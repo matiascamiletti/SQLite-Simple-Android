@@ -1,10 +1,8 @@
 **Status - in the development**
 
 <h2>Install</h2>
----------------------------------------
 
 <h2>Usage</h2>
----------------------------------------
 
 Create class extends Application
 
@@ -33,7 +31,6 @@ public class MyApplication extends Application {
 ```
 
 <h2>Notices</h2>
----------------------------------------
 
 Be careful with attribute «notNull», because at some point you may **delete column** from model with this attribute and got error:
 ```java
