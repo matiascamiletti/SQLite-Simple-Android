@@ -1,9 +1,9 @@
 **Status - in the development**
 
-<h1>**Install**</h1>
+<h2>Install</h2>
 ---------------------------------------
 
-<h1>**Usage**</h1>
+<h2>Usage</h2>
 ---------------------------------------
 
 Create class extends Application
@@ -32,7 +32,7 @@ public class MyApplication extends Application {
             >
 ```
 
-<h1>**Notices**</h1>
+<h2>Notices</h2>
 ---------------------------------------
 
 Be careful with attribute «notNull», because at some point you may **delete column** from model with this attribute and got error:
