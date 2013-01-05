@@ -47,6 +47,7 @@ public class SQLiteDatabaseSimple {
     }
 
     public void create(Class<?>... classes) { // create table if needs
+
         List<String> savedTables = sharedPreferencesUtil.getList(Constants.DATABASE_TABLES);
         List<String> savedSQLQueries = sharedPreferencesUtil.getList(Constants.DATABASE_QUERIES);
 
