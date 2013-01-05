@@ -23,7 +23,10 @@ public class SharedPreferencesUtil {
     }
 
     public void clearAllPreferences() {
-        sharedPreferencesEditor.clear();
+        sharedPreferencesEditor.remove(Constants.SHARED_PREFERENCES_LIST);
+        sharedPreferencesEditor.remove(Constants.SHARED_PREFERENCES_INDEX);
+        sharedPreferencesEditor.remove(Constants.SHARED_DATABASE_QUERIES);
+        sharedPreferencesEditor.remove(Constants.SHARED_DATABASE_TABLES);
         sharedPreferencesEditor.commit();
     }
 
@@ -68,11 +71,11 @@ public class SharedPreferencesUtil {
     }
 
     public void putDatabaseVersion(int databaseVersion) {
-        sharedPreferencesEditor.putInt(Constants.DATABASE_VERSION, databaseVersion);
+        sharedPreferencesEditor.putInt(Constants.SHARED_DATABASE_VERSION, databaseVersion);
     }
 
     public int getDatabaseVersion() {
         // if not found, return first version -> 1
-        return sharedPreferences.getInt(Constants.DATABASE_VERSION, Constants.FIRST_DATABASE_VERSION);
+        return sharedPreferences.getInt(Constants.SHARED_DATABASE_VERSION, Constants.FIRST_DATABASE_VERSION);
     }
 }

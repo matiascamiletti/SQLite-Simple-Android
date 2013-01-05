@@ -44,6 +44,12 @@ public class MainActivity extends ListActivity {
         cursor.close();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateAdapter();
+    }
+
     private void updateAdapter() {
         MainCursorAdapter cursorAdapter = (MainCursorAdapter) getListAdapter();
         cursorAdapter.changeCursor(recordsOperator.selectCursorFromTable());
@@ -53,7 +59,6 @@ public class MainActivity extends ListActivity {
     private Record generateRecord() {
         Record record = new Record();
         record.setDateOfPublication(String.valueOf(GregorianCalendar.getInstance().getTimeInMillis()));
-        record.setDateOfChanges(String.valueOf(record.getDateOfPublication()));
         return record;
     }
 

@@ -9,11 +9,8 @@ import garin.artemiy.simple.app.sqlite.library.annotations.Column;
 public class Record {
 
     //todo support many then one type - String
-    @Column(type = Column.INTEGER, notNull = true)
-    public String dateOfPublication;
-
     @Column(type = Column.INTEGER)
-    public String dateOfChanges;
+    public String dateOfPublication;
 
     public String getDateOfPublication() {
         return dateOfPublication;
@@ -21,9 +18,5 @@ public class Record {
 
     public void setDateOfPublication(String dateOfPublication) {
         this.dateOfPublication = dateOfPublication;
-    }
-
-    public void setDateOfChanges(String dateOfChanges) {
-        this.dateOfChanges = dateOfChanges;
     }
 }

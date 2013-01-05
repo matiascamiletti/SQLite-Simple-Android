@@ -26,7 +26,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        List<String> sqlQueries = sharedPreferencesUtil.getList(Constants.DATABASE_QUERIES);
+        List<String> sqlQueries = sharedPreferencesUtil.getList(Constants.SHARED_DATABASE_QUERIES);
         if (sqlQueries != null) { // execute sql queries in order
             for (String sqlQuery : sqlQueries) {
                 sqLiteDatabase.execSQL(sqlQuery);
@@ -36,12 +36,10 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        if (newVersion > oldVersion) {
-            List<String> tables = sharedPreferencesUtil.getList(Constants.DATABASE_TABLES);
-            if (tables != null) { // drop tables in order
-                for (String table : tables) {
-                    sqLiteDatabase.execSQL(String.format(Constants.FORMAT_GLUED, Constants.DROP_TABLE_IF_EXISTS, table));
-                }
+        List<String> tables = sharedPreferencesUtil.getList(Constants.SHARED_DATABASE_TABLES);
+        if (tables != null) { // drop tables in order
+            for (String table : tables) {
+                sqLiteDatabase.execSQL(String.format(Constants.FORMAT_GLUED, Constants.DROP_TABLE_IF_EXISTS, table));
             }
         }
         onCreate(sqLiteDatabase);

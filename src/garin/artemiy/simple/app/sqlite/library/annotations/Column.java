@@ -17,13 +17,13 @@ import java.lang.annotation.Target;
 public @interface Column {
 
     @SuppressWarnings("unused")
-    public static final String TEXT = "text";
+    public static final String TEXT = "TEXT";
     @SuppressWarnings("unused")
-    public static final String REAL = "real";
+    public static final String REAL = "REAL";
     @SuppressWarnings("unused")
-    public static final String BLOB = "blob";
+    public static final String BLOB = "BLOB";
     @SuppressWarnings("unused")
-    public static final String INTEGER = "integer";
+    public static final String INTEGER = "INTEGER";
 
     String name() default Constants.EMPTY;
 

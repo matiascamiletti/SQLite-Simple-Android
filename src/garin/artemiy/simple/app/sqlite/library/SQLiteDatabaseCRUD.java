@@ -52,7 +52,13 @@ public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
         String table = DatabaseUtil.getTableName(tClass);
         Cursor cursor = database.query(table, columns, null, null, null, null, null);
         cursor.moveToLast();
-        long id = cursor.getLong(cursor.getColumnIndex(Constants.COLUMN_ID));
+
+        long id;
+        if (cursor.getPosition() == -1) {
+            id = -1;
+        } else {
+            id = cursor.getLong(cursor.getColumnIndex(Constants.COLUMN_ID));
+        }
         cursor.close();
         return id;
     }

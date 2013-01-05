@@ -29,3 +29,12 @@ public class MyApplication extends Application {
         ...
             >
 ```
+
+**Notices**
+
+Be careful with attribute «**notNull**», because at some point you may **delete column** from model with this attribute and got error:
+```java
+    Error inserting ...
+    android.database.sqlite.SQLiteConstraintException: error code 19: constraint failed
+```
+It means the column, what you delete - null, and SQLite can not add new row
