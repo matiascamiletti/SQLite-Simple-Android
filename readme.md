@@ -1,10 +1,12 @@
 **Status - in the development**
 
-**Usage**
+<h1>**Install**</h1>
+---------------------------------------
 
-- First step add library to your project, you may download jar or import lib src
+<h1>**Usage**</h1>
+---------------------------------------
 
-- Second, create class extends Application
+Create class extends Application
 
 ```java
 public class MyApplication extends Application {
@@ -30,9 +32,10 @@ public class MyApplication extends Application {
             >
 ```
 
-**Notices**
+<h1>**Notices**</h1>
+---------------------------------------
 
-Be careful with attribute «**notNull**», because at some point you may **delete column** from model with this attribute and got error:
+Be careful with attribute «notNull», because at some point you may **delete column** from model with this attribute and got error:
 ```java
     Error inserting ...
     android.database.sqlite.SQLiteConstraintException: error code 19: constraint failed
