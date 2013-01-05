@@ -13,7 +13,7 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        SQLiteDatabaseSimple databaseSimple = new SQLiteDatabaseSimple(this, 3);
+        SQLiteDatabaseSimple databaseSimple = new SQLiteDatabaseSimple(this);
         databaseSimple.create(Record.class);
     }
 
