@@ -2,7 +2,28 @@
 
 <h2>Install</h2>
 
-<h2>Usage</h2>
+add later
+
+<h2>Quick start</h2>
+
+**Code reference you may see in project**
+
+- Create your model with annotation @Column(type = Column.YOUR_TYPE), for example:
+**See all model parameters below in section Model**
+
+```java
+public class Record {
+
+    @Column(type = Column.INTEGER)
+    public Long dateOfPublication;
+
+    @Column(type = Column.INTEGER)
+    public boolean isPublished;
+
+    // also supports Column.TEXT, Column.NUMERIC, Column.REAL
+
+}
+```
 
 - Create class extends Application.
 
@@ -27,6 +48,48 @@ public class MainApplication extends Application {
         ...
         ...
             >
+```
+
+- Create «Operator» class extends SQLiteDatabaseCRUD<YourModel>
+
+```java
+public class RecordsOperator extends SQLiteDatabaseCRUD<Record> {
+
+    public RecordsOperator(Context context) {
+        super(Record.class, context);
+    }
+
+ }
+```
+
+**That's all!**
+
+In your activity just create class, for example:
+```java
+    private RecordsOperator recordsOperator;
+```
+And you may call all needed methods, if you need more, just override or create new in class **Records Operator**, look above.
+
+<h2>Model</h2>
+Look better this nuance, for example we create new model, call it **News**. But before write all available annotations:
+
+**@Table** - optional parameter, supports attributes:
+    **name** - optional.
+**@Column** - this parameter required the type of column, supports attributes:
+    **type** - required.
+    **name** - optional.
+    **notNull** - optional, default value false.
+
+Fully annotated example:
+
+```java
+@Table(name = "Super_News")
+public class News {
+
+    @Column(name = "Hot", notNull = true, type = Column.INTEGER)
+    public boolean isHot;
+
+}
 ```
 
 <h2>Notices</h2>
