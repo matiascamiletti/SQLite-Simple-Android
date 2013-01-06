@@ -51,7 +51,7 @@ public class MainApplication extends Application {
             >
 ```
 
-- Create «Operator» class extends SQLiteDatabaseCRUD**<YourModel>**
+- Create «Operator» class extends SQLiteDatabaseCRUD\<YourModel\>
 
 ```java
 public class RecordsOperator extends SQLiteDatabaseCRUD<Record> {
@@ -76,15 +76,15 @@ Look better this nuance, for example we create new model, call it **News**. But 
 
 **@Table** - optional parameter, supports attributes:
 
-    **name** - optional.
+    name - optional.
 
 **@Column** - this parameter required the type of column, supports attributes:
 
-    **type** - required.
+    type - required.
 
-    **name** - optional.
+    name - optional.
 
-    **notNull** - optional, default value false.
+    notNull - optional, default value false.
 
 Fully annotated example:
 
