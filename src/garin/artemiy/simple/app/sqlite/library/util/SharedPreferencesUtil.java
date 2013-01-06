@@ -2,7 +2,6 @@ package garin.artemiy.simple.app.sqlite.library.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import garin.artemiy.simple.app.sqlite.library.Constants;
 
 import java.util.ArrayList;
 import java.util.List;

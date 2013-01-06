@@ -8,15 +8,26 @@ import garin.artemiy.simple.app.sqlite.library.annotations.Column;
  */
 public class Record {
 
-    //todo support many then one type - String
     @Column(type = Column.INTEGER)
-    public String dateOfPublication;
+    public Long dateOfPublication;
 
-    public String getDateOfPublication() {
+    @Column(type = Column.INTEGER)
+    public boolean isPublished;
+
+    public Long getDateOfPublication() {
         return dateOfPublication;
     }
 
-    public void setDateOfPublication(String dateOfPublication) {
+    public void setDateOfPublication(Long dateOfPublication) {
         this.dateOfPublication = dateOfPublication;
+    }
+
+    @SuppressWarnings("unused")
+    public boolean isPublished() {
+        return isPublished;
+    }
+
+    public void setPublished(boolean published) {
+        isPublished = published;
     }
 }

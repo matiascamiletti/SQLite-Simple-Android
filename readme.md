@@ -12,7 +12,6 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        // it automatically set database version = 1, write manually if need
         SQLiteDatabaseSimple databaseSimple = new SQLiteDatabaseSimple(this);
         databaseSimple.create(Record.class);
     }
@@ -20,7 +19,7 @@ public class MainApplication extends Application {
 }
 ```
 
-- Add to **AndroidManifest.xml**.
+- Add to **AndroidManifest.xml**
 
 ```java
     <application
@@ -31,7 +30,7 @@ public class MainApplication extends Application {
 ```
 
 <h2>Notices</h2>
-**Database version** - if upgrade database version, for example from 1 to 2, your all tables will be deleted, and created again **DATA WILL BE LOST.**
+**Database version** - if upgrade database version, for example from 1 to 2, your all tables will be deleted, and created again. **DATA WILL BE LOST.**
 If you want only add column, just write it on model and SQLite Simple create it for you.
 
 <h3>Be careful</h3>

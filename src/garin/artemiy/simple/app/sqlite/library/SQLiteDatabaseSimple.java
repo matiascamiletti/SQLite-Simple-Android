@@ -3,6 +3,7 @@ package garin.artemiy.simple.app.sqlite.library;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import garin.artemiy.simple.app.sqlite.library.annotations.Column;
+import garin.artemiy.simple.app.sqlite.library.util.Constants;
 import garin.artemiy.simple.app.sqlite.library.util.DatabaseUtil;
 import garin.artemiy.simple.app.sqlite.library.util.SharedPreferencesUtil;
 

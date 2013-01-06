@@ -1,6 +1,5 @@
 package garin.artemiy.simple.app.sqlite.library.util;
 
-import garin.artemiy.simple.app.sqlite.library.Constants;
 import garin.artemiy.simple.app.sqlite.library.annotations.Column;
 import garin.artemiy.simple.app.sqlite.library.annotations.Table;
 

@@ -3,6 +3,7 @@ package garin.artemiy.simple.app.sqlite.library;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import garin.artemiy.simple.app.sqlite.library.util.Constants;
 import garin.artemiy.simple.app.sqlite.library.util.SharedPreferencesUtil;
 
 import java.util.List;
@@ -13,10 +14,11 @@ import java.util.List;
  */
 public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
 
+    private static final String DB_FORMAT = ".db";
     private SharedPreferencesUtil sharedPreferencesUtil;
 
     public SQLiteDatabaseHelper(Context context, int databaseVersion) {
-        super(context, String.format(Constants.FORMAT_GLUED, context.getPackageName(), Constants.DB_FORMAT), null, databaseVersion);
+        super(context, String.format(Constants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT), null, databaseVersion);
         sharedPreferencesUtil = new SharedPreferencesUtil(context);
         if (databaseVersion > sharedPreferencesUtil.getDatabaseVersion()) {
             sharedPreferencesUtil.putDatabaseVersion(databaseVersion);

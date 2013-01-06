@@ -44,7 +44,7 @@ public class MainCursorAdapter extends CursorAdapter {
         TextView publicationDate = (TextView) view.findViewById(R.id.publicationDate);
 
         Date date = new Date();
-        date.setTime(Long.parseLong(record.getDateOfPublication()));
+        date.setTime(record.getDateOfPublication());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
 
         publicationDate.setText(simpleDateFormat.format(date));

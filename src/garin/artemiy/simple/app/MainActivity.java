@@ -26,7 +26,7 @@ public class MainActivity extends ListActivity {
         recordsOperator = new RecordsOperator(this);
         setContentView(R.layout.main);
 
-        cursor = recordsOperator.selectCursorFromTable();
+        cursor = recordsOperator.selectCursorDescFromTable();
         MainCursorAdapter cursorAdapter = new MainCursorAdapter(this, cursor);
         setListAdapter(cursorAdapter);
 
@@ -52,13 +52,14 @@ public class MainActivity extends ListActivity {
 
     private void updateAdapter() {
         MainCursorAdapter cursorAdapter = (MainCursorAdapter) getListAdapter();
-        cursorAdapter.changeCursor(recordsOperator.selectCursorFromTable());
+        cursorAdapter.changeCursor(recordsOperator.selectCursorDescFromTable());
         cursorAdapter.notifyDataSetChanged();
     }
 
     private Record generateRecord() {
         Record record = new Record();
-        record.setDateOfPublication(String.valueOf(GregorianCalendar.getInstance().getTimeInMillis()));
+        record.setDateOfPublication(GregorianCalendar.getInstance().getTimeInMillis());
+        record.setPublished(true);
         return record;
     }
 

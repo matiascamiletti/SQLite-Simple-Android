@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import garin.artemiy.simple.app.sqlite.library.util.Constants;
 import garin.artemiy.simple.app.sqlite.library.util.DatabaseUtil;
 import garin.artemiy.simple.app.sqlite.library.util.SharedPreferencesUtil;
 
@@ -17,6 +18,9 @@ import java.util.List;
  */
 public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
 
+    private static final String COLUMN_ID = "_id";
+    private static final String DESC = "DESC";
+    private static final String FORMAT_ARGUMENT = "%s = %s";
     private Class<T> tClass;
 
     public SQLiteDatabaseCRUD(Class<T> tClass, Context context) {
@@ -27,7 +31,7 @@ public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
     private String[] getAllColumns(Class<T> tClass) {
         List<String> columnsList = new ArrayList<String>();
 
-        columnsList.add(Constants.COLUMN_ID); // default first column in android
+        columnsList.add(COLUMN_ID); // Default first column in Android
         for (Field field : tClass.getDeclaredFields()) {
             columnsList.add(DatabaseUtil.getColumnName(field));
         }
@@ -40,8 +44,61 @@ public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
     private void bindObject(T newTObject, Cursor cursor) throws NoSuchFieldException, IllegalAccessException {
         for (Field field : tClass.getDeclaredFields()) {
             Field classField = tClass.getDeclaredField(field.getName());
-            classField.set(newTObject, cursor.getString(cursor.
-                    getColumnIndex(DatabaseUtil.getColumnName(field))));
+            classField.set(newTObject, getValueFromCursor(cursor, field));
+        }
+    }
+
+    // Get content from specific types
+    private Object getValueFromCursor(Cursor cursor, Field field) throws IllegalAccessException {
+        Class<?> fieldType = field.getType();
+        Object value = null;
+        int columnIndex = cursor.getColumnIndex(DatabaseUtil.getColumnName(field));
+
+        if (fieldType.isAssignableFrom(Long.class) || fieldType.isAssignableFrom(long.class)) {
+            value = cursor.getLong(columnIndex);
+        } else if (fieldType.isAssignableFrom(String.class)) {
+            value = cursor.getString(columnIndex);
+        } else if ((fieldType.isAssignableFrom(Integer.class) || fieldType.isAssignableFrom(int.class))) {
+            value = cursor.getInt(columnIndex);
+        } else if ((fieldType.isAssignableFrom(Byte[].class) || fieldType.isAssignableFrom(byte[].class))) {
+            value = cursor.getBlob(columnIndex);
+        } else if ((fieldType.isAssignableFrom(Double.class) || fieldType.isAssignableFrom(double.class))) {
+            value = cursor.getDouble(columnIndex);
+        } else if ((fieldType.isAssignableFrom(Float.class) || fieldType.isAssignableFrom(float.class))) {
+            value = cursor.getFloat(columnIndex);
+        } else if ((fieldType.isAssignableFrom(Short.class) || fieldType.isAssignableFrom(short.class))) {
+            value = cursor.getShort(columnIndex);
+        } else if (fieldType.isAssignableFrom(Byte.class) || fieldType.isAssignableFrom(byte.class)) {
+            value = (byte) cursor.getShort(columnIndex);
+        } else if (fieldType.isAssignableFrom(Boolean.class) || fieldType.isAssignableFrom(boolean.class)) {
+            int booleanInteger = cursor.getInt(columnIndex);
+            value = booleanInteger == 1;
+        }
+        return value;
+    }
+
+    // Put in content value from object to specific type
+    private void putInContentValues(ContentValues contentValues, Field field, Object object) throws IllegalAccessException {
+        Object fieldValue = field.get(object);
+        String key = DatabaseUtil.getColumnName(field);
+        if (fieldValue instanceof Long) {
+            contentValues.put(key, Long.valueOf(fieldValue.toString()));
+        } else if (fieldValue instanceof String) {
+            contentValues.put(key, fieldValue.toString());
+        } else if (fieldValue instanceof Integer) {
+            contentValues.put(key, Integer.valueOf(fieldValue.toString()));
+        } else if (fieldValue instanceof Float) {
+            contentValues.put(key, Float.valueOf(fieldValue.toString()));
+        } else if (fieldValue instanceof Byte) {
+            contentValues.put(key, Byte.valueOf(fieldValue.toString()));
+        } else if (fieldValue instanceof Short) {
+            contentValues.put(key, Short.valueOf(fieldValue.toString()));
+        } else if (fieldValue instanceof Boolean) {
+            contentValues.put(key, Boolean.parseBoolean(fieldValue.toString()));
+        } else if (fieldValue instanceof Double) {
+            contentValues.put(key, Double.valueOf(fieldValue.toString()));
+        } else if (fieldValue instanceof Byte[]) {
+            contentValues.put(key, fieldValue.toString().getBytes());
         }
     }
 
@@ -57,18 +114,29 @@ public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
         if (cursor.getPosition() == -1) {
             id = -1;
         } else {
-            id = cursor.getLong(cursor.getColumnIndex(Constants.COLUMN_ID));
+            id = cursor.getLong(cursor.getColumnIndex(COLUMN_ID));
         }
         cursor.close();
         return id;
     }
 
     @SuppressWarnings("unused")
-    public Cursor selectCursorFromTable() {
+    public Cursor selectCursorAscFromTable() {
+        return selectCursorFromTable(null, null, null, null, null);
+    }
+
+    @SuppressWarnings("unused")
+    public Cursor selectCursorDescFromTable() {
+        return selectCursorFromTable(null, null, null, null, String.format(Constants.FORMAT_TWINS, COLUMN_ID, DESC));
+    }
+
+    @SuppressWarnings("unused")
+    public Cursor selectCursorFromTable(String selection, String[] selectionArgs,
+                                        String groupBy, String having, String orderBy) {
         SQLiteDatabase database = getReadableDatabase();
         String[] columns = getAllColumns(tClass);
         String table = DatabaseUtil.getTableName(tClass);
-        Cursor cursor = database.query(table, columns, null, null, null, null, null);
+        Cursor cursor = database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
         cursor.moveToFirst();
         database.close();
 
@@ -82,7 +150,7 @@ public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
             ContentValues contentValues = new ContentValues();
 
             for (Field field : object.getClass().getDeclaredFields()) {
-                contentValues.put(DatabaseUtil.getColumnName(field), (String) field.get(object));
+                putInContentValues(contentValues, field, object);
             }
 
             return database.insert(DatabaseUtil.getTableName(object.getClass()), null, contentValues);
@@ -98,7 +166,7 @@ public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
     public T read(long id) {
         SQLiteDatabase database = getReadableDatabase();
         Cursor cursor = database.query(DatabaseUtil.getTableName(tClass), getAllColumns(tClass),
-                String.format(Constants.FORMAT_ARGUMENT, Constants.COLUMN_ID, Long.toString(id)), null, null, null, null);
+                String.format(FORMAT_ARGUMENT, COLUMN_ID, Long.toString(id)), null, null, null, null);
         try {
             T newTObject = tClass.newInstance();
             bindObject(newTObject, cursor);
@@ -126,11 +194,20 @@ public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
     }
 
     @SuppressWarnings("unused")
-    public List<T> readAll() {
-        Cursor cursor = selectCursorFromTable();
+    public List<T> readAllAsc() {
+        Cursor cursor = selectCursorAscFromTable();
+        return readAll(cursor);
+    }
+
+    @SuppressWarnings("unused")
+    public List<T> readAllDesc() {
+        Cursor cursor = selectCursorDescFromTable();
+        return readAll(cursor);
+    }
+
+    private List<T> readAll(Cursor cursor) {
         try {
             List<T> list = new ArrayList<T>();
-
             for (int i = 0; i < cursor.getCount(); i++) {
                 T newTObject = tClass.newInstance();
                 bindObject(newTObject, cursor);
@@ -154,11 +231,11 @@ public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
             ContentValues contentValues = new ContentValues();
 
             for (Field field : newObject.getClass().getDeclaredFields()) {
-                contentValues.put(DatabaseUtil.getColumnName(field), (String) field.get(newObject));
+                putInContentValues(contentValues, field, newObject);
             }
 
             return database.update(DatabaseUtil.getTableName(newObject.getClass()), contentValues,
-                    String.format(Constants.FORMAT_ARGUMENT, Constants.COLUMN_ID, id), null);
+                    String.format(FORMAT_ARGUMENT, COLUMN_ID, id), null);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -173,7 +250,7 @@ public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
         SQLiteDatabase database = getWritableDatabase();
 
         int deletedRow = database.delete(
-                DatabaseUtil.getTableName(tClass), String.format(Constants.FORMAT_ARGUMENT, Constants.COLUMN_ID, id), null);
+                DatabaseUtil.getTableName(tClass), String.format(FORMAT_ARGUMENT, COLUMN_ID, id), null);
 
         database.close();
         return deletedRow;
