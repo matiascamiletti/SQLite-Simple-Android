@@ -9,6 +9,7 @@ add later
 **Code reference you may see in project**
 
 - Create your model with annotation @Column(type = Column.YOUR_TYPE), for example:
+
 **See all model parameters below in section Model**
 
 ```java
@@ -50,7 +51,7 @@ public class MainApplication extends Application {
             >
 ```
 
-- Create «Operator» class extends SQLiteDatabaseCRUD<YourModel>
+- Create «Operator» class extends SQLiteDatabaseCRUD**<YourModel>**
 
 ```java
 public class RecordsOperator extends SQLiteDatabaseCRUD<Record> {
@@ -62,7 +63,7 @@ public class RecordsOperator extends SQLiteDatabaseCRUD<Record> {
  }
 ```
 
-**That's all!**
+<h3>That's all!</h3>
 
 In your activity just create class, for example:
 ```java
@@ -74,10 +75,15 @@ And you may call all needed methods, if you need more, just override or create n
 Look better this nuance, for example we create new model, call it **News**. But before write all available annotations:
 
 **@Table** - optional parameter, supports attributes:
+
     **name** - optional.
+
 **@Column** - this parameter required the type of column, supports attributes:
+
     **type** - required.
+
     **name** - optional.
+
     **notNull** - optional, default value false.
 
 Fully annotated example:
