@@ -1,11 +1,11 @@
-package garin.artemiy.simple.sqlite.library;
+package garin.artemiy.simple.sqlite;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import garin.artemiy.simple.sqlite.library.annotations.Column;
-import garin.artemiy.simple.sqlite.library.util.Constants;
-import garin.artemiy.simple.sqlite.library.util.DatabaseUtil;
-import garin.artemiy.simple.sqlite.library.util.SharedPreferencesUtil;
+import garin.artemiy.simple.sqlite.annotations.Column;
+import garin.artemiy.simple.sqlite.util.Constants;
+import garin.artemiy.simple.sqlite.util.DatabaseUtil;
+import garin.artemiy.simple.sqlite.util.SharedPreferencesUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

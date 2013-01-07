@@ -1,7 +1,7 @@
-package garin.artemiy.simple.sqlite.library.annotations;
+package garin.artemiy.simple.sqlite.annotations;
 
 
-import garin.artemiy.simple.sqlite.library.util.Constants;
+import garin.artemiy.simple.sqlite.util.Constants;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

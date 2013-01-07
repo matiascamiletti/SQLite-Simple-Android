@@ -1,6 +1,6 @@
 package garin.artemiy.simple.example.model;
 
-import garin.artemiy.simple.sqlite.library.annotations.Column;
+import garin.artemiy.simple.sqlite.annotations.Column;
 
 /**
  * author: Artemiy Garin

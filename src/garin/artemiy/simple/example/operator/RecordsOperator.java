@@ -2,7 +2,7 @@ package garin.artemiy.simple.example.operator;
 
 import android.content.Context;
 import garin.artemiy.simple.example.model.Record;
-import garin.artemiy.simple.sqlite.library.SQLiteDatabaseCRUD;
+import garin.artemiy.simple.sqlite.SQLiteDatabaseCRUD;
 
 /**
  * author: Artemiy Garin
