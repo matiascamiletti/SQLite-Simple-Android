@@ -26,7 +26,7 @@ public class DatabaseUtil {
         Table annotationTable = tClass.getAnnotation(Table.class);
         String table = tClass.getSimpleName();
         if (annotationTable != null) {
-            if (annotationTable.name().equals(Constants.EMPTY)) {
+            if (!annotationTable.name().equals(Constants.EMPTY)) {
                 table = annotationTable.name();
             }
         }

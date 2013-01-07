@@ -21,11 +21,9 @@ public class SharedPreferencesUtil {
         sharedPreferencesEditor = sharedPreferences.edit();
     }
 
-    public void clearAllPreferences() {
-        sharedPreferencesEditor.remove(Constants.SHARED_PREFERENCES_LIST);
-        sharedPreferencesEditor.remove(Constants.SHARED_PREFERENCES_INDEX);
-        sharedPreferencesEditor.remove(Constants.SHARED_DATABASE_QUERIES);
-        sharedPreferencesEditor.remove(Constants.SHARED_DATABASE_TABLES);
+    public void clearAllPreferences(int databaseVersion) {
+        sharedPreferencesEditor.clear();
+        putDatabaseVersion(databaseVersion);
         sharedPreferencesEditor.commit();
     }
 
@@ -69,7 +67,7 @@ public class SharedPreferencesUtil {
         sharedPreferencesEditor.commit();
     }
 
-    public void putDatabaseVersion(int databaseVersion) {
+    private void putDatabaseVersion(int databaseVersion) {
         sharedPreferencesEditor.putInt(Constants.SHARED_DATABASE_VERSION, databaseVersion);
     }
 

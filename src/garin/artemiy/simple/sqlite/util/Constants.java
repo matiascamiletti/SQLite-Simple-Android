@@ -16,23 +16,20 @@ public class Constants {
 
     // SQL
     public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
+    public static final String DROP_TABLE_IF_EXIST_TEMPORARY = "DROP TABLE IF EXISTS temporary_table";
     public static final String CREATE_TABLE_IF_NOT_EXIST =
             "CREATE TABLE IF NOT EXISTS %s (_id INTEGER PRIMARY KEY AUTOINCREMENT"; // tableName, other columns
-    public static final String ALTER_TABLE = "ALTER TABLE %s ADD COLUMN %s DEFAULT 0";
-    public static final String NOT_NULL = "NOT NULL";
+    public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s ";
 
     // String.format(..)
     public static final String FORMAT_GLUED = "%s%s";
-    public static final String FORMAT_SINGLE = "%s";
     public static final String FORMAT_TWINS = "%s %s";
     public static final String SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS = ", %s %s";
     public static final String SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS_LAST = ", %s %s);";
-    public static final String SQL_QUERY_APPEND_FORMAT_THREE_ARGUMENTS = ", %s %s %s";
-    public static final String SQL_QUERY_APPEND_FORMAT_THREE_ARGUMENTS_LAST = ", %s %s %s);";
 
     // other
     public static final int FIRST_DATABASE_VERSION = 1;
-    public static final String DIVIDER = ",";
     public static final String EMPTY = "";
-    public static final String SQL_PARENTHESES_ENDING = ");";
+    public static final String DIVIDER = ",";
+    public static final String LAST_BRACKET = ");";
 }

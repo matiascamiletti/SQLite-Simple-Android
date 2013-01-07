@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?><!--suppress AndroidLintHardcodedText -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
 
     <TextView
         android:layout_height="wrap_content"
@@ -12,7 +12,7 @@
         android:layout_margin="10dp"
         android:text="SQLite Simple Android"
         android:gravity="center"
-        android:typeface="serif" />
+        android:typeface="serif"/>
 
     <TextView
         android:typeface="serif"
@@ -20,7 +20,7 @@
         android:text="Publication date"
         android:textColor="@android:color/black"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content" />
+        android:layout_width="wrap_content"/>
 
     <!--suppress AndroidLintPxUsage -->
     <ListView
@@ -30,7 +30,7 @@
         android:divider="@android:color/darker_gray"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_width="fill_parent" />
+        android:layout_width="fill_parent"/>
 
     <LinearLayout
         android:layout_height="wrap_content"
@@ -45,7 +45,7 @@
             android:text="ADD RECORD"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <Button
             android:onClick="onClickDeleteAllRecords"
@@ -56,7 +56,7 @@
             android:text="DELETE ALL"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <Button
             android:onClick="onClickUpdateLastRow"
@@ -67,7 +67,7 @@
             android:text="UPDATE LAST"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
     </LinearLayout>
 

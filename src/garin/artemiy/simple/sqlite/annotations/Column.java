@@ -28,6 +28,4 @@ public @interface Column {
     String name() default Constants.EMPTY;
 
     String type();
-
-    boolean notNull() default false;
 }

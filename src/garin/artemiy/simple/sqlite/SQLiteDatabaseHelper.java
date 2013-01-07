@@ -20,10 +20,6 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
     public SQLiteDatabaseHelper(Context context, int databaseVersion) {
         super(context, String.format(Constants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT), null, databaseVersion);
         sharedPreferencesUtil = new SharedPreferencesUtil(context);
-        if (databaseVersion > sharedPreferencesUtil.getDatabaseVersion()) {
-            sharedPreferencesUtil.putDatabaseVersion(databaseVersion);
-            sharedPreferencesUtil.commit();
-        }
     }
 
     @Override
@@ -44,6 +40,7 @@ public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
                 sqLiteDatabase.execSQL(String.format(Constants.FORMAT_GLUED, Constants.DROP_TABLE_IF_EXISTS, table));
             }
         }
+        sqLiteDatabase.execSQL(Constants.DROP_TABLE_IF_EXIST_TEMPORARY);
         onCreate(sqLiteDatabase);
     }
 }

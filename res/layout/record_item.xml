@@ -6,13 +6,13 @@
               android:layout_height="fill_parent">
 
     <TextView
-            android:layout_marginLeft="5dp"
-            android:padding="10dp"
-            android:id="@+id/publicationDate"
-            android:typeface="serif"
-            android:textSize="18dp"
-            android:textColor="@android:color/black"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"/>
+        android:layout_marginLeft="5dp"
+        android:padding="10dp"
+        android:id="@+id/publicationDate"
+        android:typeface="serif"
+        android:textSize="18dp"
+        android:textColor="@android:color/black"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"/>
 
 </LinearLayout>
