@@ -1,13 +1,14 @@
-package garin.artemiy.simple.app;
+package garin.artemiy.simple.example;
 
 import android.app.ListActivity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
-import garin.artemiy.simple.app.adapter.MainCursorAdapter;
-import garin.artemiy.simple.app.model.Record;
-import garin.artemiy.simple.app.operator.RecordsOperator;
+import garin.artemiy.simple.R;
+import garin.artemiy.simple.example.adapter.MainCursorAdapter;
+import garin.artemiy.simple.example.model.Record;
+import garin.artemiy.simple.example.operator.RecordsOperator;
 
 import java.util.GregorianCalendar;
 

@@ -65,11 +65,15 @@ public class RecordsOperator extends SQLiteDatabaseCRUD<Record> {
 
 <h3>That's all!</h3>
 
-In your activity just create class, for example:
+In your activity just create operator, for example:
 ```java
-    private RecordsOperator recordsOperator;
+      @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            RecordsOperator recordsOperator = new RecordsOperator(this);
+       }
 ```
-And you may call all needed methods, if you need more, just override or create new in class **Records Operator**, look above.
+And you may call all needed methods, if you need more, just override or create new in class **RecordsOperator**, look above.
 
 <h2>Model</h2>
 Look better this nuance, for example we create new model, call it **News**. But before write all available annotations:

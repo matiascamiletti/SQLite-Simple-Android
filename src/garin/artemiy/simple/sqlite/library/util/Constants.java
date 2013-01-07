@@ -1,4 +1,4 @@
-package garin.artemiy.simple.app.sqlite.library.util;
+package garin.artemiy.simple.sqlite.library.util;
 
 /**
  * author: Artemiy Garin

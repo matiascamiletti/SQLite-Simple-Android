@@ -1,8 +1,8 @@
-package garin.artemiy.simple.app.operator;
+package garin.artemiy.simple.example.operator;
 
 import android.content.Context;
-import garin.artemiy.simple.app.model.Record;
-import garin.artemiy.simple.app.sqlite.library.SQLiteDatabaseCRUD;
+import garin.artemiy.simple.example.model.Record;
+import garin.artemiy.simple.sqlite.library.SQLiteDatabaseCRUD;
 
 /**
  * author: Artemiy Garin

@@ -1,4 +1,4 @@
-package garin.artemiy.simple.app.adapter;
+package garin.artemiy.simple.example.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
-import garin.artemiy.simple.app.R;
-import garin.artemiy.simple.app.model.Record;
-import garin.artemiy.simple.app.operator.RecordsOperator;
+import garin.artemiy.simple.R;
+import garin.artemiy.simple.example.model.Record;
+import garin.artemiy.simple.example.operator.RecordsOperator;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

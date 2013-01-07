@@ -1,8 +1,8 @@
-package garin.artemiy.simple.app;
+package garin.artemiy.simple.example;
 
 import android.app.Application;
-import garin.artemiy.simple.app.model.Record;
-import garin.artemiy.simple.app.sqlite.library.SQLiteDatabaseSimple;
+import garin.artemiy.simple.example.model.Record;
+import garin.artemiy.simple.sqlite.library.SQLiteDatabaseSimple;
 
 /**
  * author: Artemiy Garin
