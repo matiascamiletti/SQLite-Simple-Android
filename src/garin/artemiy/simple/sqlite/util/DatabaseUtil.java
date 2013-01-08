@@ -13,11 +13,13 @@ public class DatabaseUtil {
 
     public static String getColumnName(Field field) {
         Column annotationColumn = field.getAnnotation(Column.class);
-        String column;
-        if (annotationColumn.name().equals(Constants.EMPTY)) {
-            column = field.getName();
-        } else {
-            column = annotationColumn.name();
+        String column = null;
+        if (annotationColumn != null) {
+            if (annotationColumn.name().equals(Constants.EMPTY)) {
+                column = field.getName();
+            } else {
+                column = annotationColumn.name();
+            }
         }
         return column;
     }

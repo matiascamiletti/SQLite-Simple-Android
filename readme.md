@@ -11,7 +11,7 @@ You may import src from project or download jar (recommended) **sorry, add later
 
 - Create your model with annotation @Column(type = ColumnType.TYPE), for example:
 
-**See all model parameters below in section * <a href="https://github.com/kvirair/SQLite-Simple-Android#model">Model</a>**
+**See all model parameters below in section <a href="https://github.com/kvirair/SQLite-Simple-Android#model">Model</a>**
 
 ```java
 public class Record {
@@ -52,7 +52,7 @@ public class MainApplication extends Application {
             >
 ```
 
-- Create «DAO» class extends SQLiteSimpleDAO\<YourModel\>
+- Create «DAO» class extends SQLiteSimpleDAO\<YourModelName\>
 
 ```java
 public class RecordsDAO extends SQLiteSimpleDAO<Record> {
@@ -96,3 +96,4 @@ Look better this nuance, for example we create new model, call it **News**. But 
 <h2>Notices</h2>
 **Database version** - if upgrade database version, for example from 1 to 2, your all tables will be deleted, and created again. **DATA WILL BE LOST.**
 If you want only add column, just write it on model and SQLite Simple create it for you.
+**_id** - this column need for cursor adapter, if you want add this column for you model, just write ```java public Long _id;```

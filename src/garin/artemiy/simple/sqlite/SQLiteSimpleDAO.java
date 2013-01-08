@@ -16,15 +16,16 @@ import java.util.List;
  * author: Artemiy Garin
  * date: 17.12.2012
  */
-public abstract class SQLiteSimpleDAO<T> extends SQLiteSimpleHelper {
+public abstract class SQLiteSimpleDAO<T> {
 
     private static final String COLUMN_ID = "_id";
     private static final String DESC = "DESC";
     private static final String FORMAT_ARGUMENT = "%s = %s";
     private Class<T> tClass;
+    private SQLiteSimpleHelper simpleHelper;
 
     public SQLiteSimpleDAO(Class<T> tClass, Context context) {
-        super(context, new SharedPreferencesUtil(context).getDatabaseVersion());
+        simpleHelper = new SQLiteSimpleHelper(context, new SharedPreferencesUtil(context).getDatabaseVersion());
         this.tClass = tClass;
     }
 
@@ -33,7 +34,9 @@ public abstract class SQLiteSimpleDAO<T> extends SQLiteSimpleHelper {
 
         columnsList.add(COLUMN_ID); // Default first column in Android
         for (Field field : tClass.getDeclaredFields()) {
-            columnsList.add(DatabaseUtil.getColumnName(field));
+            String columnName = DatabaseUtil.getColumnName(field);
+            if (columnName != null)
+                columnsList.add(columnName);
         }
 
         String[] columnsArray = new String[columnsList.size()];
@@ -52,7 +55,10 @@ public abstract class SQLiteSimpleDAO<T> extends SQLiteSimpleHelper {
     private Object getValueFromCursor(Cursor cursor, Field field) throws IllegalAccessException {
         Class<?> fieldType = field.getType();
         Object value = null;
-        int columnIndex = cursor.getColumnIndex(DatabaseUtil.getColumnName(field));
+        int columnIndex = 0; // _id
+        if (!field.getName().equals(COLUMN_ID)) {
+            columnIndex = cursor.getColumnIndex(DatabaseUtil.getColumnName(field));
+        }
 
         if (fieldType.isAssignableFrom(Long.class) || fieldType.isAssignableFrom(long.class)) {
             value = cursor.getLong(columnIndex);
@@ -104,7 +110,7 @@ public abstract class SQLiteSimpleDAO<T> extends SQLiteSimpleHelper {
 
     @SuppressWarnings("unused")
     public long getLastRowId() {
-        SQLiteDatabase database = getReadableDatabase();
+        SQLiteDatabase database = simpleHelper.getReadableDatabase();
         String[] columns = getAllColumns();
         String table = DatabaseUtil.getTableName(tClass);
         Cursor cursor = database.query(table, columns, null, null, null, null, null);
@@ -133,7 +139,7 @@ public abstract class SQLiteSimpleDAO<T> extends SQLiteSimpleHelper {
     @SuppressWarnings("unused")
     public Cursor selectCursorFromTable(String selection, String[] selectionArgs,
                                         String groupBy, String having, String orderBy) {
-        SQLiteDatabase database = getReadableDatabase();
+        SQLiteDatabase database = simpleHelper.getReadableDatabase();
         String[] columns = getAllColumns();
         String table = DatabaseUtil.getTableName(tClass);
         Cursor cursor = database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
@@ -145,7 +151,7 @@ public abstract class SQLiteSimpleDAO<T> extends SQLiteSimpleHelper {
 
     @SuppressWarnings("unused")
     public long create(T object) {
-        SQLiteDatabase database = getWritableDatabase();
+        SQLiteDatabase database = simpleHelper.getWritableDatabase();
         try {
             ContentValues contentValues = new ContentValues();
 
@@ -164,7 +170,7 @@ public abstract class SQLiteSimpleDAO<T> extends SQLiteSimpleHelper {
 
     @SuppressWarnings("unused")
     public T read(long id) {
-        SQLiteDatabase database = getReadableDatabase();
+        SQLiteDatabase database = simpleHelper.getReadableDatabase();
         Cursor cursor = database.query(DatabaseUtil.getTableName(tClass), getAllColumns(),
                 String.format(FORMAT_ARGUMENT, COLUMN_ID, Long.toString(id)), null, null, null, null);
         try {
@@ -226,7 +232,7 @@ public abstract class SQLiteSimpleDAO<T> extends SQLiteSimpleHelper {
 
     @SuppressWarnings("unused")
     public long update(long id, T newObject) {
-        SQLiteDatabase database = getWritableDatabase();
+        SQLiteDatabase database = simpleHelper.getWritableDatabase();
         try {
             ContentValues contentValues = new ContentValues();
 
@@ -247,7 +253,7 @@ public abstract class SQLiteSimpleDAO<T> extends SQLiteSimpleHelper {
 
     @SuppressWarnings("unused")
     public int delete(long id) {
-        SQLiteDatabase database = getWritableDatabase();
+        SQLiteDatabase database = simpleHelper.getWritableDatabase();
 
         int deletedRow = database.delete(
                 DatabaseUtil.getTableName(tClass), String.format(FORMAT_ARGUMENT, COLUMN_ID, id), null);
@@ -258,7 +264,7 @@ public abstract class SQLiteSimpleDAO<T> extends SQLiteSimpleHelper {
 
     @SuppressWarnings("unused")
     public int deleteAll() {
-        SQLiteDatabase database = getWritableDatabase();
+        SQLiteDatabase database = simpleHelper.getWritableDatabase();
 
         int deletedRow = database.delete(DatabaseUtil.getTableName(tClass), null, null);
 
