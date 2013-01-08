@@ -3,7 +3,7 @@
 
 <h2>Install</h2>
 
-You may import src from project or <a href="https://github.com/kvirair/SQLite-Simple-Android/raw/sqlite-simple-0.9.jar>download jar</a> (recommended)
+You may import src from project or <a href="https://github.com/kvirair/SQLite-Simple-Android/raw/sqlite-simple-0.9.jar">download jar</a> (recommended)
 
 <h2>Quick start</h2>
 
