@@ -81,7 +81,7 @@ In your activity just create operator, for example:
 And you may call all needed methods, if you need more, just override or create new in class **RecordsDAO**, look above.
 
 <h2>Model</h2>
-Look better this nuance, for example we create new model, call it **News**. But before write all available annotations:
+Look better this nuance, available annotations:
 
 **@Table** - optional parameter for classes, supports attributes:
 
@@ -97,4 +97,4 @@ Look better this nuance, for example we create new model, call it **News**. But 
 **Database version** - if upgrade database version, for example from 1 to 2, your all tables will be deleted, and created again. **DATA WILL BE LOST.**
 If you want only add column, just write it on model and SQLite Simple create it for you.
 
-**_id** - this column need for cursor adapter, if you want add this column for you model, just write ```public Long _id;```
+**_id** - this column need for cursor adapter, if you want add this column in your model, just write ```public Long _id;```

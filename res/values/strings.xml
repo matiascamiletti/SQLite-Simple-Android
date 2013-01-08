@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SQLite Simple</string>
+    <string name="publicationDate">Publication date</string>
+    <string name="addRecord">ADD RECORD</string>
+    <string name="deleteAll">DELETE ALL</string>
+    <string name="updateLast">UPDATE LAST</string>
 </resources>

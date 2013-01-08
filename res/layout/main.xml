@@ -5,20 +5,15 @@
               android:layout_height="fill_parent">
 
     <TextView
+        style="@style/defaultTextStyle"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:textSize="25dp"
-        android:textColor="@android:color/black"
-        android:layout_margin="10dp"
         android:text="@string/app_name"
-        android:gravity="center"
-        android:typeface="serif"/>
+        android:gravity="center"/>
 
     <TextView
-        android:typeface="serif"
-        android:textSize="20dp"
-        android:text="Publication date"
-        android:textColor="@android:color/black"
+        style="@style/defaultTextStyle"
+        android:text="@string/publicationDate"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"/>
 
@@ -37,34 +32,26 @@
         android:layout_width="fill_parent">
 
         <Button
+            style="@style/defaultTextStyle"
             android:onClick="onClickAddRecord"
             android:typeface="serif"
-            android:textSize="18dp"
-            android:textColor="@android:color/black"
-            android:layout_margin="10dp"
-            android:text="ADD RECORD"
+            android:text="@string/addRecord"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"/>
 
         <Button
+            style="@style/defaultTextStyle"
             android:onClick="onClickDeleteAllRecords"
-            android:typeface="serif"
-            android:textSize="18dp"
-            android:textColor="@android:color/black"
-            android:layout_margin="10dp"
-            android:text="DELETE ALL"
+            android:text="@string/deleteAll"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"/>
 
         <Button
+            style="@style/defaultTextStyle"
             android:onClick="onClickUpdateLastRow"
-            android:typeface="serif"
-            android:textSize="18dp"
-            android:textColor="@android:color/black"
-            android:layout_margin="10dp"
-            android:text="UPDATE LAST"
+            android:text="@string/updateLast"
             android:layout_height="wrap_content"
             android:layout_width="0dp"
             android:layout_weight="1"/>
