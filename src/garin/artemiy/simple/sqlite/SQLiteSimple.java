@@ -16,24 +16,24 @@ import java.util.List;
  * author: Artemiy Garin
  * date: 13.12.12
  */
-public class SQLiteDatabaseSimple {
+public class SQLiteSimple {
 
-    private SQLiteDatabaseHelper sqLiteDatabaseHelper;
+    private SQLiteSimpleHelper sqLiteSimpleHelper;
     private SharedPreferencesUtil sharedPreferencesUtil;
     private int databaseVersion;
 
-    public SQLiteDatabaseSimple(Context context, int databaseVersion) {
+    public SQLiteSimple(Context context, int databaseVersion) {
         sharedPreferencesUtil = new SharedPreferencesUtil(context);
         this.databaseVersion = databaseVersion;
         checkDatabaseVersion();
-        sqLiteDatabaseHelper = new SQLiteDatabaseHelper(context, databaseVersion);
+        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion);
     }
 
-    public SQLiteDatabaseSimple(Context context) {
+    public SQLiteSimple(Context context) {
         sharedPreferencesUtil = new SharedPreferencesUtil(context);
         this.databaseVersion = Constants.FIRST_DATABASE_VERSION;
         checkDatabaseVersion();
-        sqLiteDatabaseHelper = new SQLiteDatabaseHelper(context, databaseVersion);
+        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion);
     }
 
     private void checkDatabaseVersion() {
@@ -53,7 +53,24 @@ public class SQLiteDatabaseSimple {
         return format;
     }
 
+    private void commit(List<String> tables, List<String> sqlQueries) {
+        sharedPreferencesUtil.putList(Constants.SHARED_DATABASE_TABLES, tables);
+        sharedPreferencesUtil.putList(Constants.SHARED_DATABASE_QUERIES, sqlQueries);
+        sharedPreferencesUtil.commit();
+    }
+
+    private void checkingCommit(List<String> tables, List<String> sqlQueries, boolean newDatabaseVersion) {
+        if (newDatabaseVersion) {
+            commit(tables, sqlQueries);
+            SQLiteDatabase sqliteDatabase = sqLiteSimpleHelper.getWritableDatabase(); // call onCreate();
+            sqliteDatabase.close();
+        } else {
+            commit(tables, sqlQueries);
+        }
+    }
+
     public void create(Class<?>... classes) {
+
         List<String> savedTables = sharedPreferencesUtil.getList(Constants.SHARED_DATABASE_TABLES);
         List<String> savedSQLQueries = sharedPreferencesUtil.getList(Constants.SHARED_DATABASE_QUERIES);
         sharedPreferencesUtil.clearAllPreferences(databaseVersion);
@@ -79,20 +96,18 @@ public class SQLiteDatabaseSimple {
         }
 
         boolean newDatabaseVersion = false;
-        if (databaseVersion > sharedPreferencesUtil.getDatabaseVersion()) // check whether or not call getWritableDatabase();
+        if (databaseVersion > sharedPreferencesUtil.getDatabaseVersion())
             newDatabaseVersion = true;
 
-        boolean isRebasedTable = false;
+        boolean isRebasedTables = false;
         if (!newDatabaseVersion) {
-            isRebasedTable = rebaseTablesIfNeed(savedTables, tables, sqlQueries, savedSQLQueries);
-            if (!isRebasedTable) {
-                if (savedSQLQueries.hashCode() != sqlQueries.hashCode() && savedSQLQueries.hashCode() != 1) {
-                    addNewColumnsIfNeed(tables, sqlQueries, savedSQLQueries);
-                }
+            isRebasedTables = rebaseTablesIfNeed(savedTables, tables, sqlQueries, savedSQLQueries);
+            if (savedSQLQueries.hashCode() != sqlQueries.hashCode() && savedSQLQueries.hashCode() != 1) {
+                addNewColumnsIfNeed(tables, sqlQueries, savedSQLQueries);
             }
         }
-        if (!isRebasedTable) {
-            checkingCommit(savedTables, tables, newDatabaseVersion, sqlQueries);
+        if (!isRebasedTables) {
+            checkingCommit(tables, sqlQueries, newDatabaseVersion);
         }
     }
 
@@ -100,42 +115,39 @@ public class SQLiteDatabaseSimple {
     private boolean rebaseTablesIfNeed(List<String> savedTables, List<String> tables,
                                        List<String> sqlQueries, List<String> savedSQLQueries) {
 
-        List<String> extraTables = new ArrayList<String>(tables); // possible extra tables
-        extraTables.removeAll(savedTables);
+        List<String> extraTables = new ArrayList<String>(savedTables); // possible extra tables
+        extraTables.removeAll(tables);
 
-        if (extraTables.size() != 0) {
+        if (extraTables.size() != 0) { // drop tables
             List<String> extraSqlQueries = new ArrayList<String>(savedSQLQueries); // extra SQL queries
             extraSqlQueries.removeAll(sqlQueries);
 
-            SQLiteDatabase sqLiteDatabase = sqLiteDatabaseHelper.getWritableDatabase();
+            SQLiteDatabase sqLiteDatabase = sqLiteSimpleHelper.getWritableDatabase();
             for (String extraTable : extraTables) {
                 sqLiteDatabase.execSQL(String.format(Constants.FORMAT_GLUED,
                         Constants.DROP_TABLE_IF_EXISTS, extraTable));
             }
 
             commit(tables, sqlQueries);
-            sqLiteDatabaseHelper.onCreate(sqLiteDatabase);
+            sqLiteSimpleHelper.onCreate(sqLiteDatabase);
             sqLiteDatabase.close();
             return true;
         }
-        return false;
-    }
 
-    private void commit(List<String> tables, List<String> sqlQueries) {
-        sharedPreferencesUtil.putList(Constants.SHARED_DATABASE_TABLES, tables);
-        sharedPreferencesUtil.putList(Constants.SHARED_DATABASE_QUERIES, sqlQueries);
-        sharedPreferencesUtil.commit();
-    }
+        List<String> tablesToCreate = new ArrayList<String>(tables); // possible tables to need create
+        tablesToCreate.removeAll(savedTables);
 
-    private void checkingCommit(List<String> savedTables, List<String> tables,
-                                boolean newDatabaseVersion, List<String> sqlQueries) {
-        if (savedTables.hashCode() != tables.hashCode() || newDatabaseVersion) {
-            commit(tables, sqlQueries);
-            SQLiteDatabase sqliteDatabase = sqLiteDatabaseHelper.getWritableDatabase(); // call onCreate();
-            sqliteDatabase.close();
-        } else {
-            commit(tables, sqlQueries);
+        if (tablesToCreate.size() != 0) {
+            List<String> sqlQueriesToCreate = new ArrayList<String>(sqlQueries); // extra SQL queries
+            sqlQueriesToCreate.removeAll(savedSQLQueries);
+
+            SQLiteDatabase sqLiteDatabase = sqLiteSimpleHelper.getWritableDatabase();
+            for (String sqlQuery : sqlQueriesToCreate) {
+                sqLiteDatabase.execSQL(sqlQuery);
+            }
         }
+
+        return false;
     }
 
     // add columns to table if need
@@ -145,28 +157,32 @@ public class SQLiteDatabaseSimple {
             boolean isAddNewColumn = false;
             for (int i = 0; i < tables.size(); i++) {
                 String table = tables.get(i);
+                for (String savedSqlQuery : savedSqlQueries) {
+                    if (table.contains(savedSqlQuery)) {
 
-                List<String> columns = Arrays.asList(sqlQueries.get(i).
-                        replace(String.format(Constants.CREATE_TABLE_IF_NOT_EXIST, table), Constants.EMPTY).
-                        replace(Constants.LAST_BRACKET, Constants.EMPTY).
-                        split(Constants.DIVIDER));
+                        List<String> savedColumns = Arrays.asList(savedSqlQueries.get(i).
+                                replace(String.format(Constants.CREATE_TABLE_IF_NOT_EXIST, table), Constants.EMPTY).
+                                replace(Constants.LAST_BRACKET, Constants.EMPTY).
+                                split(Constants.DIVIDER));
 
-                List<String> savedColumns = Arrays.asList(savedSqlQueries.get(i).
-                        replace(String.format(Constants.CREATE_TABLE_IF_NOT_EXIST, table), Constants.EMPTY).
-                        replace(Constants.LAST_BRACKET, Constants.EMPTY).
-                        split(Constants.DIVIDER));
+                        List<String> columns = Arrays.asList(sqlQueries.get(i).
+                                replace(String.format(Constants.CREATE_TABLE_IF_NOT_EXIST, table), Constants.EMPTY).
+                                replace(Constants.LAST_BRACKET, Constants.EMPTY).
+                                split(Constants.DIVIDER));
 
-                if (columns.size() > savedColumns.size()) {
+                        if (columns.size() > savedColumns.size()) {
 
-                    List<String> extraColumns = new ArrayList<String>(columns);
-                    extraColumns.removeAll(savedColumns);
+                            List<String> extraColumns = new ArrayList<String>(columns);
+                            extraColumns.removeAll(savedColumns);
 
-                    SQLiteDatabase sqLiteDatabase = sqLiteDatabaseHelper.getWritableDatabase();
-                    for (String column : extraColumns) {
-                        sqLiteDatabase.execSQL(String.format(Constants.ALTER_TABLE_ADD_COLUMN, table, column));
+                            SQLiteDatabase sqLiteDatabase = sqLiteSimpleHelper.getWritableDatabase();
+                            for (String column : extraColumns) {
+                                sqLiteDatabase.execSQL(String.format(Constants.ALTER_TABLE_ADD_COLUMN, table, column));
+                            }
+                            sqLiteDatabase.close();
+                            isAddNewColumn = true;
+                        }
                     }
-                    sqLiteDatabase.close();
-                    isAddNewColumn = true;
                 }
             }
             return isAddNewColumn;

@@ -16,19 +16,19 @@ import java.util.List;
  * author: Artemiy Garin
  * date: 17.12.2012
  */
-public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
+public abstract class SQLiteSimpleDAO<T> extends SQLiteSimpleHelper {
 
     private static final String COLUMN_ID = "_id";
     private static final String DESC = "DESC";
     private static final String FORMAT_ARGUMENT = "%s = %s";
     private Class<T> tClass;
 
-    public SQLiteDatabaseCRUD(Class<T> tClass, Context context) {
+    public SQLiteSimpleDAO(Class<T> tClass, Context context) {
         super(context, new SharedPreferencesUtil(context).getDatabaseVersion());
         this.tClass = tClass;
     }
 
-    private String[] getAllColumns(Class<T> tClass) {
+    private String[] getAllColumns() {
         List<String> columnsList = new ArrayList<String>();
 
         columnsList.add(COLUMN_ID); // Default first column in Android
@@ -105,7 +105,7 @@ public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
     @SuppressWarnings("unused")
     public long getLastRowId() {
         SQLiteDatabase database = getReadableDatabase();
-        String[] columns = getAllColumns(tClass);
+        String[] columns = getAllColumns();
         String table = DatabaseUtil.getTableName(tClass);
         Cursor cursor = database.query(table, columns, null, null, null, null, null);
         cursor.moveToLast();
@@ -134,7 +134,7 @@ public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
     public Cursor selectCursorFromTable(String selection, String[] selectionArgs,
                                         String groupBy, String having, String orderBy) {
         SQLiteDatabase database = getReadableDatabase();
-        String[] columns = getAllColumns(tClass);
+        String[] columns = getAllColumns();
         String table = DatabaseUtil.getTableName(tClass);
         Cursor cursor = database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
         cursor.moveToFirst();
@@ -165,7 +165,7 @@ public abstract class SQLiteDatabaseCRUD<T> extends SQLiteDatabaseHelper {
     @SuppressWarnings("unused")
     public T read(long id) {
         SQLiteDatabase database = getReadableDatabase();
-        Cursor cursor = database.query(DatabaseUtil.getTableName(tClass), getAllColumns(tClass),
+        Cursor cursor = database.query(DatabaseUtil.getTableName(tClass), getAllColumns(),
                 String.format(FORMAT_ARGUMENT, COLUMN_ID, Long.toString(id)), null, null, null, null);
         try {
             T newTObject = tClass.newInstance();

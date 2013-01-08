@@ -2,15 +2,15 @@ package garin.artemiy.simple.example.operator;
 
 import android.content.Context;
 import garin.artemiy.simple.example.model.Record;
-import garin.artemiy.simple.sqlite.SQLiteDatabaseCRUD;
+import garin.artemiy.simple.sqlite.SQLiteSimpleDAO;
 
 /**
  * author: Artemiy Garin
  * date: 22.12.2012
  */
-public class RecordsOperator extends SQLiteDatabaseCRUD<Record> {
+public class RecordsDAO extends SQLiteSimpleDAO<Record> {
 
-    public RecordsOperator(Context context) {
+    public RecordsDAO(Context context) {
         super(Record.class, context);
     }
 

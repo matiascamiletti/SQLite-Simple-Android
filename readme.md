@@ -1,6 +1,5 @@
 <h3>Version - 0.9</h3>
-
-**todo: Write documentation for classes. Provide disorder on databaseSimple.create(Record.class);**
+**todo: Write documentation for classes.**
 
 <h2>Install</h2>
 
@@ -10,20 +9,20 @@ You may import src from project or download jar (recommended) **sorry, add later
 
 **Code reference you may see in project**
 
-- Create your model with annotation @Column(type = Column.YOUR_TYPE), for example:
+- Create your model with annotation @Column(type = ColumnType.TYPE), for example:
 
-**See all model parameters below in section Model**
+**See all model parameters below in section * <a href="https://github.com/kvirair/SQLite-Simple-Android#model">Model</a>**
 
 ```java
 public class Record {
 
-    @Column(type = Column.INTEGER)
+    @Column(type = ColumnType.INTEGER)
     public Long dateOfPublication;
 
-    @Column(type = Column.INTEGER)
+    @Column(type = ColumnType.INTEGER)
     public boolean isPublished;
 
-    // also supports Column.TEXT, Column.NUMERIC, Column.REAL
+    // also supports ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL
 
 }
 ```
@@ -36,8 +35,8 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        SQLiteDatabaseSimple databaseSimple = new SQLiteDatabaseSimple(this);
-        databaseSimple.create(Record.class); // create(Class1.class,Class2.class,...)
+        SQLiteSimple databaseSimple = new SQLiteSimple(this);
+        databaseSimple.create(Record.class); // enumerate classes Class1.class,Class2.class,...
     }
 
 }
@@ -53,19 +52,19 @@ public class MainApplication extends Application {
             >
 ```
 
-- Create «Operator» class extends SQLiteDatabaseCRUD\<YourModel\>
+- Create «DAO» class extends SQLiteSimpleDAO\<YourModel\>
 
 ```java
-public class RecordsOperator extends SQLiteDatabaseCRUD<Record> {
+public class RecordsDAO extends SQLiteSimpleDAO<Record> {
 
-    public RecordsOperator(Context context) {
+    public RecordsDAO(Context context) {
         super(Record.class, context);
     }
 
  }
 ```
 
-<h3>That's all!</h3>
+**That's all!**
 
 In your activity just create operator, for example:
 ```java
@@ -75,37 +74,24 @@ In your activity just create operator, for example:
       @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            RecordsOperator recordsOperator = new RecordsOperator(this);
+            RecordsDAO recordsDAO = new RecordsDAO(this);
        }
+
 ```
-And you may call all needed methods, if you need more, just override or create new in class **RecordsOperator**, look above.
+And you may call all needed methods, if you need more, just override or create new in class **RecordsDAO**, look above.
 
 <h2>Model</h2>
 Look better this nuance, for example we create new model, call it **News**. But before write all available annotations:
 
-**@Table** - optional parameter, supports attributes:
+**@Table** - optional parameter for classes, supports attributes:
 
     name - optional.
 
-**@Column** - this parameter required the type of column, supports attributes:
+**@Column** - required parameter for variables, also required the type of column, supports attributes:
 
-    type - required (Column.TEXT, Column.NUMERIC, Column.REAL, Column.INTEGER).
+    type - required (ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.INTEGER).
 
     name - optional.
-
-Fully annotated example:
-
-```java
-@Table(name = "Super_News")
-public class News {
-
-    @Column(name = "Hot", type = Column.INTEGER)
-    public boolean isHot;
-
-    ...
-
-}
-```
 
 <h2>Notices</h2>
 **Database version** - if upgrade database version, for example from 1 to 2, your all tables will be deleted, and created again. **DATA WILL BE LOST.**

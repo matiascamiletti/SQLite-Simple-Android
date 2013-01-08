@@ -12,12 +12,12 @@ import java.util.List;
  * author: Artemiy Garin
  * date: 13.12.12
  */
-public class SQLiteDatabaseHelper extends SQLiteOpenHelper {
+public class SQLiteSimpleHelper extends SQLiteOpenHelper {
 
     private static final String DB_FORMAT = ".db";
     private SharedPreferencesUtil sharedPreferencesUtil;
 
-    public SQLiteDatabaseHelper(Context context, int databaseVersion) {
+    public SQLiteSimpleHelper(Context context, int databaseVersion) {
         super(context, String.format(Constants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT), null, databaseVersion);
         sharedPreferencesUtil = new SharedPreferencesUtil(context);
     }

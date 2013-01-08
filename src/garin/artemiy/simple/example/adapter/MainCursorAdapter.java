@@ -9,7 +9,7 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 import garin.artemiy.simple.R;
 import garin.artemiy.simple.example.model.Record;
-import garin.artemiy.simple.example.operator.RecordsOperator;
+import garin.artemiy.simple.example.operator.RecordsDAO;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,8 +39,8 @@ public class MainCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        RecordsOperator recordsOperator = new RecordsOperator(context);
-        Record record = recordsOperator.read(cursor);
+        RecordsDAO recordsDAO = new RecordsDAO(context);
+        Record record = recordsDAO.read(cursor);
         TextView publicationDate = (TextView) view.findViewById(R.id.publicationDate);
 
         Date date = new Date();

@@ -2,6 +2,7 @@ package garin.artemiy.simple.example.model;
 
 import garin.artemiy.simple.sqlite.annotations.Column;
 import garin.artemiy.simple.sqlite.annotations.Table;
+import garin.artemiy.simple.sqlite.util.ColumnType;
 
 /**
  * author: Artemiy Garin
@@ -10,10 +11,10 @@ import garin.artemiy.simple.sqlite.annotations.Table;
 @Table
 public class Record {
 
-    @Column(type = Column.NUMERIC)
+    @Column(type = ColumnType.NUMERIC)
     public boolean isPublished;
 
-    @Column(type = Column.INTEGER)
+    @Column(type = ColumnType.INTEGER)
     public Long dateOfPublication;
 
     public Long getDateOfPublication() {

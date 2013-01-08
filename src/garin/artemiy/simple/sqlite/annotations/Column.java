@@ -16,15 +16,6 @@ import java.lang.annotation.Target;
 @Target(value = ElementType.FIELD)
 public @interface Column {
 
-    @SuppressWarnings("unused")
-    public static final String TEXT = "TEXT";
-    @SuppressWarnings("unused")
-    public static final String REAL = "REAL";
-    @SuppressWarnings("unused")
-    public static final String NUMERIC = "NUMERIC";
-    @SuppressWarnings("unused")
-    public static final String INTEGER = "INTEGER";
-
     String name() default Constants.EMPTY;
 
     String type();

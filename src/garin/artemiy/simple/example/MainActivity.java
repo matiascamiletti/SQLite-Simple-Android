@@ -8,7 +8,7 @@ import android.widget.AdapterView;
 import garin.artemiy.simple.R;
 import garin.artemiy.simple.example.adapter.MainCursorAdapter;
 import garin.artemiy.simple.example.model.Record;
-import garin.artemiy.simple.example.operator.RecordsOperator;
+import garin.artemiy.simple.example.operator.RecordsDAO;
 
 import java.util.GregorianCalendar;
 
@@ -18,22 +18,22 @@ import java.util.GregorianCalendar;
  */
 public class MainActivity extends ListActivity {
 
-    private RecordsOperator recordsOperator;
+    private RecordsDAO recordsDAO;
     private Cursor cursor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        recordsOperator = new RecordsOperator(this);
+        recordsDAO = new RecordsDAO(this);
         setContentView(R.layout.main);
 
-        cursor = recordsOperator.selectCursorDescFromTable();
+        cursor = recordsDAO.selectCursorDescFromTable();
         MainCursorAdapter cursorAdapter = new MainCursorAdapter(this, cursor);
         setListAdapter(cursorAdapter);
 
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
-                recordsOperator.delete(id);
+                recordsDAO.delete(id);
                 updateAdapter();
             }
         });
@@ -53,7 +53,7 @@ public class MainActivity extends ListActivity {
 
     private void updateAdapter() {
         MainCursorAdapter cursorAdapter = (MainCursorAdapter) getListAdapter();
-        cursorAdapter.changeCursor(recordsOperator.selectCursorDescFromTable());
+        cursorAdapter.changeCursor(recordsDAO.selectCursorDescFromTable());
         cursorAdapter.notifyDataSetChanged();
     }
 
@@ -66,20 +66,20 @@ public class MainActivity extends ListActivity {
 
     @SuppressWarnings("unused")
     public void onClickAddRecord(View view) {
-        recordsOperator.create(generateRecord());
+        recordsDAO.create(generateRecord());
 
         updateAdapter();
     }
 
     @SuppressWarnings("unused")
     public void onClickDeleteAllRecords(View view) {
-        recordsOperator.deleteAll();
+        recordsDAO.deleteAll();
         updateAdapter();
     }
 
     @SuppressWarnings("unused")
     public void onClickUpdateLastRow(View view) {
-        recordsOperator.update(recordsOperator.getLastRowId(), generateRecord());
+        recordsDAO.update(recordsDAO.getLastRowId(), generateRecord());
         updateAdapter();
     }
 

@@ -6,6 +6,9 @@ package garin.artemiy.simple.sqlite.util;
  */
 public class Constants {
 
+    private Constants() {
+    }
+
     // shared preferences
     public static final String SHARED_PREFERENCES_DATABASE = "SQLiteSimpleDatabaseHelper";
     public static final String SHARED_DATABASE_TABLES = "SQLiteSimpleDatabaseTables";
