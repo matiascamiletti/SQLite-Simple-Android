@@ -33,8 +33,16 @@ public class MainActivity extends ListActivity {
 
         getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
+                recordsDAO.update(id, generateRecord());
+                updateAdapter();
+            }
+        });
+
+        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long id) {
                 recordsDAO.delete(id);
                 updateAdapter();
+                return true;
             }
         });
     }
@@ -67,7 +75,6 @@ public class MainActivity extends ListActivity {
     @SuppressWarnings("unused")
     public void onClickAddRecord(View view) {
         recordsDAO.create(generateRecord());
-
         updateAdapter();
     }
 
