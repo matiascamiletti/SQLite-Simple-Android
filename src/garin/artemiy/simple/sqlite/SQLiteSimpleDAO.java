@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import garin.artemiy.simple.sqlite.annotations.Column;
 import garin.artemiy.simple.sqlite.util.Constants;
 import garin.artemiy.simple.sqlite.util.DatabaseUtil;
 import garin.artemiy.simple.sqlite.util.SharedPreferencesUtil;
@@ -34,9 +35,12 @@ public abstract class SQLiteSimpleDAO<T> {
 
         columnsList.add(COLUMN_ID); // Default first column in Android
         for (Field field : tClass.getDeclaredFields()) {
-            String columnName = DatabaseUtil.getColumnName(field);
-            if (columnName != null)
-                columnsList.add(columnName);
+            Column fieldEntityAnnotation = field.getAnnotation(Column.class);
+            if (fieldEntityAnnotation != null) {
+                String columnName = DatabaseUtil.getColumnName(field);
+                if (columnName != null)
+                    columnsList.add(columnName);
+            }
         }
 
         String[] columnsArray = new String[columnsList.size()];
@@ -47,7 +51,10 @@ public abstract class SQLiteSimpleDAO<T> {
     private void bindObject(T newTObject, Cursor cursor) throws NoSuchFieldException, IllegalAccessException {
         for (Field field : tClass.getDeclaredFields()) {
             Field classField = tClass.getDeclaredField(field.getName());
-            classField.set(newTObject, getValueFromCursor(cursor, field));
+            Column fieldEntityAnnotation = field.getAnnotation(Column.class);
+            if (fieldEntityAnnotation != null) {
+                classField.set(newTObject, getValueFromCursor(cursor, field));
+            }
         }
     }
 
@@ -156,7 +163,10 @@ public abstract class SQLiteSimpleDAO<T> {
             ContentValues contentValues = new ContentValues();
 
             for (Field field : object.getClass().getDeclaredFields()) {
-                putInContentValues(contentValues, field, object);
+                Column fieldEntityAnnotation = field.getAnnotation(Column.class);
+                if (fieldEntityAnnotation != null) {
+                    putInContentValues(contentValues, field, object);
+                }
             }
 
             return database.insert(DatabaseUtil.getTableName(object.getClass()), null, contentValues);
@@ -237,7 +247,10 @@ public abstract class SQLiteSimpleDAO<T> {
             ContentValues contentValues = new ContentValues();
 
             for (Field field : newObject.getClass().getDeclaredFields()) {
-                putInContentValues(contentValues, field, newObject);
+                Column fieldEntityAnnotation = field.getAnnotation(Column.class);
+                if (fieldEntityAnnotation != null) {
+                    putInContentValues(contentValues, field, newObject);
+                }
             }
 
             return database.update(DatabaseUtil.getTableName(newObject.getClass()), contentValues,
