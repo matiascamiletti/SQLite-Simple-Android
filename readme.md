@@ -1,5 +1,4 @@
 <h3>Version - 0.9</h3>
-**todo: Write documentation for classes.**
 
 <h2>Install</h2>
 
