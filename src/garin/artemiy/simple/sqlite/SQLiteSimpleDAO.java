@@ -30,7 +30,7 @@ public abstract class SQLiteSimpleDAO<T> {
         this.tClass = tClass;
     }
 
-    private String[] getAllColumns() {
+    private String[] getColumns() {
         List<String> columnsList = new ArrayList<String>();
 
         columnsList.add(COLUMN_ID); // Default first column in Android
@@ -118,7 +118,7 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public long getLastRowId() {
         SQLiteDatabase database = simpleHelper.getReadableDatabase();
-        String[] columns = getAllColumns();
+        String[] columns = getColumns();
         String table = DatabaseUtil.getTableName(tClass);
         Cursor cursor = database.query(table, columns, null, null, null, null, null);
         cursor.moveToLast();
@@ -147,7 +147,7 @@ public abstract class SQLiteSimpleDAO<T> {
     public Cursor selectCursorFromTable(String selection, String[] selectionArgs,
                                         String groupBy, String having, String orderBy) {
         SQLiteDatabase database = simpleHelper.getReadableDatabase();
-        String[] columns = getAllColumns();
+        String[] columns = getColumns();
         String table = DatabaseUtil.getTableName(tClass);
         Cursor cursor = database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
         cursor.moveToFirst();
@@ -181,7 +181,7 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public T read(long id) {
         SQLiteDatabase database = simpleHelper.getReadableDatabase();
-        Cursor cursor = database.query(DatabaseUtil.getTableName(tClass), getAllColumns(),
+        Cursor cursor = database.query(DatabaseUtil.getTableName(tClass), getColumns(),
                 String.format(FORMAT_ARGUMENT, COLUMN_ID, Long.toString(id)), null, null, null, null);
         try {
             T newTObject = tClass.newInstance();
