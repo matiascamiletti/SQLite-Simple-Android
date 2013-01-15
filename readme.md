@@ -94,8 +94,8 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         SQLiteSimple databaseSimple = new SQLiteSimple(this,DATABASE_VERSION); // just write here
-        databaseSimple.create(Record.class);                                   // if you not specify version,
-    }                                                                          // SQLite simple set version = 1
+        databaseSimple.create(Record.class);                                   // if you not specify version
+    }                                                                          // library set version 1
 
 }
 ```
