@@ -92,12 +92,11 @@ Look better this nuance, available annotations:
 
     name - optional.
 
-
 <h2>Database version</h2>
-    **Database version** - if you upgrade database version, for example from 1 to 2, your all tables will be deleted, and created again. **DATA WILL BE LOST.**
-    If you want only add column, just write it on model and SQLite Simple create it for you.
+**Database version** - if you upgrade database version, for example from 1 to 2, your all tables will be deleted, and created again. **DATA WILL BE LOST.**
+If you want only add column, just write it on model and SQLite Simple create it for you.
 
-    How use:
+How use:
 
     ```java
     public class MainApplication extends Application {
@@ -113,7 +112,6 @@ Look better this nuance, available annotations:
 
     }
     ```
-
 
 <h2>Notices</h2>
 **_id** - this column need for cursor adapter, if you want add this column in your model, just write ```public Long _id;```
