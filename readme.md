@@ -79,28 +79,6 @@ In your activity just create operator, for example:
 ```
 And you may call all needed methods, if you need more, just override or create new in class **RecordsDAO**, look above.
 
-<h2>Database version</h2>
-**Database version** - if you upgrade database version, for example from 1 to 2, your all tables will be deleted, and created again. **DATA WILL BE LOST.**
-If you want only add column, just write it on model and SQLite Simple create it for you.
-
-How use:
-
-```java
-public class MainApplication extends Application {
-
-    private final static int DATABASE_VERSION = 2;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        SQLiteSimple databaseSimple = new SQLiteSimple(this,DATABASE_VERSION); // just write here
-        databaseSimple.create(Record.class);                                   // if you not specify version
-    }                                                                          // library set version 1
-
-}
-```
-
-
 <h2>Model</h2>
 Look better this nuance, available annotations:
 
@@ -113,6 +91,29 @@ Look better this nuance, available annotations:
     type - required (ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.INTEGER).
 
     name - optional.
+
+
+<h2>Database version</h2>
+    **Database version** - if you upgrade database version, for example from 1 to 2, your all tables will be deleted, and created again. **DATA WILL BE LOST.**
+    If you want only add column, just write it on model and SQLite Simple create it for you.
+
+    How use:
+
+    ```java
+    public class MainApplication extends Application {
+
+        private final static int DATABASE_VERSION = 2;
+
+        @Override
+        public void onCreate() {
+            super.onCreate();
+            SQLiteSimple databaseSimple = new SQLiteSimple(this,DATABASE_VERSION); // just write here
+            databaseSimple.create(Record.class);                                   // if you not specify version
+        }                                                                          // library set version 1
+
+    }
+    ```
+
 
 <h2>Notices</h2>
 **_id** - this column need for cursor adapter, if you want add this column in your model, just write ```public Long _id;```
