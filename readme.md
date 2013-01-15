@@ -99,18 +99,17 @@ If you want only add column, just write it on model and SQLite Simple create it 
 How use:
 
 ```java
-    public class MainApplication extends Application {
+public class MainApplication extends Application {
 
-        private final static int DATABASE_VERSION = 2;
+    private final static int DATABASE_VERSION = 2;
 
-        @Override
-        public void onCreate() {
-            super.onCreate();
-            SQLiteSimple databaseSimple = new SQLiteSimple(this,DATABASE_VERSION); // just write here
-            databaseSimple.create(Record.class);                                   // if you not specify version
-        }                                                                          // library set version 1
-
-    }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        SQLiteSimple databaseSimple = new SQLiteSimple(this,DATABASE_VERSION); // just write here
+        databaseSimple.create(Record.class);                                   // if you not specify version
+    }                                                                          // library set version 1
+}
 ```
 
 <h2>Notices</h2>
