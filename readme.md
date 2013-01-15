@@ -98,7 +98,7 @@ If you want only add column, just write it on model and SQLite Simple create it 
 
 How use:
 
-    ```java
+```java
     public class MainApplication extends Application {
 
         private final static int DATABASE_VERSION = 2;
@@ -111,7 +111,7 @@ How use:
         }                                                                          // library set version 1
 
     }
-    ```
+```
 
 <h2>Notices</h2>
 **_id** - this column need for cursor adapter, if you want add this column in your model, just write ```public Long _id;```
