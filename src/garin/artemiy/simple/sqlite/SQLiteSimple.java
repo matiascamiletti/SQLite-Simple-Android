@@ -34,23 +34,25 @@ public class SQLiteSimple {
     private SharedPreferencesUtil sharedPreferencesUtil;
     private int databaseVersion;
 
+    @SuppressWarnings("unused")
     public SQLiteSimple(Context context, int databaseVersion) {
         sharedPreferencesUtil = new SharedPreferencesUtil(context);
         this.databaseVersion = databaseVersion;
-        checkDatabaseVersion();
+        commitDatabaseVersion();
         sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion);
     }
 
+    @SuppressWarnings("unused")
     public SQLiteSimple(Context context) {
         sharedPreferencesUtil = new SharedPreferencesUtil(context);
         this.databaseVersion = Constants.FIRST_DATABASE_VERSION;
-        checkDatabaseVersion();
+        commitDatabaseVersion();
         sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion);
     }
 
-    private void checkDatabaseVersion() {
+    private void commitDatabaseVersion() {
         if (databaseVersion > sharedPreferencesUtil.getDatabaseVersion()) {
-            sharedPreferencesUtil.clearAllPreferences(databaseVersion);
+            sharedPreferencesUtil.putDatabaseVersion(databaseVersion);
             sharedPreferencesUtil.commit();
         }
     }

@@ -93,7 +93,7 @@ Look better this nuance, available annotations:
     name - optional.
 
 <h2>Database version</h2>
-**Database version** - if you upgrade database version, for example from 1 to 2, your all tables will be deleted, and created again. **DATA WILL BE LOST.**
+**Database version** - if you upgrade database version, for example from 1 to 2, all your tables will be deleted, and created again. **DATA WILL BE LOST.**
 If you want only add column, just write it on model and SQLite Simple create it for you.
 
 How use:

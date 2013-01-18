@@ -79,7 +79,7 @@ public class SharedPreferencesUtil {
         sharedPreferencesEditor.commit();
     }
 
-    private void putDatabaseVersion(int databaseVersion) {
+    public void putDatabaseVersion(int databaseVersion) {
         sharedPreferencesEditor.putInt(Constants.SHARED_DATABASE_VERSION, databaseVersion);
     }
 
