@@ -1,8 +1,8 @@
-<h3>Version - 0.9</h3>
+<h3>Version - 0.91</h3>
 
 <h2>Install</h2>
 
-You may import src from project or <a href="http://sourceforge.net/projects/sqlite-android/files/sqlite-simple-0.9.jar/download">download jar</a> (recommended)
+You may import src from project or <a href="http://sourceforge.net/projects/sqlite-android/files/sqlite-simple-0.91.jar/download">download jar</a> (recommended)
 
 <h2>Quick start</h2>
 
