@@ -1,7 +1,7 @@
-package garin.artemiy.simple.sqlite.util;
+package garin.artemiy.sqlitesimple.library.util;
 
-import garin.artemiy.simple.sqlite.annotations.Column;
-import garin.artemiy.simple.sqlite.annotations.Table;
+import garin.artemiy.sqlitesimple.library.annotations.Column;
+import garin.artemiy.sqlitesimple.library.annotations.Table;
 
 import java.lang.reflect.Field;
 

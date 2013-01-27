@@ -1,8 +1,8 @@
-package garin.artemiy.simple.example.model;
+package garin.artemiy.sqlitesimple.example.model;
 
-import garin.artemiy.simple.sqlite.annotations.Column;
-import garin.artemiy.simple.sqlite.annotations.Table;
-import garin.artemiy.simple.sqlite.util.ColumnType;
+import garin.artemiy.sqlitesimple.library.annotations.Column;
+import garin.artemiy.sqlitesimple.library.annotations.Table;
+import garin.artemiy.sqlitesimple.library.util.ColumnType;
 
 /**
  * author: Artemiy Garin
@@ -15,7 +15,7 @@ public class Record {
     public boolean isPublished;
 
     @Column(type = ColumnType.INTEGER)
-    public Long dateOfPublication;
+    private Long dateOfPublication;
 
     public Long getDateOfPublication() {
         return dateOfPublication;

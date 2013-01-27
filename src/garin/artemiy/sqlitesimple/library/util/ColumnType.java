@@ -1,4 +1,4 @@
-package garin.artemiy.simple.sqlite.util;
+package garin.artemiy.sqlitesimple.library.util;
 
 /**
  * author: Artemiy Garin
@@ -29,5 +29,7 @@ public class ColumnType {
     public static final String NUMERIC = "NUMERIC";
     @SuppressWarnings("unused")
     public static final String INTEGER = "INTEGER";
+    @SuppressWarnings("unused")
+    public static final String BLOB = "BLOB";
 
 }

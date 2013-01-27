@@ -1,4 +1,4 @@
-package garin.artemiy.simple.example.adapter;
+package garin.artemiy.sqlitesimple.example.adapter;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
-import garin.artemiy.simple.R;
-import garin.artemiy.simple.example.model.Record;
-import garin.artemiy.simple.example.operator.RecordsDAO;
+import garin.artemiy.sqlitesimple.R;
+import garin.artemiy.sqlitesimple.example.model.Record;
+import garin.artemiy.sqlitesimple.example.operator.RecordsDAO;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,6 +22,7 @@ public class MainCursorAdapter extends CursorAdapter {
 
     private static final String DATE_FORMAT_PATTERN = "HH:mm:ss dd/MM/yyyy";
 
+    @SuppressWarnings("deprecation")
     public MainCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor);
     }

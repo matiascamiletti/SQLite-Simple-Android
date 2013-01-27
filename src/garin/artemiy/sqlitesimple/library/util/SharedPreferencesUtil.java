@@ -1,4 +1,4 @@
-package garin.artemiy.simple.sqlite.util;
+package garin.artemiy.sqlitesimple.library.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

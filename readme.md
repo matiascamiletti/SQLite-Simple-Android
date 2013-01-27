@@ -1,4 +1,4 @@
-<h3>Version - 0.91</h3>
+<h3>Version - 0.92</h3>
 
 <h2>Install</h2>
 
@@ -21,7 +21,7 @@ public class Record {
     @Column(type = ColumnType.INTEGER)
     public boolean isPublished;
 
-    // also supports ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL
+    // also supports ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.BLOB
 
 }
 ```
@@ -88,7 +88,7 @@ Look better this nuance, available annotations:
 
 **@Column** - required parameter for variables, also required the type of column, supports attributes:
 
-    type - required (ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.INTEGER).
+    type - required (ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.INTEGER, ColumnType.BLOB).
 
     name - optional.
 
