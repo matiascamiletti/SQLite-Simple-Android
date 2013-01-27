@@ -62,10 +62,11 @@ public abstract class SQLiteSimpleDAO<T> {
 
     private void bindObject(T newTObject, Cursor cursor) throws NoSuchFieldException, IllegalAccessException {
         for (Field field : tClass.getDeclaredFields()) {
-            Field classField = tClass.getDeclaredField(field.getName());
+            if (!field.isAccessible())
+                field.setAccessible(true); // for private variables
             Column fieldEntityAnnotation = field.getAnnotation(Column.class);
             if (fieldEntityAnnotation != null) {
-                classField.set(newTObject, getValueFromCursor(cursor, field));
+                field.set(newTObject, getValueFromCursor(cursor, field));
             }
         }
     }
@@ -104,6 +105,8 @@ public abstract class SQLiteSimpleDAO<T> {
 
     // Put in content value from object to specific type
     private void putInContentValues(ContentValues contentValues, Field field, Object object) throws IllegalAccessException {
+        if (!field.isAccessible())
+            field.setAccessible(true); // for private variables
         Object fieldValue = field.get(object);
         String key = DatabaseUtil.getColumnName(field);
         if (fieldValue instanceof Long) {

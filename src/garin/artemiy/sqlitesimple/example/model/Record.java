@@ -12,7 +12,7 @@ import garin.artemiy.sqlitesimple.library.util.ColumnType;
 public class Record {
 
     @Column(type = ColumnType.NUMERIC)
-    public boolean isPublished;
+    private boolean isPublished;
 
     @Column(type = ColumnType.INTEGER)
     private Long dateOfPublication;
