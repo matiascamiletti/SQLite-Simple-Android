@@ -57,13 +57,17 @@ public abstract class SQLiteSimpleDAO<T> {
     private String getPrimaryKeyColumnName() {
         for (Field field : tClass.getDeclaredFields()) {
             Column fieldEntityAnnotation = field.getAnnotation(Column.class);
+
             if (fieldEntityAnnotation != null) {
                 String columnName = SimpleDatabaseUtil.getColumnName(field);
+
                 if (columnName != null) {
                     Column annotationColumn = field.getAnnotation(Column.class);
+
                     if (annotationColumn.isPrimaryKey()) {
                         return columnName;
                     }
+
                 }
             }
         }

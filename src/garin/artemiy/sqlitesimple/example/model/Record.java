@@ -11,6 +11,7 @@ import garin.artemiy.sqlitesimple.library.util.ColumnType;
 @Table
 public class Record {
 
+    @SuppressWarnings("unused")
     @Column(type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
     private String _id;
 
