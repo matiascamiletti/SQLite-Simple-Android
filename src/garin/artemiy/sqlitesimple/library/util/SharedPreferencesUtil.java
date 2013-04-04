@@ -87,4 +87,5 @@ public class SharedPreferencesUtil {
         // if not found, return first version -> 1
         return sharedPreferences.getInt(Constants.SHARED_DATABASE_VERSION, Constants.FIRST_DATABASE_VERSION);
     }
+
 }

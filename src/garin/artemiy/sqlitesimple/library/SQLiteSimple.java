@@ -39,15 +39,27 @@ public class SQLiteSimple {
         sharedPreferencesUtil = new SharedPreferencesUtil(context);
         this.databaseVersion = databaseVersion;
         commitDatabaseVersion();
-        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion);
+        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion, null);
     }
 
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context) {
         sharedPreferencesUtil = new SharedPreferencesUtil(context);
         this.databaseVersion = Constants.FIRST_DATABASE_VERSION;
+
         commitDatabaseVersion();
-        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion);
+
+        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion, null);
+    }
+
+    @SuppressWarnings("unused")
+    public SQLiteSimple(Context context, String localDatabaseName) {
+        sharedPreferencesUtil = new SharedPreferencesUtil(context);
+        this.databaseVersion = Constants.FIRST_DATABASE_VERSION;
+
+        commitDatabaseVersion();
+
+        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion, localDatabaseName);
     }
 
     private void commitDatabaseVersion() {

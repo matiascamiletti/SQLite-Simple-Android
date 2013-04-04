@@ -1,4 +1,4 @@
-<h3>Version - 0.92</h3>
+<h3>Version - 1.0</h3>
 
 <h2>Install</h2>
 
@@ -106,9 +106,23 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        SQLiteSimple databaseSimple = new SQLiteSimple(this,DATABASE_VERSION); // just write here
+        SQLiteSimple databaseSimple = new SQLiteSimple(this, DATABASE_VERSION); // just write here
         databaseSimple.create(Record.class);                                   // if you not specify version
     }                                                                          // library set version 1
+}
+```
+
+<h2>Read database from assets</h2>
+```java
+public class MainApplication extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        SQLiteSimple databaseSimple = new SQLiteSimple(this, "example.sqlite");
+        databaseSimple.create(Example.class);
+    }
+
 }
 ```
 

@@ -38,7 +38,14 @@ public abstract class SQLiteSimpleDAO<T> {
     private SQLiteSimpleHelper simpleHelper;
 
     public SQLiteSimpleDAO(Class<T> tClass, Context context) {
-        simpleHelper = new SQLiteSimpleHelper(context, new SharedPreferencesUtil(context).getDatabaseVersion());
+        simpleHelper = new SQLiteSimpleHelper(context,
+                new SharedPreferencesUtil(context).getDatabaseVersion(), null);
+        this.tClass = tClass;
+    }
+
+    public SQLiteSimpleDAO(Class<T> tClass, Context context, String localDatabaseName) {
+        simpleHelper = new SQLiteSimpleHelper(context,
+                new SharedPreferencesUtil(context).getDatabaseVersion(), localDatabaseName);
         this.tClass = tClass;
     }
 
@@ -128,6 +135,11 @@ public abstract class SQLiteSimpleDAO<T> {
         } else if (fieldValue instanceof Byte[]) {
             contentValues.put(key, fieldValue.toString().getBytes());
         }
+    }
+
+    @SuppressWarnings("unused")
+    public int getCount() {
+        return selectCursorAscFromTable().getCount();
     }
 
     @SuppressWarnings("unused")

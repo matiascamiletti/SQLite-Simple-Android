@@ -1,5 +1,6 @@
 package garin.artemiy.sqlitesimple.library.util;
 
+import android.content.Context;
 import garin.artemiy.sqlitesimple.library.annotations.Column;
 import garin.artemiy.sqlitesimple.library.annotations.Table;
 
@@ -22,6 +23,9 @@ import java.lang.reflect.Field;
  * limitations under the License.
  */
 public class DatabaseUtil {
+
+    private static final String DB_FORMAT = ".db";
+    private static final String DATABASE_PATH = "/data/data/%s/databases/%s";
 
     public static String getColumnName(Field field) {
         Column annotationColumn = field.getAnnotation(Column.class);
@@ -47,4 +51,15 @@ public class DatabaseUtil {
         return table;
     }
 
+    public static String getFullDatabasePath(Context context, String databaseName) {
+        return String.format(DATABASE_PATH, context.getPackageName(), databaseName);
+    }
+
+    public static String getFullDatabaseName(String localDatabaseName, Context context) {
+        if (localDatabaseName == null) {
+            return String.format(Constants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT);
+        } else {
+            return localDatabaseName;
+        }
+    }
 }

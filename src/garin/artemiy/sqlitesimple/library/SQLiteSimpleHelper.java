@@ -4,8 +4,13 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import garin.artemiy.sqlitesimple.library.util.Constants;
+import garin.artemiy.sqlitesimple.library.util.DatabaseUtil;
 import garin.artemiy.sqlitesimple.library.util.SharedPreferencesUtil;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -26,11 +31,17 @@ import java.util.List;
  */
 public class SQLiteSimpleHelper extends SQLiteOpenHelper {
 
-    private static final String DB_FORMAT = ".db";
+    private String localDatabaseName;
+    private Context context;
     private SharedPreferencesUtil sharedPreferencesUtil;
 
-    public SQLiteSimpleHelper(Context context, int databaseVersion) {
-        super(context, String.format(Constants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT), null, databaseVersion);
+    /**
+     * @param localDatabaseName - load local sqlite if need
+     */
+    public SQLiteSimpleHelper(Context context, int databaseVersion, String localDatabaseName) {
+        super(context, DatabaseUtil.getFullDatabaseName(localDatabaseName, context), null, databaseVersion);
+        this.localDatabaseName = localDatabaseName;
+        this.context = context;
         sharedPreferencesUtil = new SharedPreferencesUtil(context);
     }
 
@@ -55,4 +66,58 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(Constants.DROP_TABLE_IF_EXIST_TEMPORARY);
         onCreate(sqLiteDatabase);
     }
+
+    @Override
+    public synchronized SQLiteDatabase getWritableDatabase() {
+        checkDatabaseFromAssets();
+        if (localDatabaseName == null) {
+            return super.getWritableDatabase();
+        } else {
+            return SQLiteDatabase.openDatabase(DatabaseUtil.getFullDatabasePath(context, localDatabaseName),
+                    null, SQLiteDatabase.OPEN_READWRITE);
+        }
+    }
+
+    @Override
+    public synchronized SQLiteDatabase getReadableDatabase() {
+        checkDatabaseFromAssets();
+        if (localDatabaseName == null) {
+            return super.getReadableDatabase();
+        } else {
+            return SQLiteDatabase.openDatabase(DatabaseUtil.getFullDatabasePath(context, localDatabaseName),
+                    null, SQLiteDatabase.OPEN_READONLY);
+        }
+    }
+
+    private void checkDatabaseFromAssets() {
+        if (localDatabaseName != null) {
+            if (!isDatabaseExist()) {
+                super.getReadableDatabase(); // create empty database
+                super.close();
+                copyDatabaseFromAssets();
+            }
+        }
+    }
+
+    private void copyDatabaseFromAssets() {
+        try {
+            InputStream inputStream = context.getAssets().open(localDatabaseName);
+            OutputStream outputStream = new FileOutputStream(DatabaseUtil.getFullDatabasePath(context, localDatabaseName));
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = inputStream.read(buffer)) > 0) {
+                outputStream.write(buffer, 0, length);
+            }
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean isDatabaseExist() {
+        return new File(DatabaseUtil.getFullDatabasePath(context, localDatabaseName)).exists();
+    }
+
 }
