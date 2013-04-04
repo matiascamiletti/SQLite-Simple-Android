@@ -8,8 +8,9 @@ import android.widget.AdapterView;
 import garin.artemiy.sqlitesimple.R;
 import garin.artemiy.sqlitesimple.example.adapter.MainCursorAdapter;
 import garin.artemiy.sqlitesimple.example.model.Record;
-import garin.artemiy.sqlitesimple.example.operator.ExamplesDAO;
 import garin.artemiy.sqlitesimple.example.operator.RecordsDAO;
+import garin.artemiy.sqlitesimple.example.operator.TestDAO;
+import garin.artemiy.sqlitesimple.example.operator.TestSecondDAO;
 
 import java.util.GregorianCalendar;
 
@@ -47,8 +48,11 @@ public class MainActivity extends ListActivity {
             }
         });
 
-        ExamplesDAO examplesDAO = new ExamplesDAO(this);
-        examplesDAO.readAllAsc();
+        TestDAO testDAO = new TestDAO(this);
+        testDAO.readAllAsc();
+
+        TestSecondDAO testSecondDAO = new TestSecondDAO(this);
+        testSecondDAO.readAllAsc();
 
     }
 

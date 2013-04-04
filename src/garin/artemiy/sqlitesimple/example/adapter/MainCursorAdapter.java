@@ -50,4 +50,5 @@ public class MainCursorAdapter extends CursorAdapter {
 
         publicationDate.setText(simpleDateFormat.format(date));
     }
+
 }

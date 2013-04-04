@@ -6,18 +6,18 @@ import garin.artemiy.sqlitesimple.library.util.ColumnType;
 
 /**
  * Author: Artemiy Garin
- * Date: 03.04.13
+ * Date: 04.04.13
  */
-@Table
-public class Example {
+@Table(name = "Test_Second")
+public class TestSecond {
 
-    @Column(type = ColumnType.TEXT, name = "Title")
+    @Column(type = ColumnType.TEXT, name = "Name")
     @SuppressWarnings("unused")
-    private String title;
+    private String name;
 
     @SuppressWarnings("unused")
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
 }
