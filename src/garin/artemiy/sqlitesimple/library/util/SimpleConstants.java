@@ -16,9 +16,9 @@ package garin.artemiy.sqlitesimple.library.util;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class Constants {
+public class SimpleConstants {
 
-    private Constants() {
+    private SimpleConstants() {
     }
 
     // shared preferences
@@ -31,19 +31,22 @@ public class Constants {
 
     // SQL
     public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
+    public static final String AUTOINCREMENT = "AUTOINCREMENT";
+    public static final String PRIMARY_KEY = "PRIMARY KEY";
     public static final String DROP_TABLE_IF_EXIST_TEMPORARY = "DROP TABLE IF EXISTS temporary_table";
-    public static final String CREATE_TABLE_IF_NOT_EXIST =
-            "CREATE TABLE IF NOT EXISTS %s (_id INTEGER PRIMARY KEY AUTOINCREMENT"; // tableName, other columns
+    public static final String CREATE_TABLE_IF_NOT_EXIST = "CREATE TABLE IF NOT EXISTS %s (";
     public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s ";
 
     // String.format(..)
     public static final String FORMAT_GLUED = "%s%s";
     public static final String FORMAT_TWINS = "%s %s";
+    public static final String SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS_FIRST = "%s %s";
     public static final String SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS = ", %s %s";
     public static final String SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS_LAST = ", %s %s);";
 
     // other
     public static final int FIRST_DATABASE_VERSION = 1;
+    public static final String SPACE = " ";
     public static final String EMPTY = "";
     public static final String DIVIDER = ",";
     public static final String LAST_BRACKET = ");";

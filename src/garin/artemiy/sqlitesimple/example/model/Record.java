@@ -11,6 +11,9 @@ import garin.artemiy.sqlitesimple.library.util.ColumnType;
 @Table
 public class Record {
 
+    @Column(type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
+    private String _id;
+
     @Column(type = ColumnType.NUMERIC)
     private boolean isPublished;
 

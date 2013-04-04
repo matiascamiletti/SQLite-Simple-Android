@@ -15,6 +15,9 @@ You may import src from project or <a href="http://sourceforge.net/projects/sqli
 ```java
 public class Record {
 
+    @Column(type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
+    private String _id;
+
     @Column(type = ColumnType.INTEGER)
     public Long dateOfPublication;
 
@@ -125,6 +128,3 @@ public class MainApplication extends Application {
 
 }
 ```
-
-<h2>Notices</h2>
-**_id** - this column need for cursor adapter, if you want add this column in your model, just write ```public Long _id;```

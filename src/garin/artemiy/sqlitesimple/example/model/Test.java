@@ -11,6 +11,9 @@ import garin.artemiy.sqlitesimple.library.util.ColumnType;
 @Table
 public class Test {
 
+    @Column(type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
+    private String _id;
+
     @Column(type = ColumnType.TEXT)
     @SuppressWarnings("unused")
     private String title;

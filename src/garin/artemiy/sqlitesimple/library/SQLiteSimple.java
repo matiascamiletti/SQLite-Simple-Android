@@ -3,9 +3,9 @@ package garin.artemiy.sqlitesimple.library;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import garin.artemiy.sqlitesimple.library.annotations.Column;
-import garin.artemiy.sqlitesimple.library.util.Constants;
-import garin.artemiy.sqlitesimple.library.util.DatabaseUtil;
-import garin.artemiy.sqlitesimple.library.util.SharedPreferencesUtil;
+import garin.artemiy.sqlitesimple.library.util.SimpleConstants;
+import garin.artemiy.sqlitesimple.library.util.SimpleDatabaseUtil;
+import garin.artemiy.sqlitesimple.library.util.SimplePreferencesUtil;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -31,12 +31,12 @@ import java.util.List;
 public class SQLiteSimple {
 
     private SQLiteSimpleHelper sqLiteSimpleHelper;
-    private SharedPreferencesUtil sharedPreferencesUtil;
+    private SimplePreferencesUtil sharedPreferencesUtil;
     private int databaseVersion;
 
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context, int databaseVersion) {
-        sharedPreferencesUtil = new SharedPreferencesUtil(context);
+        sharedPreferencesUtil = new SimplePreferencesUtil(context);
         this.databaseVersion = databaseVersion;
         commitDatabaseVersion();
         sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion, null);
@@ -44,8 +44,8 @@ public class SQLiteSimple {
 
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context) {
-        sharedPreferencesUtil = new SharedPreferencesUtil(context);
-        this.databaseVersion = Constants.FIRST_DATABASE_VERSION;
+        sharedPreferencesUtil = new SimplePreferencesUtil(context);
+        this.databaseVersion = SimpleConstants.FIRST_DATABASE_VERSION;
 
         commitDatabaseVersion();
 
@@ -54,8 +54,8 @@ public class SQLiteSimple {
 
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context, String localDatabaseName) {
-        sharedPreferencesUtil = new SharedPreferencesUtil(context);
-        this.databaseVersion = Constants.FIRST_DATABASE_VERSION;
+        sharedPreferencesUtil = new SimplePreferencesUtil(context);
+        this.databaseVersion = SimpleConstants.FIRST_DATABASE_VERSION;
 
         commitDatabaseVersion();
 
@@ -71,17 +71,19 @@ public class SQLiteSimple {
 
     private String makeFormatForColumnsTwoArguments(int index, Class classEntity) {
         String format;
-        if (index == classEntity.getDeclaredFields().length - 1) { // check need default or ");" ending
-            format = Constants.SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS_LAST;
+        if (index == 0) {
+            format = SimpleConstants.SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS_FIRST;
+        } else if (index == classEntity.getDeclaredFields().length - 1) { // check need default or ");" ending
+            format = SimpleConstants.SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS_LAST;
         } else {
-            format = Constants.SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS;
+            format = SimpleConstants.SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS;
         }
         return format;
     }
 
     private void commit(List<String> tables, List<String> sqlQueries) {
-        sharedPreferencesUtil.putList(Constants.SHARED_DATABASE_TABLES, tables);
-        sharedPreferencesUtil.putList(Constants.SHARED_DATABASE_QUERIES, sqlQueries);
+        sharedPreferencesUtil.putList(SimpleConstants.SHARED_DATABASE_TABLES, tables);
+        sharedPreferencesUtil.putList(SimpleConstants.SHARED_DATABASE_QUERIES, sqlQueries);
         sharedPreferencesUtil.commit();
     }
 
@@ -97,26 +99,37 @@ public class SQLiteSimple {
 
     public void create(Class<?>... classes) {
 
-        List<String> savedTables = sharedPreferencesUtil.getList(Constants.SHARED_DATABASE_TABLES);
-        List<String> savedSQLQueries = sharedPreferencesUtil.getList(Constants.SHARED_DATABASE_QUERIES);
+        List<String> savedTables = sharedPreferencesUtil.getList(SimpleConstants.SHARED_DATABASE_TABLES);
+        List<String> savedSQLQueries = sharedPreferencesUtil.getList(SimpleConstants.SHARED_DATABASE_QUERIES);
         sharedPreferencesUtil.clearAllPreferences(databaseVersion);
         List<String> tables = new ArrayList<String>();
         List<String> sqlQueries = new ArrayList<String>();
 
         for (Class classEntity : classes) {
             StringBuilder sqlQueryBuilder = new StringBuilder();
-            String table = DatabaseUtil.getTableName(classEntity);
-            sqlQueryBuilder.append(String.format(Constants.CREATE_TABLE_IF_NOT_EXIST, table));
+            String table = SimpleDatabaseUtil.getTableName(classEntity);
+            sqlQueryBuilder.append(String.format(SimpleConstants.CREATE_TABLE_IF_NOT_EXIST, table));
 
             for (int i = 0; i < classEntity.getDeclaredFields().length; i++) {
                 Field fieldEntity = classEntity.getDeclaredFields()[i];
                 Column fieldEntityAnnotation = fieldEntity.getAnnotation(Column.class);
                 if (fieldEntityAnnotation != null) { // if field what we need annotated
-                    String column = DatabaseUtil.getColumnName(fieldEntity);
+                    String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
                     String format = makeFormatForColumnsTwoArguments(i, classEntity);
                     sqlQueryBuilder.append(String.format(format, column, fieldEntityAnnotation.type()));
+
+                    if (fieldEntityAnnotation.isPrimaryKey()) {
+                        sqlQueryBuilder.append(SimpleConstants.SPACE);
+                        sqlQueryBuilder.append(SimpleConstants.PRIMARY_KEY);
+                    }
+                    if (fieldEntityAnnotation.isAutoincrement()) {
+                        sqlQueryBuilder.append(SimpleConstants.SPACE);
+                        sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
+                    }
+
                 }
             }
+
             tables.add(table);
             sqlQueries.add(sqlQueryBuilder.toString());
         }
@@ -150,8 +163,8 @@ public class SQLiteSimple {
 
             SQLiteDatabase sqLiteDatabase = sqLiteSimpleHelper.getWritableDatabase();
             for (String extraTable : extraTables) {
-                sqLiteDatabase.execSQL(String.format(Constants.FORMAT_GLUED,
-                        Constants.DROP_TABLE_IF_EXISTS, extraTable));
+                sqLiteDatabase.execSQL(String.format(SimpleConstants.FORMAT_GLUED,
+                        SimpleConstants.DROP_TABLE_IF_EXISTS, extraTable));
             }
 
             commit(tables, sqlQueries);
@@ -187,14 +200,14 @@ public class SQLiteSimple {
                     if (table.contains(savedSqlQuery)) {
 
                         List<String> savedColumns = Arrays.asList(savedSqlQueries.get(i).
-                                replace(String.format(Constants.CREATE_TABLE_IF_NOT_EXIST, table), Constants.EMPTY).
-                                replace(Constants.LAST_BRACKET, Constants.EMPTY).
-                                split(Constants.DIVIDER));
+                                replace(String.format(SimpleConstants.CREATE_TABLE_IF_NOT_EXIST, table), SimpleConstants.EMPTY).
+                                replace(SimpleConstants.LAST_BRACKET, SimpleConstants.EMPTY).
+                                split(SimpleConstants.DIVIDER));
 
                         List<String> columns = Arrays.asList(sqlQueries.get(i).
-                                replace(String.format(Constants.CREATE_TABLE_IF_NOT_EXIST, table), Constants.EMPTY).
-                                replace(Constants.LAST_BRACKET, Constants.EMPTY).
-                                split(Constants.DIVIDER));
+                                replace(String.format(SimpleConstants.CREATE_TABLE_IF_NOT_EXIST, table), SimpleConstants.EMPTY).
+                                replace(SimpleConstants.LAST_BRACKET, SimpleConstants.EMPTY).
+                                split(SimpleConstants.DIVIDER));
 
                         if (columns.size() > savedColumns.size()) {
 
@@ -203,7 +216,7 @@ public class SQLiteSimple {
 
                             SQLiteDatabase sqLiteDatabase = sqLiteSimpleHelper.getWritableDatabase();
                             for (String column : extraColumns) {
-                                sqLiteDatabase.execSQL(String.format(Constants.ALTER_TABLE_ADD_COLUMN, table, column));
+                                sqLiteDatabase.execSQL(String.format(SimpleConstants.ALTER_TABLE_ADD_COLUMN, table, column));
                             }
                             sqLiteDatabase.close();
                             isAddNewColumn = true;

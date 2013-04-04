@@ -1,7 +1,7 @@
 package garin.artemiy.sqlitesimple.library.annotations;
 
 
-import garin.artemiy.sqlitesimple.library.util.Constants;
+import garin.artemiy.sqlitesimple.library.util.SimpleConstants;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -28,7 +28,12 @@ import java.lang.annotation.Target;
 @Target(value = ElementType.FIELD)
 public @interface Column {
 
-    String name() default Constants.EMPTY;
+    boolean isPrimaryKey() default false;
+
+    boolean isAutoincrement() default false;
+
+    String name() default SimpleConstants.EMPTY;
 
     String type();
+
 }

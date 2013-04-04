@@ -22,7 +22,7 @@ import java.lang.reflect.Field;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class DatabaseUtil {
+public class SimpleDatabaseUtil {
 
     private static final String DB_FORMAT = ".db";
     private static final String DATABASE_PATH = "/data/data/%s/databases/%s";
@@ -31,7 +31,7 @@ public class DatabaseUtil {
         Column annotationColumn = field.getAnnotation(Column.class);
         String column = null;
         if (annotationColumn != null) {
-            if (annotationColumn.name().equals(Constants.EMPTY)) {
+            if (annotationColumn.name().equals(SimpleConstants.EMPTY)) {
                 column = field.getName();
             } else {
                 column = annotationColumn.name();
@@ -44,7 +44,7 @@ public class DatabaseUtil {
         Table annotationTable = tClass.getAnnotation(Table.class);
         String table = tClass.getSimpleName();
         if (annotationTable != null) {
-            if (!annotationTable.name().equals(Constants.EMPTY)) {
+            if (!annotationTable.name().equals(SimpleConstants.EMPTY)) {
                 table = annotationTable.name();
             }
         }
@@ -57,7 +57,7 @@ public class DatabaseUtil {
 
     public static String getFullDatabaseName(String localDatabaseName, Context context) {
         if (localDatabaseName == null) {
-            return String.format(Constants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT);
+            return String.format(SimpleConstants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT);
         } else {
             return localDatabaseName;
         }

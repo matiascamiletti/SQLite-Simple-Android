@@ -3,9 +3,9 @@ package garin.artemiy.sqlitesimple.library;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import garin.artemiy.sqlitesimple.library.util.Constants;
-import garin.artemiy.sqlitesimple.library.util.DatabaseUtil;
-import garin.artemiy.sqlitesimple.library.util.SharedPreferencesUtil;
+import garin.artemiy.sqlitesimple.library.util.SimpleConstants;
+import garin.artemiy.sqlitesimple.library.util.SimpleDatabaseUtil;
+import garin.artemiy.sqlitesimple.library.util.SimplePreferencesUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,21 +33,21 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
 
     private String localDatabaseName;
     private Context context;
-    private SharedPreferencesUtil sharedPreferencesUtil;
+    private SimplePreferencesUtil sharedPreferencesUtil;
 
     /**
      * @param localDatabaseName - load local sqlite if need
      */
     public SQLiteSimpleHelper(Context context, int databaseVersion, String localDatabaseName) {
-        super(context, DatabaseUtil.getFullDatabaseName(localDatabaseName, context), null, databaseVersion);
+        super(context, SimpleDatabaseUtil.getFullDatabaseName(localDatabaseName, context), null, databaseVersion);
         this.localDatabaseName = localDatabaseName;
         this.context = context;
-        sharedPreferencesUtil = new SharedPreferencesUtil(context);
+        sharedPreferencesUtil = new SimplePreferencesUtil(context);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        List<String> sqlQueries = sharedPreferencesUtil.getList(Constants.SHARED_DATABASE_QUERIES);
+        List<String> sqlQueries = sharedPreferencesUtil.getList(SimpleConstants.SHARED_DATABASE_QUERIES);
         if (sqlQueries != null) { // execute sql queries in order
             for (String sqlQuery : sqlQueries) {
                 sqLiteDatabase.execSQL(sqlQuery);
@@ -57,13 +57,13 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        List<String> tables = sharedPreferencesUtil.getList(Constants.SHARED_DATABASE_TABLES);
+        List<String> tables = sharedPreferencesUtil.getList(SimpleConstants.SHARED_DATABASE_TABLES);
         if (tables != null) { // drop tables in order
             for (String table : tables) {
-                sqLiteDatabase.execSQL(String.format(Constants.FORMAT_GLUED, Constants.DROP_TABLE_IF_EXISTS, table));
+                sqLiteDatabase.execSQL(String.format(SimpleConstants.FORMAT_GLUED, SimpleConstants.DROP_TABLE_IF_EXISTS, table));
             }
         }
-        sqLiteDatabase.execSQL(Constants.DROP_TABLE_IF_EXIST_TEMPORARY);
+        sqLiteDatabase.execSQL(SimpleConstants.DROP_TABLE_IF_EXIST_TEMPORARY);
         onCreate(sqLiteDatabase);
     }
 
@@ -73,7 +73,7 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
         if (localDatabaseName == null) {
             return super.getWritableDatabase();
         } else {
-            return SQLiteDatabase.openDatabase(DatabaseUtil.getFullDatabasePath(context, localDatabaseName),
+            return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.getFullDatabasePath(context, localDatabaseName),
                     null, SQLiteDatabase.OPEN_READWRITE);
         }
     }
@@ -84,7 +84,7 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
         if (localDatabaseName == null) {
             return super.getReadableDatabase();
         } else {
-            return SQLiteDatabase.openDatabase(DatabaseUtil.getFullDatabasePath(context, localDatabaseName),
+            return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.getFullDatabasePath(context, localDatabaseName),
                     null, SQLiteDatabase.OPEN_READONLY);
         }
     }
@@ -102,7 +102,7 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
     private void copyDatabaseFromAssets() {
         try {
             InputStream inputStream = context.getAssets().open(localDatabaseName);
-            OutputStream outputStream = new FileOutputStream(DatabaseUtil.getFullDatabasePath(context, localDatabaseName));
+            OutputStream outputStream = new FileOutputStream(SimpleDatabaseUtil.getFullDatabasePath(context, localDatabaseName));
             byte[] buffer = new byte[1024];
             int length;
             while ((length = inputStream.read(buffer)) > 0) {
@@ -117,7 +117,7 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
     }
 
     private boolean isDatabaseExist() {
-        return new File(DatabaseUtil.getFullDatabasePath(context, localDatabaseName)).exists();
+        return new File(SimpleDatabaseUtil.getFullDatabasePath(context, localDatabaseName)).exists();
     }
 
 }
