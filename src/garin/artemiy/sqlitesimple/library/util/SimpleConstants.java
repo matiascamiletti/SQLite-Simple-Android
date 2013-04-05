@@ -21,7 +21,16 @@ public class SimpleConstants {
     private SimpleConstants() {
     }
 
-    // shared preferences
+    // FTS
+    public static final int QUERY_LENGTH = 3;
+    public static final String FTS_SQL_OR = "OR";
+    public static final String FTS_SQL_AND = "AND";
+    public static final String FTS_SQL_FORMAT = "SELECT * FROM %s WHERE %s MATCH 'data:%s*';";
+    public static final String FTS_SQL_TABLE_NAME = "%s_FTS";
+    public static final String FTS_CREATE_VIRTUAL_TABLE =
+            "CREATE VIRTUAL TABLE IF NOT EXISTS %s USING fts3(id, table, data, tokenize = porter);";
+
+    // Shared preferences
     public static final String SHARED_PREFERENCES_DATABASE = "SQLiteSimpleDatabaseHelper";
     public static final String SHARED_DATABASE_TABLES = "SQLiteSimpleDatabaseTables";
     public static final String SHARED_DATABASE_QUERIES = "SQLiteSimpleDatabaseQueries";
@@ -36,18 +45,20 @@ public class SimpleConstants {
     public static final String DROP_TABLE_IF_EXIST_TEMPORARY = "DROP TABLE IF EXISTS temporary_table";
     public static final String CREATE_TABLE_IF_NOT_EXIST = "CREATE TABLE IF NOT EXISTS %s (";
     public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s ";
+    public static final String INSERT_INTO = "INSERT INTO %s VALUES (%s, %s, '%s');";
 
     // String.format(..)
     public static final String FORMAT_GLUED = "%s%s";
     public static final String FORMAT_TWINS = "%s %s";
-    public static final String SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS_FIRST = "%s %s";
-    public static final String SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS = ", %s %s";
-    public static final String SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS_LAST = ", %s %s);";
+    public static final String FORMAT_ARGUMENT = "%s = %s";
 
-    // other
+    // Other
     public static final int FIRST_DATABASE_VERSION = 1;
     public static final String SPACE = " ";
     public static final String EMPTY = "";
     public static final String DIVIDER = ",";
     public static final String LAST_BRACKET = ");";
+    public static final String DOT = ".";
+    public static final String UNDERSCORE = "_";
+
 }

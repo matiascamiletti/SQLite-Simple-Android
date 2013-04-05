@@ -13,7 +13,7 @@ public class TestSecond {
 
     @SuppressWarnings("unused")
     @Column(type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
-    private String _id;
+    private long _id;
 
     @Column(type = ColumnType.TEXT, name = "Name")
     @SuppressWarnings("unused")
@@ -22,6 +22,11 @@ public class TestSecond {
     @SuppressWarnings("unused")
     public String getName() {
         return name;
+    }
+
+    @SuppressWarnings("unused")
+    public long getId() {
+        return _id;
     }
 
 }

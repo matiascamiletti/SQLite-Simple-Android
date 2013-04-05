@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--suppress AndroidLintHardcodedText -->
+<?xml version="1.0" encoding="utf-8"?><!--suppress AndroidLintHardcodedText, AndroidLintNestedWeights -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:background="@android:color/white"
               android:orientation="vertical"
@@ -18,15 +18,46 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"/>
 
-    <!--suppress AndroidLintPxUsage -->
-    <ListView
-        android:id="@android:id/list"
-        android:cacheColorHint="@android:color/transparent"
-        android:dividerHeight="1px"
-        android:divider="@android:color/darker_gray"
+    <LinearLayout
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_width="fill_parent"/>
+        android:layout_width="fill_parent">
+
+        <!--suppress AndroidLintPxUsage -->
+        <ListView
+            android:id="@android:id/list"
+            android:cacheColorHint="@android:color/transparent"
+            android:dividerHeight="1px"
+            android:divider="@android:color/darker_gray"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="fill_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1">
+
+            <EditText
+                android:id="@+id/ftsEditText"
+                android:inputType="text"
+                android:layout_margin="@dimen/margin"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"/>
+
+            <!--suppress AndroidLintPxUsage -->
+            <ListView
+                android:id="@+id/ftsList"
+                android:cacheColorHint="@android:color/transparent"
+                android:dividerHeight="1px"
+                android:divider="@android:color/darker_gray"
+                android:layout_height="wrap_content"
+                android:layout_width="fill_parent"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_height="wrap_content"

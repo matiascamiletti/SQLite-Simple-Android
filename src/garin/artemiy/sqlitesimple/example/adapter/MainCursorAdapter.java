@@ -11,16 +11,11 @@ import garin.artemiy.sqlitesimple.R;
 import garin.artemiy.sqlitesimple.example.model.Record;
 import garin.artemiy.sqlitesimple.example.operator.RecordsDAO;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * author: Artemiy Garin
  * date: 22.12.2012
  */
 public class MainCursorAdapter extends CursorAdapter {
-
-    private static final String DATE_FORMAT_PATTERN = "HH:mm:ss dd/MM/yyyy";
 
     @SuppressWarnings("deprecation")
     public MainCursorAdapter(Context context, Cursor cursor) {
@@ -44,11 +39,7 @@ public class MainCursorAdapter extends CursorAdapter {
         Record record = recordsDAO.read(cursor);
         TextView publicationDate = (TextView) view.findViewById(R.id.publicationDate);
 
-        Date date = new Date();
-        date.setTime(record.getDateOfPublication());
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATE_FORMAT_PATTERN);
-
-        publicationDate.setText(simpleDateFormat.format(date));
+        publicationDate.setText(String.valueOf(record.getDateOfPublication()));
     }
 
 }

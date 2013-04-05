@@ -13,7 +13,7 @@ public class Record {
 
     @SuppressWarnings("unused")
     @Column(type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
-    private String _id;
+    private long _id;
 
     @Column(type = ColumnType.NUMERIC)
     private boolean isPublished;
@@ -37,4 +37,10 @@ public class Record {
     public void setPublished(boolean published) {
         isPublished = published;
     }
+
+    @SuppressWarnings("unused")
+    public long getId() {
+        return _id;
+    }
+
 }

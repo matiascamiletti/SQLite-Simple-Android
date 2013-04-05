@@ -5,4 +5,5 @@
     <string name="addRecord">ADD RECORD</string>
     <string name="deleteAll">DELETE ALL</string>
     <string name="updateLast">UPDATE LAST</string>
+    <string name="fts">FTS</string>
 </resources>

@@ -18,7 +18,7 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        SQLiteSimple databaseSimple = new SQLiteSimple(this);
+        SQLiteSimple databaseSimple = new SQLiteSimple(this, 2);
         databaseSimple.create(Record.class);
 
         // If sqlite data contain large amount, create task

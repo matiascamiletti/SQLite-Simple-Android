@@ -55,9 +55,7 @@ public class SQLiteSimple {
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context, String localDatabaseName) {
         sharedPreferencesUtil = new SimplePreferencesUtil(context);
-        this.databaseVersion = SimpleConstants.FIRST_DATABASE_VERSION;
-
-        commitDatabaseVersion();
+        this.databaseVersion = sharedPreferencesUtil.getDatabaseVersion();
 
         sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion, localDatabaseName);
     }
@@ -67,18 +65,6 @@ public class SQLiteSimple {
             sharedPreferencesUtil.putDatabaseVersion(databaseVersion);
             sharedPreferencesUtil.commit();
         }
-    }
-
-    private String makeFormatForColumnsTwoArguments(int index, Class classEntity) {
-        String format;
-        if (index == 0) {
-            format = SimpleConstants.SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS_FIRST;
-        } else if (index == classEntity.getDeclaredFields().length - 1) { // check need default or ");" ending
-            format = SimpleConstants.SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS_LAST;
-        } else {
-            format = SimpleConstants.SQL_QUERY_APPEND_FORMAT_TWO_ARGUMENTS;
-        }
-        return format;
     }
 
     private void commit(List<String> tables, List<String> sqlQueries) {
@@ -115,8 +101,9 @@ public class SQLiteSimple {
                 Column fieldEntityAnnotation = fieldEntity.getAnnotation(Column.class);
                 if (fieldEntityAnnotation != null) { // if field what we need annotated
                     String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
-                    String format = makeFormatForColumnsTwoArguments(i, classEntity);
-                    sqlQueryBuilder.append(String.format(format, column, fieldEntityAnnotation.type()));
+
+                    sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
+                            column, fieldEntityAnnotation.type()));
 
                     if (fieldEntityAnnotation.isPrimaryKey()) {
                         sqlQueryBuilder.append(SimpleConstants.SPACE);
@@ -125,6 +112,13 @@ public class SQLiteSimple {
                     if (fieldEntityAnnotation.isAutoincrement()) {
                         sqlQueryBuilder.append(SimpleConstants.SPACE);
                         sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
+                    }
+
+                    if (i != classEntity.getDeclaredFields().length - 1) {
+                        sqlQueryBuilder.append(SimpleConstants.DIVIDER);
+                        sqlQueryBuilder.append(SimpleConstants.SPACE);
+                    } else {
+                        sqlQueryBuilder.append(SimpleConstants.LAST_BRACKET);
                     }
 
                 }

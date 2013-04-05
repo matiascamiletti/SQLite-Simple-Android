@@ -32,7 +32,6 @@ import java.util.List;
 public abstract class SQLiteSimpleDAO<T> {
 
     private static final String DESC = "DESC";
-    private static final String FORMAT_ARGUMENT = "%s = %s";
     private Class<T> tClass;
     private SQLiteSimpleHelper simpleHelper;
     private String primaryKeyColumnName;
@@ -215,7 +214,9 @@ public abstract class SQLiteSimpleDAO<T> {
             for (Field field : object.getClass().getDeclaredFields()) {
                 Column fieldEntityAnnotation = field.getAnnotation(Column.class);
                 if (fieldEntityAnnotation != null) {
-                    putInContentValues(contentValues, field, object);
+                    if (!fieldEntityAnnotation.isAutoincrement()) {
+                        putInContentValues(contentValues, field, object);
+                    }
                 }
             }
 
@@ -232,7 +233,7 @@ public abstract class SQLiteSimpleDAO<T> {
     public T read(long id) {
         SQLiteDatabase database = simpleHelper.getReadableDatabase();
         Cursor cursor = database.query(SimpleDatabaseUtil.getTableName(tClass), getColumns(),
-                String.format(FORMAT_ARGUMENT, primaryKeyColumnName, Long.toString(id)), null, null, null, null);
+                String.format(SimpleConstants.FORMAT_ARGUMENT, primaryKeyColumnName, Long.toString(id)), null, null, null, null);
         try {
             T newTObject = tClass.newInstance();
             bindObject(newTObject, cursor);
@@ -299,12 +300,14 @@ public abstract class SQLiteSimpleDAO<T> {
             for (Field field : newObject.getClass().getDeclaredFields()) {
                 Column fieldEntityAnnotation = field.getAnnotation(Column.class);
                 if (fieldEntityAnnotation != null) {
-                    putInContentValues(contentValues, field, newObject);
+                    if (!fieldEntityAnnotation.isAutoincrement()) {
+                        putInContentValues(contentValues, field, newObject);
+                    }
                 }
             }
 
             return database.update(SimpleDatabaseUtil.getTableName(newObject.getClass()), contentValues,
-                    String.format(FORMAT_ARGUMENT, primaryKeyColumnName, id), null);
+                    String.format(SimpleConstants.FORMAT_ARGUMENT, primaryKeyColumnName, id), null);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -319,7 +322,8 @@ public abstract class SQLiteSimpleDAO<T> {
         SQLiteDatabase database = simpleHelper.getWritableDatabase();
 
         int deletedRow = database.delete(
-                SimpleDatabaseUtil.getTableName(tClass), String.format(FORMAT_ARGUMENT, primaryKeyColumnName, id), null);
+                SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_ARGUMENT,
+                primaryKeyColumnName, id), null);
 
         database.close();
         return deletedRow;
