@@ -12,8 +12,6 @@ import garin.artemiy.sqlitesimple.R;
 import garin.artemiy.sqlitesimple.example.adapter.MainCursorAdapter;
 import garin.artemiy.sqlitesimple.example.model.Record;
 import garin.artemiy.sqlitesimple.example.operator.RecordsDAO;
-import garin.artemiy.sqlitesimple.example.operator.TestDAO;
-import garin.artemiy.sqlitesimple.example.operator.TestSecondDAO;
 import garin.artemiy.sqlitesimple.library.SQLiteSimpleFTS;
 import garin.artemiy.sqlitesimple.library.model.FTSModel;
 
@@ -55,12 +53,6 @@ public class MainActivity extends ListActivity {
             }
         });
 
-        TestDAO testDAO = new TestDAO(this);
-        testDAO.readAllAsc();
-
-        TestSecondDAO testSecondDAO = new TestSecondDAO(this);
-        testSecondDAO.readAllAsc();
-
         // FTS
         List<FTSModel> ftsModelList = new ArrayList<FTSModel>();
         FTSModel ftsModel = new FTSModel(19, 2, "улица Докукина");
@@ -77,7 +69,7 @@ public class MainActivity extends ListActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int count, int i3) {
-                simpleFTS.search(charSequence.toString(), null);
+                simpleFTS.search(charSequence.toString());
             }
 
             @Override

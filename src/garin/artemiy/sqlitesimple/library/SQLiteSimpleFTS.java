@@ -46,24 +46,15 @@ public class SQLiteSimpleFTS {
 
     }
 
-    public Cursor search(String query, String searchedColumn) {
+    public Cursor search(String query) {
         if (query.contains(SimpleConstants.FTS_SQL_OR) ||
                 query.contains(SimpleConstants.FTS_SQL_AND) ||
                 query.length() < SimpleConstants.QUERY_LENGTH) {
             return null;
         }
 
-        Cursor cursor;
-
-        if (searchedColumn == null) {
-            cursor = database.rawQuery(String.format(SimpleConstants.FTS_SQL_FORMAT, tableName,
-                    tableName, query.toLowerCase()), null);
-        } else {
-            cursor = database.rawQuery(String.format(SimpleConstants.FTS_SQL_FORMAT, tableName,
-                    searchedColumn, query.toLowerCase()), null);
-        }
-
-        return cursor;
+        return database.rawQuery(String.format(SimpleConstants.FTS_SQL_FORMAT, tableName,
+                tableName, query.toLowerCase()), null);
     }
 
 }

@@ -2,8 +2,6 @@ package garin.artemiy.sqlitesimple.example;
 
 import android.app.Application;
 import garin.artemiy.sqlitesimple.example.model.Record;
-import garin.artemiy.sqlitesimple.example.model.Test;
-import garin.artemiy.sqlitesimple.example.model.TestSecond;
 import garin.artemiy.sqlitesimple.library.SQLiteSimple;
 
 /**
@@ -18,12 +16,8 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        SQLiteSimple databaseSimple = new SQLiteSimple(this, 2);
+        SQLiteSimple databaseSimple = new SQLiteSimple(this);
         databaseSimple.create(Record.class);
-
-        // If sqlite data contain large amount, create task
-        SQLiteSimple databaseSimpleLocal = new SQLiteSimple(this, LOCAL_DATABASE_NAME);
-        databaseSimpleLocal.create(TestSecond.class, Test.class);
 
     }
 
