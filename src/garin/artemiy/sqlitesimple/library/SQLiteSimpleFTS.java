@@ -21,17 +21,8 @@ public class SQLiteSimpleFTS {
 
     @SuppressWarnings("unused")
     public SQLiteSimpleFTS(Context context) {
-        init(context, null);
-    }
-
-    @SuppressWarnings("unused")
-    public SQLiteSimpleFTS(Context context, String localDatabaseName) {
-        init(context, localDatabaseName);
-    }
-
-    private void init(Context context, String localDatabaseName) {
         SQLiteSimpleHelper simpleHelper = new SQLiteSimpleHelper(context,
-                new SimplePreferencesUtil(context).getDatabaseVersion(), localDatabaseName);
+                new SimplePreferencesUtil(context).getDatabaseVersion(), null);
         database = simpleHelper.getWritableDatabase();
 
         tableName = SimpleDatabaseUtil.getFTSTableName(context);
