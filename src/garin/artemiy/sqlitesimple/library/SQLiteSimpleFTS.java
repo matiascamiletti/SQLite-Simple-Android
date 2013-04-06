@@ -20,30 +20,36 @@ public class SQLiteSimpleFTS {
     private String tableName;
 
     @SuppressWarnings("unused")
-    public SQLiteSimpleFTS(Context context, List<FTSModel> ftsModels) {
-        init(context, ftsModels, null);
+    public SQLiteSimpleFTS(Context context) {
+        init(context, null);
     }
 
     @SuppressWarnings("unused")
-    public SQLiteSimpleFTS(Context context, List<FTSModel> ftsModels, String localDatabaseName) {
-        init(context, ftsModels, localDatabaseName);
+    public SQLiteSimpleFTS(Context context, String localDatabaseName) {
+        init(context, localDatabaseName);
     }
 
-    private void init(Context context, List<FTSModel> ftsModels, String localDatabaseName) {
-        tableName = SimpleDatabaseUtil.getFTSTableName(context);
-
+    private void init(Context context, String localDatabaseName) {
         SQLiteSimpleHelper simpleHelper = new SQLiteSimpleHelper(context,
                 new SimplePreferencesUtil(context).getDatabaseVersion(), localDatabaseName);
         database = simpleHelper.getWritableDatabase();
 
+        tableName = SimpleDatabaseUtil.getFTSTableName(context);
         String createVirtualFTSTable = String.format(SimpleConstants.FTS_CREATE_VIRTUAL_TABLE, tableName);
         database.execSQL(createVirtualFTSTable);
+    }
 
+    @SuppressWarnings("unused")
+    public void create(FTSModel ftsModel) {
+        database.execSQL(String.format(SimpleConstants.INSERT_INTO, tableName,
+                ftsModel.getId(), ftsModel.getTable(), ftsModel.getData().toLowerCase()));
+    }
+
+    @SuppressWarnings("unused")
+    public void createAll(List<FTSModel> ftsModels) {
         for (FTSModel ftsModel : ftsModels) {
-            database.execSQL(String.format(SimpleConstants.INSERT_INTO, tableName,
-                    ftsModel.getId(), ftsModel.getTable(), ftsModel.getData().toLowerCase()));
+            create(ftsModel);
         }
-
     }
 
     public Cursor search(String query) {

@@ -58,7 +58,8 @@ public class MainActivity extends ListActivity {
         FTSModel ftsModel = new FTSModel(19, 2, "улица Докукина");
         ftsModelList.add(ftsModel);
 
-        final SQLiteSimpleFTS simpleFTS = new SQLiteSimpleFTS(this, ftsModelList, MainApplication.LOCAL_DATABASE_NAME);
+        final SQLiteSimpleFTS simpleFTS = new SQLiteSimpleFTS(this, MainApplication.LOCAL_DATABASE_NAME);
+        simpleFTS.createAll(ftsModelList);
 
         EditText ftsEditText = (EditText) findViewById(R.id.ftsEditText);
         ftsEditText.addTextChangedListener(new TextWatcher() {

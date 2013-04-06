@@ -206,6 +206,13 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
+    public void createAll(List<T> objects) {
+        for (T object : objects) {
+            create(object);
+        }
+    }
+
+    @SuppressWarnings("unused")
     public long create(T object) {
         SQLiteDatabase database = simpleHelper.getWritableDatabase();
         try {
