@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import garin.artemiy.sqlitesimple.library.model.FTSModel;
 import garin.artemiy.sqlitesimple.library.util.SimpleConstants;
+import garin.artemiy.sqlitesimple.library.util.SimpleDatabaseUtil;
 import garin.artemiy.sqlitesimple.library.util.SimplePreferencesUtil;
 
 import java.util.List;
@@ -29,8 +30,7 @@ public class SQLiteSimpleFTS {
     }
 
     private void init(Context context, List<FTSModel> ftsModels, String localDatabaseName) {
-        tableName = String.format(SimpleConstants.FTS_SQL_TABLE_NAME, context.getPackageName().
-                replace(SimpleConstants.DOT, SimpleConstants.UNDERSCORE));
+        tableName = SimpleDatabaseUtil.getFTSTableName(context);
 
         SQLiteSimpleHelper simpleHelper = new SQLiteSimpleHelper(context,
                 new SimplePreferencesUtil(context).getDatabaseVersion(), localDatabaseName);

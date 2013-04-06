@@ -57,9 +57,16 @@ public class SimpleDatabaseUtil {
 
     public static String getFullDatabaseName(String localDatabaseName, Context context) {
         if (localDatabaseName == null) {
-            return String.format(SimpleConstants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT);
+            return String.format(SimpleConstants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT).
+                    replace(SimpleConstants.DOT, SimpleConstants.UNDERSCORE).toUpperCase();
         } else {
             return localDatabaseName;
         }
     }
+
+    public static String getFTSTableName(Context context) {
+        return String.format(SimpleConstants.FTS_SQL_TABLE_NAME, context.getPackageName()).
+                replace(SimpleConstants.DOT, SimpleConstants.UNDERSCORE).toUpperCase();
+    }
+
 }
