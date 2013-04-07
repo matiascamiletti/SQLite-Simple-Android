@@ -204,7 +204,7 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public long createIfNotExist(T object, String columnName, String columnValue) {
-        long result;
+        long result = 0;
 
         String table = SimpleDatabaseUtil.getTableName(tClass);
         SQLiteDatabase database = simpleHelper.getReadableDatabase();
@@ -215,8 +215,6 @@ public abstract class SQLiteSimpleDAO<T> {
 
         if (cursor.getCount() == 0) {
             result = create(object);
-        } else {
-            result = 0;
         }
 
         database.close();

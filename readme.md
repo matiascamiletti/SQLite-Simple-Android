@@ -1,4 +1,4 @@
-<h3>Version - 1.2</h3>
+<h3>Version - 1.3</h3>
 
 <h2>Install</h2>
 
@@ -21,7 +21,7 @@ public class Record {
     @Column(type = ColumnType.INTEGER)
     public Long dateOfPublication;
 
-    @Column(type = ColumnType.INTEGER)
+    @Column(type = ColumnType.NUMERIC)
     public boolean isPublished;
 
     // also supports ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.BLOB

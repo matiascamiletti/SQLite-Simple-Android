@@ -47,9 +47,11 @@ public class SQLiteSimpleFTS {
 
         String createVirtualFTSTable;
         if (useTablesCategory) {
-            createVirtualFTSTable = String.format(SimpleConstants.FTS_CREATE_VIRTUAL_TABLE_WITH_CATEGORY, tableName);
+            createVirtualFTSTable = String.format(SimpleConstants.FTS_CREATE_VIRTUAL_TABLE_WITH_CATEGORY, tableName,
+                    COLUMN_ID, COLUMN_TABLE_CATEGORY, COLUMN_DATA);
         } else {
-            createVirtualFTSTable = String.format(SimpleConstants.FTS_CREATE_VIRTUAL_TABLE, tableName);
+            createVirtualFTSTable = String.format(SimpleConstants.FTS_CREATE_VIRTUAL_TABLE, tableName,
+                    COLUMN_ID, COLUMN_DATA);
         }
 
         database.execSQL(createVirtualFTSTable);
@@ -89,9 +91,10 @@ public class SQLiteSimpleFTS {
         }
 
         Cursor cursor = database.rawQuery(String.format(SimpleConstants.FTS_SQL_FORMAT, tableName,
-                tableName, query.toLowerCase()), null);
+                tableName, COLUMN_DATA, query.toLowerCase()), null);
 
         cursor.moveToFirst();
+
         while (!cursor.isAfterLast()) {
 
             FTSModel ftsModel;
