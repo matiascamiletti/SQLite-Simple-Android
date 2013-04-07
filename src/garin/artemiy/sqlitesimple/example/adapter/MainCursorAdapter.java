@@ -37,9 +37,9 @@ public class MainCursorAdapter extends CursorAdapter {
     public void bindView(View view, Context context, Cursor cursor) {
         RecordsDAO recordsDAO = new RecordsDAO(context);
         Record record = recordsDAO.read(cursor);
-        TextView publicationDate = (TextView) view.findViewById(R.id.publicationDate);
+        TextView recordText = (TextView) view.findViewById(R.id.recordTextView);
 
-        publicationDate.setText(String.valueOf(record.getDateOfPublication()));
+        recordText.setText(String.valueOf(record.getRecordText()));
     }
 
 }

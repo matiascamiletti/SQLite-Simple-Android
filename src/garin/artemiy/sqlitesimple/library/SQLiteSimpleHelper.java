@@ -102,16 +102,20 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
 
     private void copyDatabaseFromAssets() {
         try {
+
             InputStream inputStream = context.getAssets().open(localDatabaseName);
-            OutputStream outputStream = new FileOutputStream(SimpleDatabaseUtil.getFullDatabasePath(context, localDatabaseName));
+            OutputStream outputStream = new FileOutputStream(SimpleDatabaseUtil.getFullDatabasePath(context,
+                    localDatabaseName));
             byte[] buffer = new byte[1024];
             int length;
             while ((length = inputStream.read(buffer)) > 0) {
                 outputStream.write(buffer, 0, length);
             }
+
             outputStream.flush();
             outputStream.close();
             inputStream.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

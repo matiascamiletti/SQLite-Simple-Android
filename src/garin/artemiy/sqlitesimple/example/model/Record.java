@@ -11,36 +11,25 @@ import garin.artemiy.sqlitesimple.library.util.ColumnType;
 @Table
 public class Record {
 
-    @SuppressWarnings("unused")
-    @Column(type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
-    private long _id;
-
-    @Column(type = ColumnType.NUMERIC)
-    private boolean isPublished;
-
-    @Column(type = ColumnType.INTEGER)
-    private Long dateOfPublication;
-
-    public Long getDateOfPublication() {
-        return dateOfPublication;
-    }
-
-    public void setDateOfPublication(Long dateOfPublication) {
-        this.dateOfPublication = dateOfPublication;
-    }
+    public static final String COLUMN_RECORD_TEXT = "recordText";
 
     @SuppressWarnings("unused")
-    public boolean isPublished() {
-        return isPublished;
+    @Column(name = "_id", type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
+    private long id;
+
+    @Column(name = COLUMN_RECORD_TEXT, type = ColumnType.TEXT)
+    private String recordText;
+
+    public String getRecordText() {
+        return recordText;
     }
 
-    public void setPublished(boolean published) {
-        isPublished = published;
+    public void setRecordText(String recordText) {
+        this.recordText = recordText;
     }
 
-    @SuppressWarnings("unused")
     public long getId() {
-        return _id;
+        return id;
     }
 
 }

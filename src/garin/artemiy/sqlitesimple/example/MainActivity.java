@@ -15,10 +15,6 @@ import garin.artemiy.sqlitesimple.example.operator.RecordsDAO;
 import garin.artemiy.sqlitesimple.library.SQLiteSimpleFTS;
 import garin.artemiy.sqlitesimple.library.model.FTSModel;
 
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
-
 /**
  * author: Artemiy Garin
  * date: 11.12.12
@@ -27,6 +23,7 @@ public class MainActivity extends ListActivity {
 
     private RecordsDAO recordsDAO;
     private Cursor cursor;
+    private SQLiteSimpleFTS simpleFTS;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,13 +35,6 @@ public class MainActivity extends ListActivity {
         MainCursorAdapter cursorAdapter = new MainCursorAdapter(this, cursor);
         setListAdapter(cursorAdapter);
 
-        getListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long id) {
-                recordsDAO.update(id, generateRecord());
-                updateAdapter();
-            }
-        });
-
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long id) {
                 recordsDAO.delete(id);
@@ -53,13 +43,7 @@ public class MainActivity extends ListActivity {
             }
         });
 
-        // FTS
-        List<FTSModel> ftsModelList = new ArrayList<FTSModel>();
-        FTSModel ftsModel = new FTSModel(19, 2, "улица Докукина");
-        ftsModelList.add(ftsModel);
-
-        final SQLiteSimpleFTS simpleFTS = new SQLiteSimpleFTS(this, true);
-        simpleFTS.createAll(ftsModelList);
+        simpleFTS = new SQLiteSimpleFTS(this, false);
 
         EditText ftsEditText = (EditText) findViewById(R.id.ftsEditText);
         ftsEditText.addTextChangedListener(new TextWatcher() {
@@ -99,28 +83,21 @@ public class MainActivity extends ListActivity {
         cursorAdapter.notifyDataSetChanged();
     }
 
-    private Record generateRecord() {
-        Record record = new Record();
-        record.setDateOfPublication(GregorianCalendar.getInstance().getTimeInMillis());
-        record.setPublished(true);
-        return record;
-    }
-
     @SuppressWarnings("unused")
     public void onClickAddRecord(View view) {
-        recordsDAO.create(generateRecord());
+        Record record = new Record();
+        record.setRecordText(((EditText) findViewById(R.id.recordEditText)).getText().toString());
+
+        if (recordsDAO.createIfNotExist(record, Record.COLUMN_RECORD_TEXT, record.getRecordText()) != 0) {
+            simpleFTS.create(new FTSModel(record.getId(), record.getRecordText()));
+        }
+
         updateAdapter();
     }
 
     @SuppressWarnings("unused")
     public void onClickDeleteAllRecords(View view) {
         recordsDAO.deleteAll();
-        updateAdapter();
-    }
-
-    @SuppressWarnings("unused")
-    public void onClickUpdateLastRow(View view) {
-        recordsDAO.update(recordsDAO.getLastRowId(), generateRecord());
         updateAdapter();
     }
 
