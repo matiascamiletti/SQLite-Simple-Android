@@ -92,7 +92,7 @@ public class SQLiteSimpleFTS {
                 tableName, query.toLowerCase()), null);
 
         cursor.moveToFirst();
-        while (cursor.moveToNext()) {
+        while (!cursor.isAfterLast()) {
 
             FTSModel ftsModel;
             if (useTablesCategory) {
@@ -105,6 +105,8 @@ public class SQLiteSimpleFTS {
                         cursor.getLong(cursor.getColumnIndex(COLUMN_ID)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_DATA)));
             }
+
+            cursor.moveToNext();
             ftsModels.add(ftsModel);
         }
 

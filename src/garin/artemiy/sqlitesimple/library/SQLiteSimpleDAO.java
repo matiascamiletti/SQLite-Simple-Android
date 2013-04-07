@@ -165,10 +165,7 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public long getLastRowId() {
-        SQLiteDatabase database = simpleHelper.getReadableDatabase();
-        String[] columns = getColumns();
-        String table = SimpleDatabaseUtil.getTableName(tClass);
-        Cursor cursor = database.query(table, columns, null, null, null, null, null);
+        Cursor cursor = selectCursorAscFromTable();
         cursor.moveToLast();
 
         long id;
@@ -207,14 +204,20 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public long createIfNotExist(T object, String columnName, String columnValue) {
-        String table = SimpleDatabaseUtil.getTableName(tClass);
-        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.WHERE_CLAUSE,
-                table, columnName, columnValue), null, null, null, null);
+        long result;
+        // todo check
+        Cursor cursor = selectCursorFromTable(null, null, null, null,
+                String.format(SimpleConstants.WHERE_CLAUSE, columnName, columnValue));
+
         if (cursor.getCount() == 0) {
-            return create(object);
+            result = create(object);
         } else {
-            return 0;
+            result = 0;
         }
+
+        cursor.close();
+
+        return result;
     }
 
     @SuppressWarnings("unused")
@@ -250,9 +253,9 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public T read(long id) {
-        SQLiteDatabase database = simpleHelper.getReadableDatabase();
-        Cursor cursor = database.query(SimpleDatabaseUtil.getTableName(tClass), getColumns(),
-                String.format(SimpleConstants.FORMAT_ARGUMENT, primaryKeyColumnName, Long.toString(id)), null, null, null, null);
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_ARGUMENT,
+                primaryKeyColumnName, Long.toString(id)), null, null, null, null);
+
         try {
             T newTObject = tClass.newInstance();
             bindObject(newTObject, cursor);
@@ -262,9 +265,9 @@ public abstract class SQLiteSimpleDAO<T> {
             e.printStackTrace();
             return null;
         } finally {
-            database.close();
             cursor.close();
         } // in this case we close cursor, because we use database.query, NOT incoming cursor
+
     }
 
     @SuppressWarnings("unused")
