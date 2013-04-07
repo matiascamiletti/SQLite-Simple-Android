@@ -206,6 +206,18 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
+    public long createIfNotExist(T object, String columnName, String columnValue) {
+        String table = SimpleDatabaseUtil.getTableName(tClass);
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.WHERE_CLAUSE,
+                table, columnName, columnValue), null, null, null, null);
+        if (cursor.getCount() == 0) {
+            return create(object);
+        } else {
+            return 0;
+        }
+    }
+
+    @SuppressWarnings("unused")
     public void createAll(List<T> objects) {
         for (T object : objects) {
             create(object);

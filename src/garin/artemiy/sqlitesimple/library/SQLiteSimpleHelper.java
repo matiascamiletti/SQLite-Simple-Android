@@ -60,10 +60,11 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
         List<String> tables = sharedPreferencesUtil.getList(SimpleConstants.SHARED_DATABASE_TABLES);
         if (tables != null) { // drop tables in order
             for (String table : tables) {
-                sqLiteDatabase.execSQL(String.format(SimpleConstants.FORMAT_GLUED, SimpleConstants.DROP_TABLE_IF_EXISTS, table));
+                sqLiteDatabase.execSQL(String.format(SimpleConstants.FORMAT_TWINS,
+                        SimpleConstants.DROP_TABLE_IF_EXISTS, table));
             }
         }
-        sqLiteDatabase.execSQL(SimpleConstants.DROP_TABLE_IF_EXIST_TEMPORARY);
+
         onCreate(sqLiteDatabase);
     }
 

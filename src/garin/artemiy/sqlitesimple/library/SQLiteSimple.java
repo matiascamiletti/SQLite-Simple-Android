@@ -157,7 +157,7 @@ public class SQLiteSimple {
 
             SQLiteDatabase sqLiteDatabase = sqLiteSimpleHelper.getWritableDatabase();
             for (String extraTable : extraTables) {
-                sqLiteDatabase.execSQL(String.format(SimpleConstants.FORMAT_GLUED,
+                sqLiteDatabase.execSQL(String.format(SimpleConstants.FORMAT_TWINS,
                         SimpleConstants.DROP_TABLE_IF_EXISTS, extraTable));
             }
 

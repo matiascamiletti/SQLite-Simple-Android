@@ -27,8 +27,13 @@ public class SimpleConstants {
     public static final String FTS_SQL_AND = "AND";
     public static final String FTS_SQL_FORMAT = "SELECT * FROM %s WHERE %s MATCH 'data:%s*';";
     public static final String FTS_SQL_TABLE_NAME = "%s_FTS";
+    public static final String FTS_CREATE_VIRTUAL_TABLE_WITH_CATEGORY =
+            "CREATE VIRTUAL TABLE IF NOT EXISTS %s USING fts3(id, tableCategory, data, tokenize = porter);";
     public static final String FTS_CREATE_VIRTUAL_TABLE =
-            "CREATE VIRTUAL TABLE IF NOT EXISTS %s USING fts3(id, table, data, tokenize = porter);";
+            "CREATE VIRTUAL TABLE IF NOT EXISTS %s USING fts3(id, data, tokenize = porter);";
+    public static final String FTS_DROP_VIRTUAL_TABLE = "DROP VIRTUAL TABLE IF EXISTS %s";
+    public static final String FTS_INSERT_INTO_WITH_TABLE_CATEGORY = "INSERT INTO %s VALUES (%s, %s, '%s');";
+    public static final String FTS_INSERT_INTO = "INSERT INTO %s VALUES (%s, '%s');";
 
     // Shared preferences
     public static final String SHARED_PREFERENCES_DATABASE = "SQLiteSimpleDatabaseHelper";
@@ -39,13 +44,12 @@ public class SimpleConstants {
     public static final String SHARED_PREFERENCES_INDEX = "%s_Index";
 
     // SQL
-    public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS ";
+    public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS";
     public static final String AUTOINCREMENT = "AUTOINCREMENT";
     public static final String PRIMARY_KEY = "PRIMARY KEY";
-    public static final String DROP_TABLE_IF_EXIST_TEMPORARY = "DROP TABLE IF EXISTS temporary_table";
+    public static final String WHERE_CLAUSE = "SELECT * FROM %s WHERE %s = %s";
     public static final String CREATE_TABLE_IF_NOT_EXIST = "CREATE TABLE IF NOT EXISTS %s (";
     public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s ";
-    public static final String INSERT_INTO = "INSERT INTO %s VALUES (%s, %s, '%s');";
 
     // String.format(..)
     public static final String FORMAT_GLUED = "%s%s";

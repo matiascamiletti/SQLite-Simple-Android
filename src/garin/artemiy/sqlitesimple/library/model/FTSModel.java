@@ -7,12 +7,19 @@ package garin.artemiy.sqlitesimple.library.model;
 public class FTSModel {
 
     private long id;
-    private int table;
+    private int tableCategory;
     private String data;
 
-    public FTSModel(long id, int table, String data) {
+    @SuppressWarnings("unused")
+    public FTSModel(long id, int tableCategory, String data) {
         this.id = id;
-        this.table = table;
+        this.tableCategory = tableCategory;
+        this.data = data;
+    }
+
+    @SuppressWarnings("unused")
+    public FTSModel(long id, String data) {
+        this.id = id;
         this.data = data;
     }
 
@@ -24,8 +31,8 @@ public class FTSModel {
         return id;
     }
 
-    public int getTable() {
-        return table;
+    public int getTableCategory() {
+        return tableCategory;
     }
 
 }
