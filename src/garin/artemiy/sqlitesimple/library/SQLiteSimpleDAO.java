@@ -193,8 +193,8 @@ public abstract class SQLiteSimpleDAO<T> {
     public Cursor selectCursorFromTable(String selection, String[] selectionArgs,
                                         String groupBy, String having, String orderBy) {
         SQLiteDatabase database = simpleHelper.getReadableDatabase();
-        String[] columns = getColumns();
         String table = SimpleDatabaseUtil.getTableName(tClass);
+        String[] columns = getColumns();
         Cursor cursor = database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
         cursor.moveToFirst();
         database.close();
@@ -205,9 +205,13 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public long createIfNotExist(T object, String columnName, String columnValue) {
         long result;
-        // todo check
-        Cursor cursor = selectCursorFromTable(null, null, null, null,
-                String.format(SimpleConstants.WHERE_CLAUSE, columnName, columnValue));
+
+        String table = SimpleDatabaseUtil.getTableName(tClass);
+        SQLiteDatabase database = simpleHelper.getReadableDatabase();
+        Cursor cursor = database.rawQuery(String.format(SimpleConstants.WHERE_CLAUSE,
+                table, columnName, columnValue), null);
+
+        cursor.moveToFirst();
 
         if (cursor.getCount() == 0) {
             result = create(object);
@@ -215,6 +219,7 @@ public abstract class SQLiteSimpleDAO<T> {
             result = 0;
         }
 
+        database.close();
         cursor.close();
 
         return result;

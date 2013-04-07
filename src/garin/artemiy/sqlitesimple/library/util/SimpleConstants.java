@@ -47,7 +47,7 @@ public class SimpleConstants {
     public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS";
     public static final String AUTOINCREMENT = "AUTOINCREMENT";
     public static final String PRIMARY_KEY = "PRIMARY KEY";
-    public static final String WHERE_CLAUSE = "%s = '%s'";
+    public static final String WHERE_CLAUSE = "SELECT * FROM %s WHERE %s = '%s'";
     public static final String CREATE_TABLE_IF_NOT_EXIST = "CREATE TABLE IF NOT EXISTS %s (";
     public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s ";
 
