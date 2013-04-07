@@ -107,10 +107,12 @@ public class MainActivity extends ListActivity {
     @SuppressWarnings("unused")
     public void onClickAddRecord(View view) {
         Record record = new Record();
-        record.setRecordText(((EditText) findViewById(R.id.recordEditText)).getText().toString());
 
-        if (recordsDAO.createIfNotExist(record, Record.COLUMN_RECORD_TEXT, record.getRecordText()) != 0) {
-            simpleFTS.create(new FTSModel(record.getId(), record.getRecordText()));
+        record.setRecordText(((EditText) findViewById(R.id.recordEditText)).getText().toString());
+        long id = recordsDAO.createIfNotExist(record, Record.COLUMN_RECORD_TEXT, record.getRecordText());
+
+        if (id != 0) {
+            simpleFTS.create(new FTSModel(id, record.getRecordText()));
         }
 
         ((EditText) findViewById(R.id.recordEditText)).setText(EMPTY);

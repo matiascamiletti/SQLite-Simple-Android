@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import garin.artemiy.sqlitesimple.R;
+import garin.artemiy.sqlitesimple.example.operator.RecordsDAO;
 import garin.artemiy.sqlitesimple.library.model.FTSModel;
 
 /**
@@ -16,10 +17,12 @@ import garin.artemiy.sqlitesimple.library.model.FTSModel;
 public class MainAdapter extends ArrayAdapter<FTSModel> {
 
     private Context context;
+    private RecordsDAO recordsDAO;
 
     public MainAdapter(Context context) {
         super(context, R.layout.main_layout);
         this.context = context;
+        recordsDAO = new RecordsDAO(context);
     }
 
     @Override
@@ -34,7 +37,7 @@ public class MainAdapter extends ArrayAdapter<FTSModel> {
 
         FTSModel ftsModel = getItem(position);
         TextView recordText = (TextView) view.findViewById(R.id.recordTextView);
-        recordText.setText(String.valueOf(ftsModel.getData()));
+        recordText.setText(recordsDAO.read(ftsModel.getId()).getRecordText());
 
         return view;
     }
