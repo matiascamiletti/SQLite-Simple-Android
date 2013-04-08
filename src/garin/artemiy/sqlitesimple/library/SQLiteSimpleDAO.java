@@ -31,7 +31,6 @@ import java.util.List;
  */
 public abstract class SQLiteSimpleDAO<T> {
 
-    private static final String DESC = "DESC";
     private Class<T> tClass;
     private SQLiteSimpleHelper simpleHelper;
     private String primaryKeyColumnName;
@@ -186,7 +185,7 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public Cursor selectCursorDescFromTable() {
         return selectCursorFromTable(null, null, null, null,
-                String.format(SimpleConstants.FORMAT_TWINS, primaryKeyColumnName, DESC));
+                String.format(SimpleConstants.FORMAT_TWINS, primaryKeyColumnName, SimpleConstants.DESC));
     }
 
     @SuppressWarnings("unused")

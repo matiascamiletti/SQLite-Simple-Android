@@ -66,7 +66,7 @@ public class MainActivity extends ListActivity {
                 mainAdapter.clear();
                 mainAdapter.notifyDataSetChanged();
 
-                List<FTSModel> ftsModelList = simpleFTS.search(charSequence.toString());
+                List<FTSModel> ftsModelList = simpleFTS.search(charSequence.toString(), false);
                 for (FTSModel ftsModel : ftsModelList) {
                     mainAdapter.add(ftsModel);
                 }

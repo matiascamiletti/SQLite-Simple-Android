@@ -81,7 +81,7 @@ public class SQLiteSimpleFTS {
     }
 
     @SuppressWarnings("unused")
-    public List<FTSModel> search(String query) {
+    public List<FTSModel> search(String query, boolean resultDesc) {
         List<FTSModel> ftsModels = new ArrayList<FTSModel>();
 
         if (query.contains(SimpleConstants.FTS_SQL_OR) ||
@@ -90,8 +90,16 @@ public class SQLiteSimpleFTS {
             return ftsModels;
         }
 
-        Cursor cursor = database.rawQuery(String.format(SimpleConstants.FTS_SQL_FORMAT, tableName,
-                tableName, COLUMN_DATA, query.toLowerCase()), null);
+        String format;
+        if (resultDesc) {
+            format = String.format(SimpleConstants.FTS_SQL_FORMAT, tableName, tableName, COLUMN_DATA, query.toLowerCase(),
+                    COLUMN_ID, SimpleConstants.DESC);
+        } else {
+            format = String.format(SimpleConstants.FTS_SQL_FORMAT, tableName, tableName, COLUMN_DATA, query.toLowerCase(),
+                    COLUMN_ID, SimpleConstants.ASC);
+        }
+
+        Cursor cursor = database.rawQuery(format, null);
 
         cursor.moveToFirst();
 
