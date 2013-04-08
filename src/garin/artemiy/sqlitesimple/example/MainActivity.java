@@ -63,7 +63,6 @@ public class MainActivity extends ListActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int count, int i3) {
-                // todo adapter not cleared
                 mainAdapter.clear();
                 mainAdapter.notifyDataSetChanged();
 
