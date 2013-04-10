@@ -28,9 +28,9 @@ public class SimpleConstants {
     public static final String FTS_SQL_FORMAT = "SELECT * FROM %s WHERE %s MATCH '%s:%s*' ORDER BY %s %s;";
     public static final String FTS_SQL_TABLE_NAME = "%s_FTS";
     public static final String FTS_CREATE_VIRTUAL_TABLE_WITH_CATEGORY =
-            "CREATE VIRTUAL TABLE IF NOT EXISTS %s USING fts3(%s, %s, %s, tokenize = porter);";
+            "CREATE VIRTUAL TABLE %s USING fts3(%s, %s, %s, tokenize = porter);";
     public static final String FTS_CREATE_VIRTUAL_TABLE =
-            "CREATE VIRTUAL TABLE IF NOT EXISTS %s USING fts3(%s, %s, tokenize = porter);";
+            "CREATE VIRTUAL TABLE %s USING fts3(%s, %s, tokenize = porter);";
     public static final String FTS_DROP_VIRTUAL_TABLE = "DROP VIRTUAL TABLE IF EXISTS %s";
     public static final String FTS_INSERT_INTO_WITH_TABLE_CATEGORY = "INSERT INTO %s VALUES (%s, %s, '%s');";
     public static final String FTS_INSERT_INTO = "INSERT INTO %s VALUES (%s, '%s');";
@@ -40,6 +40,7 @@ public class SimpleConstants {
     public static final String SHARED_DATABASE_TABLES = "SQLiteSimpleDatabaseTables";
     public static final String SHARED_DATABASE_QUERIES = "SQLiteSimpleDatabaseQueries";
     public static final String SHARED_DATABASE_VERSION = "SQLiteSimpleDatabaseVersion";
+    public static final String SHARED_DATABASE_VIRTUAL_TABLE_CREATED = "SQLiteSimpleDatabaseVirtualTableCreated";
     public static final String SHARED_PREFERENCES_LIST = "List_%s_%s";
     public static final String SHARED_PREFERENCES_INDEX = "%s_Index";
 
@@ -58,6 +59,8 @@ public class SimpleConstants {
 
     // Other
     public static final int FIRST_DATABASE_VERSION = 1;
+    public static final String APOSTROPHE = "'";
+    public static final String DOUBLE_APOSTROPHE = "''";
     public static final String DESC = "DESC";
     public static final String ASC = "ASC";
     public static final String SPACE = " ";

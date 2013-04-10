@@ -3,6 +3,7 @@ package garin.artemiy.sqlitesimple.library;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 import garin.artemiy.sqlitesimple.library.model.FTSModel;
 import garin.artemiy.sqlitesimple.library.util.SimpleConstants;
 import garin.artemiy.sqlitesimple.library.util.SimpleDatabaseUtil;
@@ -36,6 +37,7 @@ public class SQLiteSimpleFTS {
     private SQLiteDatabase database;
     private String tableName;
     private boolean useTablesCategory;
+    private SimplePreferencesUtil preferencesUtil;
 
     @SuppressWarnings("unused")
     public SQLiteSimpleFTS(Context context, boolean useTablesCategory) {
@@ -45,31 +47,40 @@ public class SQLiteSimpleFTS {
         database = simpleHelper.getWritableDatabase();
         tableName = SimpleDatabaseUtil.getFTSTableName(context);
 
-        String createVirtualFTSTable;
-        if (useTablesCategory) {
-            createVirtualFTSTable = String.format(SimpleConstants.FTS_CREATE_VIRTUAL_TABLE_WITH_CATEGORY, tableName,
-                    COLUMN_ID, COLUMN_TABLE_CATEGORY, COLUMN_DATA);
-        } else {
-            createVirtualFTSTable = String.format(SimpleConstants.FTS_CREATE_VIRTUAL_TABLE, tableName,
-                    COLUMN_ID, COLUMN_DATA);
-        }
+        preferencesUtil = new SimplePreferencesUtil(context);
+        if (!preferencesUtil.isVirtualTableCreated()) {
 
-        database.execSQL(createVirtualFTSTable);
+            String createVirtualFTSTable;
+            if (useTablesCategory) {
+                createVirtualFTSTable = String.format(SimpleConstants.FTS_CREATE_VIRTUAL_TABLE_WITH_CATEGORY, tableName,
+                        COLUMN_ID, COLUMN_TABLE_CATEGORY, COLUMN_DATA);
+            } else {
+                createVirtualFTSTable = String.format(SimpleConstants.FTS_CREATE_VIRTUAL_TABLE, tableName,
+                        COLUMN_ID, COLUMN_DATA);
+            }
+
+            database.execSQL(createVirtualFTSTable);
+            preferencesUtil.setVirtualTableCreated();
+
+        }
     }
 
     @SuppressWarnings("unused")
     public void dropTable() {
         database.execSQL(String.format(SimpleConstants.FTS_DROP_VIRTUAL_TABLE, tableName));
+        preferencesUtil.setVirtualTableDropped();
     }
 
     @SuppressWarnings("unused")
     public void create(FTSModel ftsModel) {
-        if (useTablesCategory) {
-            database.execSQL(String.format(SimpleConstants.FTS_INSERT_INTO_WITH_TABLE_CATEGORY, tableName,
-                    ftsModel.getId(), ftsModel.getTableCategory(), ftsModel.getData().toLowerCase()));
-        } else {
-            database.execSQL(String.format(SimpleConstants.FTS_INSERT_INTO, tableName,
-                    ftsModel.getId(), ftsModel.getData().toLowerCase()));
+        if (!TextUtils.isEmpty(ftsModel.getData())) {
+            if (useTablesCategory) {
+                database.execSQL(String.format(SimpleConstants.FTS_INSERT_INTO_WITH_TABLE_CATEGORY, tableName,
+                        ftsModel.getId(), ftsModel.getTableCategory(), ftsModel.getData().toLowerCase()));
+            } else {
+                database.execSQL(String.format(SimpleConstants.FTS_INSERT_INTO, tableName,
+                        ftsModel.getId(), ftsModel.getData().toLowerCase()));
+            }
         }
     }
 

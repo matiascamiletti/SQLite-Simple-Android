@@ -88,4 +88,18 @@ public class SimplePreferencesUtil {
         return sharedPreferences.getInt(SimpleConstants.SHARED_DATABASE_VERSION, SimpleConstants.FIRST_DATABASE_VERSION);
     }
 
+    public boolean isVirtualTableCreated() {
+        return sharedPreferences.getBoolean(SimpleConstants.SHARED_DATABASE_VIRTUAL_TABLE_CREATED, false);
+    }
+
+    public void setVirtualTableCreated() {
+        sharedPreferencesEditor.putBoolean(SimpleConstants.SHARED_DATABASE_VIRTUAL_TABLE_CREATED, true);
+        sharedPreferencesEditor.commit();
+    }
+
+    public void setVirtualTableDropped() {
+        sharedPreferencesEditor.putBoolean(SimpleConstants.SHARED_DATABASE_VIRTUAL_TABLE_CREATED, false);
+        sharedPreferencesEditor.commit();
+    }
+
 }

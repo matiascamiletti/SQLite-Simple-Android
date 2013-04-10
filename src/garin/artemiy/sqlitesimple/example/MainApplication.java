@@ -10,8 +10,6 @@ import garin.artemiy.sqlitesimple.library.SQLiteSimple;
  */
 public class MainApplication extends Application {
 
-    public static final String LOCAL_DATABASE_NAME = "test.sqlite";
-
     @Override
     public void onCreate() {
         super.onCreate();

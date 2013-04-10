@@ -208,7 +208,8 @@ public abstract class SQLiteSimpleDAO<T> {
         String table = SimpleDatabaseUtil.getTableName(tClass);
         SQLiteDatabase database = simpleHelper.getReadableDatabase();
         Cursor cursor = database.rawQuery(String.format(SimpleConstants.WHERE_CLAUSE,
-                table, columnName, columnValue), null);
+                table, columnName, columnValue.replace(SimpleConstants.APOSTROPHE,
+                SimpleConstants.DOUBLE_APOSTROPHE)), null);
 
         cursor.moveToFirst();
 
@@ -348,6 +349,18 @@ public abstract class SQLiteSimpleDAO<T> {
         int deletedRow = database.delete(
                 SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_ARGUMENT,
                 primaryKeyColumnName, id), null);
+
+        database.close();
+        return deletedRow;
+    }
+
+    @SuppressWarnings("unused")
+    public int deleteWhere(String columnName, String columnValue) {
+        SQLiteDatabase database = simpleHelper.getWritableDatabase();
+
+        int deletedRow = database.delete(
+                SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_ARGUMENT,
+                columnName, columnValue), null);
 
         database.close();
         return deletedRow;

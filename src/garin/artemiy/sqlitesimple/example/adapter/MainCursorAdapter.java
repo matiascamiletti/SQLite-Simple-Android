@@ -17,9 +17,12 @@ import garin.artemiy.sqlitesimple.example.operator.RecordsDAO;
  */
 public class MainCursorAdapter extends CursorAdapter {
 
+    private RecordsDAO recordsDAO;
+
     @SuppressWarnings("deprecation")
     public MainCursorAdapter(Context context, Cursor cursor) {
         super(context, cursor);
+        recordsDAO = new RecordsDAO(context);
     }
 
     @Override
@@ -35,7 +38,6 @@ public class MainCursorAdapter extends CursorAdapter {
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        RecordsDAO recordsDAO = new RecordsDAO(context);
         Record record = recordsDAO.read(cursor);
 
         TextView recordText = (TextView) view.findViewById(R.id.recordTextView);

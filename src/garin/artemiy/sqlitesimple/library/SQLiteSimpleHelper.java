@@ -93,7 +93,7 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
     private void checkDatabaseFromAssets() {
         if (localDatabaseName != null) {
             if (!isDatabaseExist()) {
-                super.getReadableDatabase(); // create empty database
+                super.getWritableDatabase(); // create empty database
                 super.close();
                 copyDatabaseFromAssets();
             }
