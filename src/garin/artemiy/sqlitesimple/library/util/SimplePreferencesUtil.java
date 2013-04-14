@@ -34,8 +34,16 @@ public class SimplePreferencesUtil {
     }
 
     public void clearAllPreferences(int databaseVersion) {
+
+        boolean isFTSTableCreated = isVirtualTableCreated();
+
         sharedPreferencesEditor.clear();
         putDatabaseVersion(databaseVersion);
+
+        if (isFTSTableCreated) {
+            setVirtualTableCreated();
+        }
+
         sharedPreferencesEditor.commit();
     }
 
@@ -94,12 +102,10 @@ public class SimplePreferencesUtil {
 
     public void setVirtualTableCreated() {
         sharedPreferencesEditor.putBoolean(SimpleConstants.SHARED_DATABASE_VIRTUAL_TABLE_CREATED, true);
-        sharedPreferencesEditor.commit();
     }
 
     public void setVirtualTableDropped() {
         sharedPreferencesEditor.putBoolean(SimpleConstants.SHARED_DATABASE_VIRTUAL_TABLE_CREATED, false);
-        sharedPreferencesEditor.commit();
     }
 
 }

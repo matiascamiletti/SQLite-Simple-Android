@@ -286,6 +286,12 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
+    public T readWhere(String columnName, String columnValue) {
+        return read(selectCursorFromTable(String.format(SimpleConstants.FORMAT_ARGUMENT,
+                columnName, columnValue), null, null, null, null));
+    }
+
+    @SuppressWarnings("unused")
     public List<T> readAllAsc() {
         Cursor cursor = selectCursorAscFromTable();
         return readAll(cursor);
@@ -360,7 +366,8 @@ public abstract class SQLiteSimpleDAO<T> {
 
         int deletedRow = database.delete(
                 SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_ARGUMENT,
-                columnName, columnValue), null);
+                columnName, columnValue.replace(SimpleConstants.APOSTROPHE,
+                SimpleConstants.DOUBLE_APOSTROPHE)), null);
 
         database.close();
         return deletedRow;

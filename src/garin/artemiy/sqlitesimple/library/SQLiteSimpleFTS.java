@@ -61,6 +61,7 @@ public class SQLiteSimpleFTS {
 
             database.execSQL(createVirtualFTSTable);
             preferencesUtil.setVirtualTableCreated();
+            preferencesUtil.commit();
 
         }
     }
@@ -69,6 +70,7 @@ public class SQLiteSimpleFTS {
     public void dropTable() {
         database.execSQL(String.format(SimpleConstants.FTS_DROP_VIRTUAL_TABLE, tableName));
         preferencesUtil.setVirtualTableDropped();
+        preferencesUtil.commit();
     }
 
     @SuppressWarnings("unused")

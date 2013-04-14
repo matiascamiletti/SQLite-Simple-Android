@@ -55,10 +55,12 @@ public class SimpleConstants {
     // String.format(..)
     public static final String FORMAT_GLUED = "%s%s";
     public static final String FORMAT_TWINS = "%s %s";
-    public static final String FORMAT_ARGUMENT = "%s = %s";
+    public static final String FORMAT_ARGUMENT = "%s = '%s'";
+    public static final String FORMAT_BRACKETS = "(%s)";
 
     // Other
     public static final int FIRST_DATABASE_VERSION = 1;
+    public static final String ID_COLUMN = "_id INTEGER"; // if we don't make a primary key column
     public static final String APOSTROPHE = "'";
     public static final String DOUBLE_APOSTROPHE = "''";
     public static final String DESC = "DESC";

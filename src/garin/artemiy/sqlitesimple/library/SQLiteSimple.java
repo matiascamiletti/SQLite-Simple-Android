@@ -96,33 +96,44 @@ public class SQLiteSimple {
             String table = SimpleDatabaseUtil.getTableName(classEntity);
             sqlQueryBuilder.append(String.format(SimpleConstants.CREATE_TABLE_IF_NOT_EXIST, table));
 
+            List<Field> primaryKeys = new ArrayList<Field>();
+            boolean useDividerForKeys = true;
+
             for (int i = 0; i < classEntity.getDeclaredFields().length; i++) {
                 Field fieldEntity = classEntity.getDeclaredFields()[i];
                 Column fieldEntityAnnotation = fieldEntity.getAnnotation(Column.class);
                 if (fieldEntityAnnotation != null) { // if field what we need annotated
                     String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
 
-                    sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
-                            column, fieldEntityAnnotation.type()));
-
                     if (fieldEntityAnnotation.isPrimaryKey()) {
-                        sqlQueryBuilder.append(SimpleConstants.SPACE);
-                        sqlQueryBuilder.append(SimpleConstants.PRIMARY_KEY);
-                    }
-                    if (fieldEntityAnnotation.isAutoincrement()) {
-                        sqlQueryBuilder.append(SimpleConstants.SPACE);
-                        sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
-                    }
 
-                    if (i != classEntity.getDeclaredFields().length - 1) {
-                        sqlQueryBuilder.append(SimpleConstants.DIVIDER);
-                        sqlQueryBuilder.append(SimpleConstants.SPACE);
+                        primaryKeys.add(fieldEntity);
+                        if (i == classEntity.getDeclaredFields().length - 1) {
+                            useDividerForKeys = false;
+                        }
+
                     } else {
-                        sqlQueryBuilder.append(SimpleConstants.LAST_BRACKET);
+
+                        sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
+                                column, fieldEntityAnnotation.type()));
+
+                        if (fieldEntityAnnotation.isAutoincrement()) {
+                            sqlQueryBuilder.append(SimpleConstants.SPACE);
+                            sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
+                        }
+
+                        if (i != classEntity.getDeclaredFields().length - 1) {
+                            sqlQueryBuilder.append(SimpleConstants.DIVIDER);
+                            sqlQueryBuilder.append(SimpleConstants.SPACE);
+                        }
                     }
 
                 }
             }
+
+            makeKeyForTable(sqlQueryBuilder, primaryKeys, useDividerForKeys); // or keys
+
+            sqlQueryBuilder.append(SimpleConstants.LAST_BRACKET);
 
             tables.add(table);
             sqlQueries.add(sqlQueryBuilder.toString());
@@ -142,6 +153,68 @@ public class SQLiteSimple {
         if (!isRebasedTables) {
             checkingCommit(tables, sqlQueries, newDatabaseVersion);
         }
+    }
+
+    private void makeKeyForTable(StringBuilder sqlQueryBuilder, List<Field> primaryKeys, boolean useDividerForKeys) {
+
+        if (useDividerForKeys && primaryKeys.size() != 0) {
+            sqlQueryBuilder.append(SimpleConstants.DIVIDER);
+            sqlQueryBuilder.append(SimpleConstants.SPACE);
+        }
+
+        if (primaryKeys.size() == 0) {
+
+//            todo: add default primary key if any key do not exist
+//            sqlQueryBuilder.append(SimpleConstants.ID_COLUMN);
+//            sqlQueryBuilder.append(SimpleConstants.SPACE);
+//            sqlQueryBuilder.append(SimpleConstants.PRIMARY_KEY);
+//            sqlQueryBuilder.append(SimpleConstants.SPACE);
+//            sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
+
+        } else if (primaryKeys.size() == 1) {
+
+            Field fieldEntity = primaryKeys.get(0);
+            String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
+            Column fieldEntityAnnotation = fieldEntity.getAnnotation(Column.class);
+            sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
+                    column, fieldEntityAnnotation.type()));
+            sqlQueryBuilder.append(SimpleConstants.SPACE);
+            sqlQueryBuilder.append(SimpleConstants.PRIMARY_KEY);
+            if (fieldEntityAnnotation.isAutoincrement()) {
+                sqlQueryBuilder.append(SimpleConstants.SPACE);
+                sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
+            }
+
+        } else {
+
+            StringBuilder primaryKeysBuilder = new StringBuilder();
+            boolean isFirst = true;
+
+            for (Field fieldEntity : primaryKeys) {
+                String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
+                Column fieldEntityAnnotation = fieldEntity.getAnnotation(Column.class);
+                sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
+                        column, fieldEntityAnnotation.type()));
+                sqlQueryBuilder.append(SimpleConstants.DIVIDER);
+                sqlQueryBuilder.append(SimpleConstants.SPACE);
+
+                if (!isFirst) {
+                    primaryKeysBuilder.append(SimpleConstants.DIVIDER);
+                    primaryKeysBuilder.append(SimpleConstants.SPACE);
+                }
+
+                primaryKeysBuilder.append(column);
+
+                isFirst = false;
+
+            }
+
+            sqlQueryBuilder.append(SimpleConstants.PRIMARY_KEY);
+            primaryKeysBuilder.append(SimpleConstants.SPACE);
+            sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_BRACKETS, primaryKeysBuilder.toString()));
+
+        }
+
     }
 
     // Delete extra tables
