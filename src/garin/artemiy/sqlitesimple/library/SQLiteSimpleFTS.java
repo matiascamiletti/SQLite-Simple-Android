@@ -1,5 +1,6 @@
 package garin.artemiy.sqlitesimple.library;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -76,13 +77,17 @@ public class SQLiteSimpleFTS {
     @SuppressWarnings("unused")
     public void create(FTSModel ftsModel) {
         if (!TextUtils.isEmpty(ftsModel.getData())) {
+
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_ID, ftsModel.getId());
+            contentValues.put(COLUMN_DATA, ftsModel.getData());
+
             if (useTablesCategory) {
-                database.execSQL(String.format(SimpleConstants.FTS_INSERT_INTO_WITH_TABLE_CATEGORY, tableName,
-                        ftsModel.getId(), ftsModel.getTableCategory(), ftsModel.getData().toLowerCase()));
-            } else {
-                database.execSQL(String.format(SimpleConstants.FTS_INSERT_INTO, tableName,
-                        ftsModel.getId(), ftsModel.getData().toLowerCase()));
+                contentValues.put(COLUMN_TABLE_CATEGORY, ftsModel.getTableCategory());
             }
+
+            database.insert(tableName, null, contentValues);
+
         }
     }
 

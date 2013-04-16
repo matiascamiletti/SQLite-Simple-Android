@@ -203,13 +203,34 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public long createIfNotExist(T object, String columnName, String columnValue) {
-        long result = 0;
+        long result = -1;
 
         String table = SimpleDatabaseUtil.getTableName(tClass);
         SQLiteDatabase database = simpleHelper.getReadableDatabase();
-        Cursor cursor = database.rawQuery(String.format(SimpleConstants.WHERE_CLAUSE,
-                table, columnName, columnValue.replace(SimpleConstants.APOSTROPHE,
-                SimpleConstants.DOUBLE_APOSTROPHE)), null);
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN,
+                columnName), new String[]{columnValue}, null, null, null);
+
+        cursor.moveToFirst();
+
+        if (cursor.getCount() == 0) {
+            result = create(object);
+        }
+
+        database.close();
+        cursor.close();
+
+        return result;
+    }
+
+    @SuppressWarnings("unused")
+    public long createIfNotExist(T object, String firstColumnName, String firstColumnValue,
+                                 String secondColumnName, String secondColumnValue) {
+        long result = -1;
+
+        String table = SimpleDatabaseUtil.getTableName(tClass);
+        SQLiteDatabase database = simpleHelper.getReadableDatabase();
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COMMA,
+                firstColumnName, secondColumnName), new String[]{firstColumnValue, secondColumnValue}, null, null, null);
 
         cursor.moveToFirst();
 
@@ -234,6 +255,7 @@ public abstract class SQLiteSimpleDAO<T> {
     public long create(T object) {
         SQLiteDatabase database = simpleHelper.getWritableDatabase();
         try {
+
             ContentValues contentValues = new ContentValues();
 
             for (Field field : object.getClass().getDeclaredFields()) {
@@ -246,6 +268,7 @@ public abstract class SQLiteSimpleDAO<T> {
             }
 
             return database.insert(SimpleDatabaseUtil.getTableName(object.getClass()), null, contentValues);
+
         } catch (Exception e) {
             e.printStackTrace();
             return -1;
@@ -256,8 +279,9 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public T read(long id) {
-        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_ARGUMENT,
-                primaryKeyColumnName, Long.toString(id)), null, null, null, null);
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName),
+                new String[]{Long.toString(id)}
+                , null, null, null);
 
         try {
             T newTObject = tClass.newInstance();
@@ -287,8 +311,14 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public T readWhere(String columnName, String columnValue) {
-        return read(selectCursorFromTable(String.format(SimpleConstants.FORMAT_ARGUMENT,
-                columnName, columnValue), null, null, null, null));
+        return read(selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName), new String[]{columnValue}, null, null, null));
+    }
+
+    @SuppressWarnings("unused")
+    public T readWhere(String firstColumnName, String firstColumnValue,
+                       String secondColumnName, String secondColumnValue) {
+        return read(selectCursorFromTable(String.format(SimpleConstants.FORMAT_COMMA,
+                firstColumnName, secondColumnName), new String[]{firstColumnValue, secondColumnValue}, null, null, null));
     }
 
     @SuppressWarnings("unused")
@@ -300,6 +330,13 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public List<T> readAllDesc() {
         Cursor cursor = selectCursorDescFromTable();
+        return readAll(cursor);
+    }
+
+    @SuppressWarnings("unused")
+    public List<T> readAllWhere(String columnName, String columnValue) {
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
+                new String[]{columnValue}, null, null, null);
         return readAll(cursor);
     }
 
@@ -323,22 +360,14 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
-    public long update(long id, T newObject) {
+    public long update(String columnName, String columnValue, T newObject) {
         SQLiteDatabase database = simpleHelper.getWritableDatabase();
         try {
-            ContentValues contentValues = new ContentValues();
 
-            for (Field field : newObject.getClass().getDeclaredFields()) {
-                Column fieldEntityAnnotation = field.getAnnotation(Column.class);
-                if (fieldEntityAnnotation != null) {
-                    if (!fieldEntityAnnotation.isAutoincrement()) {
-                        putInContentValues(contentValues, field, newObject);
-                    }
-                }
-            }
+            ContentValues contentValues = getFilledContentValues(newObject);
 
             return database.update(SimpleDatabaseUtil.getTableName(newObject.getClass()), contentValues,
-                    String.format(SimpleConstants.FORMAT_ARGUMENT, primaryKeyColumnName, id), null);
+                    String.format(SimpleConstants.FORMAT_COLUMN, columnName), new String[]{columnValue});
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -349,12 +378,53 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
+    public long update(String firstColumnName, String firstColumnValue,
+                       String secondColumnName, String secondColumnValue, T newObject) {
+
+        SQLiteDatabase database = simpleHelper.getWritableDatabase();
+
+        try {
+
+            ContentValues contentValues = getFilledContentValues(newObject);
+
+            return database.update(SimpleDatabaseUtil.getTableName(newObject.getClass()), contentValues,
+                    String.format(SimpleConstants.FORMAT_COMMA, firstColumnName, secondColumnName),
+                    new String[]{firstColumnValue, secondColumnValue});
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        } finally {
+            database.close();
+        }
+    }
+
+    private ContentValues getFilledContentValues(Object object) throws IllegalAccessException {
+        ContentValues contentValues = new ContentValues();
+
+        for (Field field : object.getClass().getDeclaredFields()) {
+            Column fieldEntityAnnotation = field.getAnnotation(Column.class);
+            if (fieldEntityAnnotation != null) {
+                if (!fieldEntityAnnotation.isAutoincrement()) {
+                    putInContentValues(contentValues, field, object);
+                }
+            }
+        }
+        return contentValues;
+    }
+
+    @SuppressWarnings("unused")
+    public long update(long id, T newObject) {
+        return update(primaryKeyColumnName, String.valueOf(id), newObject);
+    }
+
+    @SuppressWarnings("unused")
     public int delete(long id) {
         SQLiteDatabase database = simpleHelper.getWritableDatabase();
 
         int deletedRow = database.delete(
-                SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_ARGUMENT,
-                primaryKeyColumnName, id), null);
+                SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName),
+                new String[]{String.valueOf(id)});
 
         database.close();
         return deletedRow;
@@ -365,9 +435,8 @@ public abstract class SQLiteSimpleDAO<T> {
         SQLiteDatabase database = simpleHelper.getWritableDatabase();
 
         int deletedRow = database.delete(
-                SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_ARGUMENT,
-                columnName, columnValue.replace(SimpleConstants.APOSTROPHE,
-                SimpleConstants.DOUBLE_APOSTROPHE)), null);
+                SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMN, columnName),
+                new String[]{columnValue});
 
         database.close();
         return deletedRow;
