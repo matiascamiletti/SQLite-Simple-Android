@@ -31,6 +31,8 @@ import java.util.List;
  */
 public abstract class SQLiteSimpleDAO<T> {
 
+    private static final int FIRST_ELEMENT = 0;
+
     private Class<T> tClass;
     private SQLiteSimpleHelper simpleHelper;
     private String primaryKeyColumnName;
@@ -229,7 +231,7 @@ public abstract class SQLiteSimpleDAO<T> {
 
         String table = SimpleDatabaseUtil.getTableName(tClass);
         SQLiteDatabase database = simpleHelper.getReadableDatabase();
-        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COMMA,
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
                 firstColumnName, secondColumnName), new String[]{firstColumnValue, secondColumnValue}, null, null, null);
 
         cursor.moveToFirst();
@@ -317,7 +319,7 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public T readWhere(String firstColumnName, String firstColumnValue,
                        String secondColumnName, String secondColumnValue) {
-        return read(selectCursorFromTable(String.format(SimpleConstants.FORMAT_COMMA,
+        return read(selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
                 firstColumnName, secondColumnName), new String[]{firstColumnValue, secondColumnValue}, null, null, null));
     }
 
@@ -388,7 +390,7 @@ public abstract class SQLiteSimpleDAO<T> {
             ContentValues contentValues = getFilledContentValues(newObject);
 
             return database.update(SimpleDatabaseUtil.getTableName(newObject.getClass()), contentValues,
-                    String.format(SimpleConstants.FORMAT_COMMA, firstColumnName, secondColumnName),
+                    String.format(SimpleConstants.FORMAT_COLUMNS_COMMA, firstColumnName, secondColumnName),
                     new String[]{firstColumnValue, secondColumnValue});
 
         } catch (Exception e) {
@@ -450,6 +452,34 @@ public abstract class SQLiteSimpleDAO<T> {
 
         database.close();
         return deletedRow;
+    }
+
+    @SuppressWarnings("unused")
+    public float average(String columnName) {
+        String query = String.format(SimpleConstants.AVG_QUERY, columnName, SimpleDatabaseUtil.getTableName(tClass));
+        return averageQuery(query);
+    }
+
+    @SuppressWarnings("unused")
+    public float average(String columnName, String whereColumn, String whereValue) {
+        String query = String.format(SimpleConstants.AVG_QUERY_WHERE,
+                columnName, SimpleDatabaseUtil.getTableName(tClass),
+                whereColumn, whereValue);
+        return averageQuery(query);
+    }
+
+    private float averageQuery(String query) {
+
+        SQLiteDatabase database = simpleHelper.getWritableDatabase();
+        Cursor cursor = database.rawQuery(query, null);
+        cursor.moveToFirst();
+
+        float averageResult = cursor.getFloat(FIRST_ELEMENT);
+
+        database.close();
+        cursor.close();
+
+        return averageResult;
     }
 
 }
