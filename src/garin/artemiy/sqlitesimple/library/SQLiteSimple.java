@@ -97,7 +97,15 @@ public class SQLiteSimple {
             sqlQueryBuilder.append(String.format(SimpleConstants.CREATE_TABLE_IF_NOT_EXIST, table));
 
             List<Field> primaryKeys = new ArrayList<Field>();
-            boolean useDividerForKeys = true;
+
+            int tableFieldsCount = classEntity.getDeclaredFields().length; // remove no annotation fields
+            for (Field field : classEntity.getDeclaredFields()) {
+                if (field.getAnnotation(Column.class) == null) {
+                    tableFieldsCount--;
+                }
+            }
+
+            int annotatedFieldsIndex = 0;
 
             for (int i = 0; i < classEntity.getDeclaredFields().length; i++) {
                 Field fieldEntity = classEntity.getDeclaredFields()[i];
@@ -108,9 +116,6 @@ public class SQLiteSimple {
                     if (fieldEntityAnnotation.isPrimaryKey()) {
 
                         primaryKeys.add(fieldEntity);
-                        if (i == classEntity.getDeclaredFields().length - 1) {
-                            useDividerForKeys = false;
-                        }
 
                     } else {
 
@@ -122,16 +127,19 @@ public class SQLiteSimple {
                             sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
                         }
 
-                        if (i != classEntity.getDeclaredFields().length - 1) {
+                        if (annotatedFieldsIndex != tableFieldsCount - 1) {
                             sqlQueryBuilder.append(SimpleConstants.DIVIDER);
                             sqlQueryBuilder.append(SimpleConstants.SPACE);
                         }
+
                     }
+
+                    annotatedFieldsIndex++;
 
                 }
             }
 
-            makeKeyForTable(sqlQueryBuilder, primaryKeys, useDividerForKeys); // or keys
+            makeKeyForTable(sqlQueryBuilder, primaryKeys); // or keys
 
             sqlQueryBuilder.append(SimpleConstants.LAST_BRACKET);
 
@@ -155,12 +163,7 @@ public class SQLiteSimple {
         }
     }
 
-    private void makeKeyForTable(StringBuilder sqlQueryBuilder, List<Field> primaryKeys, boolean useDividerForKeys) {
-
-        if (useDividerForKeys && primaryKeys.size() != 0) {
-            sqlQueryBuilder.append(SimpleConstants.DIVIDER);
-            sqlQueryBuilder.append(SimpleConstants.SPACE);
-        }
+    private void makeKeyForTable(StringBuilder sqlQueryBuilder, List<Field> primaryKeys) {
 
         if (primaryKeys.size() == 0) {
 
@@ -172,6 +175,9 @@ public class SQLiteSimple {
 //            sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
 
         } else if (primaryKeys.size() == 1) {
+
+            sqlQueryBuilder.append(SimpleConstants.DIVIDER);
+            sqlQueryBuilder.append(SimpleConstants.SPACE);
 
             Field fieldEntity = primaryKeys.get(0);
             String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
