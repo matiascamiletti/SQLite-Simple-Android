@@ -336,6 +336,13 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
+    public List<T> readAllWithOrder(String column, String order) {
+        Cursor cursor = selectCursorFromTable(null, null, null, null,
+                String.format(SimpleConstants.FORMAT_TWINS, column, order));
+        return readAll(cursor);
+    }
+
+    @SuppressWarnings("unused")
     public List<T> readAllWhere(String columnName, String columnValue) {
         Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
                 new String[]{columnValue}, null, null, null);
