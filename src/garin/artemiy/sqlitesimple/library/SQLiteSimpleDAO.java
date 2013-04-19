@@ -489,4 +489,16 @@ public abstract class SQLiteSimpleDAO<T> {
         return averageResult;
     }
 
+    @SuppressWarnings("unused")
+    public Cursor rawQuery(String sqlQuery) {
+
+        SQLiteDatabase database = simpleHelper.getReadableDatabase();
+        Cursor cursor = database.rawQuery(sqlQuery, null);
+        cursor.moveToFirst();
+
+        database.close();
+
+        return cursor;
+    }
+
 }

@@ -83,6 +83,13 @@ public class SQLiteSimple {
         }
     }
 
+    @SuppressWarnings("unused")
+    public void rawQuery(String sql) {
+        SQLiteDatabase database = sqLiteSimpleHelper.getWritableDatabase();
+        database.execSQL(sql);
+        database.close();
+    }
+
     public void create(Class<?>... classes) {
 
         List<String> savedTables = sharedPreferencesUtil.getList(SimpleConstants.SHARED_DATABASE_TABLES);
