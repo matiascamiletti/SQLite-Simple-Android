@@ -53,6 +53,7 @@ public class SimpleConstants {
 
     // String.format(..)
     public static final String FORMAT_GLUED = "%s%s";
+    public static final String FORMAT_OBJECT_BRACKET = "'%s'";
     public static final String FORMAT_TWINS = "%s %s";
     public static final String FORMAT_COLUMN = "%s=?";
     public static final String FORMAT_BRACKETS = "(%s)";

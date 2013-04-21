@@ -127,7 +127,8 @@ public class SQLiteSimple {
                     } else {
 
                         sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
-                                column, fieldEntityAnnotation.type()));
+                                String.format(SimpleConstants.FORMAT_OBJECT_BRACKET, column),
+                                fieldEntityAnnotation.type()));
 
                         if (fieldEntityAnnotation.isAutoincrement()) {
                             sqlQueryBuilder.append(SimpleConstants.SPACE);
