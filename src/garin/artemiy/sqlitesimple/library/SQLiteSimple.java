@@ -160,7 +160,7 @@ public class SQLiteSimple {
             newDatabaseVersion = true;
 
         boolean isRebasedTables = false;
-        if (!newDatabaseVersion) {
+        if (!newDatabaseVersion) {   // todo new column support (alter table)
             isRebasedTables = rebaseTablesIfNeed(savedTables, tables, sqlQueries, savedSQLQueries);
             if (savedSQLQueries.hashCode() != sqlQueries.hashCode() && savedSQLQueries.hashCode() != 1) {
                 addNewColumnsIfNeed(tables, sqlQueries, savedSQLQueries);
@@ -184,9 +184,6 @@ public class SQLiteSimple {
 
         } else if (primaryKeys.size() == 1) {
 
-            sqlQueryBuilder.append(SimpleConstants.DIVIDER);
-            sqlQueryBuilder.append(SimpleConstants.SPACE);
-
             Field fieldEntity = primaryKeys.get(0);
             String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
             Column fieldEntityAnnotation = fieldEntity.getAnnotation(Column.class);
@@ -209,6 +206,7 @@ public class SQLiteSimple {
                 Column fieldEntityAnnotation = fieldEntity.getAnnotation(Column.class);
                 sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
                         column, fieldEntityAnnotation.type()));
+
                 sqlQueryBuilder.append(SimpleConstants.DIVIDER);
                 sqlQueryBuilder.append(SimpleConstants.SPACE);
 
