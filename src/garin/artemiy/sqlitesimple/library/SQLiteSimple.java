@@ -33,6 +33,7 @@ public class SQLiteSimple {
     private SQLiteSimpleHelper sqLiteSimpleHelper;
     private SimplePreferencesUtil sharedPreferencesUtil;
     private int databaseVersion;
+    private boolean isAddedSQLDivider;
 
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context, int databaseVersion) {
@@ -129,6 +130,7 @@ public class SQLiteSimple {
                         sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
                                 String.format(SimpleConstants.FORMAT_OBJECT_BRACKET, column),
                                 fieldEntityAnnotation.type()));
+                        isAddedSQLDivider = false;
 
                         if (fieldEntityAnnotation.isAutoincrement()) {
                             sqlQueryBuilder.append(SimpleConstants.SPACE);
@@ -136,6 +138,7 @@ public class SQLiteSimple {
                         }
 
                         if (annotatedFieldsIndex != tableFieldsCount - 1) {
+                            isAddedSQLDivider = true;
                             sqlQueryBuilder.append(SimpleConstants.DIVIDER);
                             sqlQueryBuilder.append(SimpleConstants.SPACE);
                         }
@@ -184,13 +187,20 @@ public class SQLiteSimple {
 
         } else if (primaryKeys.size() == 1) {
 
+            if (!isAddedSQLDivider) {
+                sqlQueryBuilder.append(SimpleConstants.DIVIDER);
+                sqlQueryBuilder.append(SimpleConstants.SPACE);
+            }
+
             Field fieldEntity = primaryKeys.get(0);
             String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
             Column fieldEntityAnnotation = fieldEntity.getAnnotation(Column.class);
             sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
                     column, fieldEntityAnnotation.type()));
+
             sqlQueryBuilder.append(SimpleConstants.SPACE);
             sqlQueryBuilder.append(SimpleConstants.PRIMARY_KEY);
+
             if (fieldEntityAnnotation.isAutoincrement()) {
                 sqlQueryBuilder.append(SimpleConstants.SPACE);
                 sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
