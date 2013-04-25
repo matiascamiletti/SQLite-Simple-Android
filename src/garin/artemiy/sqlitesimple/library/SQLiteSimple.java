@@ -176,6 +176,11 @@ public class SQLiteSimple {
 
     private void makeKeyForTable(StringBuilder sqlQueryBuilder, List<Field> primaryKeys) {
 
+        if (!isAddedSQLDivider) {
+            sqlQueryBuilder.append(SimpleConstants.DIVIDER);
+            sqlQueryBuilder.append(SimpleConstants.SPACE);
+        }
+
         if (primaryKeys.size() == 0) {
 
 //            todo: add default primary key if any key do not exist
@@ -186,11 +191,6 @@ public class SQLiteSimple {
 //            sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
 
         } else if (primaryKeys.size() == 1) {
-
-            if (!isAddedSQLDivider) {
-                sqlQueryBuilder.append(SimpleConstants.DIVIDER);
-                sqlQueryBuilder.append(SimpleConstants.SPACE);
-            }
 
             Field fieldEntity = primaryKeys.get(0);
             String column = SimpleDatabaseUtil.getColumnName(fieldEntity);

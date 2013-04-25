@@ -193,6 +193,7 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public Cursor selectCursorFromTable(String selection, String[] selectionArgs,
                                         String groupBy, String having, String orderBy) {
+
         SQLiteDatabase database = simpleHelper.getReadableDatabase();
         String table = SimpleDatabaseUtil.getTableName(tClass);
         String[] columns = getColumns();
