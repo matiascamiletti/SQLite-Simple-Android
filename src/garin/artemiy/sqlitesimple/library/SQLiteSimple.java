@@ -116,10 +116,12 @@ public class SQLiteSimple {
             int annotatedFieldsIndex = 0;
 
             for (int i = 0; i < classEntity.getDeclaredFields().length; i++) {
+
                 Field fieldEntity = classEntity.getDeclaredFields()[i];
                 Column fieldEntityAnnotation = fieldEntity.getAnnotation(Column.class);
+                String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
+
                 if (fieldEntityAnnotation != null) { // if field what we need annotated
-                    String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
 
                     if (fieldEntityAnnotation.isPrimaryKey()) {
 
@@ -128,8 +130,8 @@ public class SQLiteSimple {
                     } else {
 
                         sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
-                                String.format(SimpleConstants.FORMAT_OBJECT_BRACKET, column),
-                                fieldEntityAnnotation.type()));
+                                column, fieldEntityAnnotation.type()));
+
                         isAddedSQLDivider = false;
 
                         if (fieldEntityAnnotation.isAutoincrement()) {
@@ -150,7 +152,7 @@ public class SQLiteSimple {
                 }
             }
 
-            makeKeyForTable(sqlQueryBuilder, primaryKeys); // or keys
+            makeKeyForTable(sqlQueryBuilder, primaryKeys);
 
             sqlQueryBuilder.append(SimpleConstants.LAST_BRACKET);
 
@@ -176,7 +178,7 @@ public class SQLiteSimple {
 
     private void makeKeyForTable(StringBuilder sqlQueryBuilder, List<Field> primaryKeys) {
 
-        if (!isAddedSQLDivider) {
+        if (!isAddedSQLDivider && !sqlQueryBuilder.toString().endsWith(SimpleConstants.FIRST_BRACKET)) {
             sqlQueryBuilder.append(SimpleConstants.DIVIDER);
             sqlQueryBuilder.append(SimpleConstants.SPACE);
         }
@@ -212,6 +214,7 @@ public class SQLiteSimple {
             boolean isFirst = true;
 
             for (Field fieldEntity : primaryKeys) {
+
                 String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
                 Column fieldEntityAnnotation = fieldEntity.getAnnotation(Column.class);
                 sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
@@ -232,7 +235,7 @@ public class SQLiteSimple {
             }
 
             sqlQueryBuilder.append(SimpleConstants.PRIMARY_KEY);
-            primaryKeysBuilder.append(SimpleConstants.SPACE);
+            sqlQueryBuilder.append(SimpleConstants.SPACE);
             sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_BRACKETS, primaryKeysBuilder.toString()));
 
         }

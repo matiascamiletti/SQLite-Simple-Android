@@ -460,6 +460,20 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
+    public int deleteWhere(String firstColumnName, String firstColumnValue,
+                           String secondColumnName, String secondColumnValue) {
+        SQLiteDatabase database = simpleHelper.getWritableDatabase();
+
+        int deletedRow = database.delete(
+                SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
+                firstColumnName, secondColumnName),
+                new String[]{firstColumnValue, secondColumnValue});
+
+        database.close();
+        return deletedRow;
+    }
+
+    @SuppressWarnings("unused")
     public int deleteAll() {
         SQLiteDatabase database = simpleHelper.getWritableDatabase();
 
