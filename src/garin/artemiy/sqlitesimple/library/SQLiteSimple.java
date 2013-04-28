@@ -185,12 +185,11 @@ public class SQLiteSimple {
 
         if (primaryKeys.size() == 0) {
 
-//            todo: add default primary key if any key do not exist
-//            sqlQueryBuilder.append(SimpleConstants.ID_COLUMN);
-//            sqlQueryBuilder.append(SimpleConstants.SPACE);
-//            sqlQueryBuilder.append(SimpleConstants.PRIMARY_KEY);
-//            sqlQueryBuilder.append(SimpleConstants.SPACE);
-//            sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
+            sqlQueryBuilder.append(SimpleConstants.ID_COLUMN);
+            sqlQueryBuilder.append(SimpleConstants.SPACE);
+            sqlQueryBuilder.append(SimpleConstants.PRIMARY_KEY);
+            sqlQueryBuilder.append(SimpleConstants.SPACE);
+            sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
 
         } else if (primaryKeys.size() == 1) {
 

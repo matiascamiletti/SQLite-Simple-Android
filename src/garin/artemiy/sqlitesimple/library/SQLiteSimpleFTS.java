@@ -126,12 +126,12 @@ public class SQLiteSimpleFTS {
             FTSModel ftsModel;
             if (useTablesCategory) {
                 ftsModel = new FTSModel(
-                        cursor.getLong(cursor.getColumnIndex(COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_ID)),
                         cursor.getInt(cursor.getColumnIndex(COLUMN_TABLE_CATEGORY)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_DATA)));
             } else {
                 ftsModel = new FTSModel(
-                        cursor.getLong(cursor.getColumnIndex(COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_ID)),
                         cursor.getString(cursor.getColumnIndex(COLUMN_DATA)));
             }
 

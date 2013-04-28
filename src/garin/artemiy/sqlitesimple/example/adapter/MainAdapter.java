@@ -37,7 +37,7 @@ public class MainAdapter extends ArrayAdapter<FTSModel> {
 
         FTSModel ftsModel = getItem(position);
         TextView recordText = (TextView) view.findViewById(R.id.recordTextView);
-        recordText.setText(recordsDAO.read(ftsModel.getId()).getRecordText());
+        recordText.setText(recordsDAO.readWhere("_id", ftsModel.getId()).getRecordText());
 
         return view;
     }

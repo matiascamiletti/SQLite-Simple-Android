@@ -111,7 +111,7 @@ public class MainActivity extends ListActivity {
         long id = recordsDAO.createIfNotExist(record, Record.COLUMN_RECORD_TEXT, record.getRecordText());
 
         if (id != 0) {
-            simpleFTS.create(new FTSModel(id, record.getRecordText()));
+            simpleFTS.create(new FTSModel(String.valueOf(id), record.getRecordText()));
         }
 
         ((EditText) findViewById(R.id.recordEditText)).setText(EMPTY);
