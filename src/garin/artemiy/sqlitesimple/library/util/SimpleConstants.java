@@ -22,7 +22,7 @@ public class SimpleConstants {
     }
 
     // FTS
-    public static final int QUERY_LENGTH = 3;
+    public static final int QUERY_LENGTH = 2;
     public static final String FTS_SQL_OR = "OR";
     public static final String FTS_SQL_AND = "AND";
     public static final String FTS_SQL_FORMAT = "SELECT * FROM %s WHERE %s MATCH \"%s:%s*\" ORDER BY %s %s;";
@@ -60,6 +60,7 @@ public class SimpleConstants {
 
     // Other
     public static final int FIRST_DATABASE_VERSION = 1;
+    public static final String SPECIAL_SYMBOLS_REGEX = "[-+.^:,\"']";
     public static final String ID_COLUMN = "_id INTEGER"; // if we don't make a primary key column
     public static final String DESC = "DESC";
     public static final String ASC = "ASC";
