@@ -3,6 +3,7 @@ package garin.artemiy.sqlitesimple.library;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import garin.artemiy.sqlitesimple.library.annotations.Column;
+import garin.artemiy.sqlitesimple.library.util.ColumnType;
 import garin.artemiy.sqlitesimple.library.util.SimpleConstants;
 import garin.artemiy.sqlitesimple.library.util.SimpleDatabaseUtil;
 import garin.artemiy.sqlitesimple.library.util.SimplePreferencesUtil;
@@ -34,31 +35,38 @@ public class SQLiteSimple {
     private SimplePreferencesUtil sharedPreferencesUtil;
     private int databaseVersion;
     private boolean isAddedSQLDivider;
+    private String sharedPreferencesPlace;
 
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context, int databaseVersion) {
         sharedPreferencesUtil = new SimplePreferencesUtil(context);
+        sharedPreferencesPlace = SimpleConstants.LOCAL_PREFERENCES;
+
         this.databaseVersion = databaseVersion;
+
         commitDatabaseVersion();
-        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion, null);
+
+        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, sharedPreferencesPlace, databaseVersion, null);
     }
 
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context) {
         sharedPreferencesUtil = new SimplePreferencesUtil(context);
+        sharedPreferencesPlace = SimpleConstants.LOCAL_PREFERENCES;
         this.databaseVersion = SimpleConstants.FIRST_DATABASE_VERSION;
 
         commitDatabaseVersion();
 
-        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion, null);
+        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, sharedPreferencesPlace, databaseVersion, null);
     }
 
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context, String localDatabaseName) {
         sharedPreferencesUtil = new SimplePreferencesUtil(context);
+        sharedPreferencesPlace = localDatabaseName;
         this.databaseVersion = sharedPreferencesUtil.getDatabaseVersion();
 
-        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, databaseVersion, localDatabaseName);
+        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, sharedPreferencesPlace, databaseVersion, localDatabaseName);
     }
 
     private void commitDatabaseVersion() {
@@ -69,8 +77,8 @@ public class SQLiteSimple {
     }
 
     private void commit(List<String> tables, List<String> sqlQueries) {
-        sharedPreferencesUtil.putList(SimpleConstants.SHARED_DATABASE_TABLES, tables);
-        sharedPreferencesUtil.putList(SimpleConstants.SHARED_DATABASE_QUERIES, sqlQueries);
+        sharedPreferencesUtil.putList(String.format(SimpleConstants.SHARED_DATABASE_TABLES, sharedPreferencesPlace), tables);
+        sharedPreferencesUtil.putList(String.format(SimpleConstants.SHARED_DATABASE_QUERIES, sharedPreferencesPlace), sqlQueries);
         sharedPreferencesUtil.commit();
     }
 
@@ -93,9 +101,13 @@ public class SQLiteSimple {
 
     public void create(Class<?>... classes) {
 
-        List<String> savedTables = sharedPreferencesUtil.getList(SimpleConstants.SHARED_DATABASE_TABLES);
-        List<String> savedSQLQueries = sharedPreferencesUtil.getList(SimpleConstants.SHARED_DATABASE_QUERIES);
-        sharedPreferencesUtil.clearAllPreferences(databaseVersion);
+        List<String> savedTables = sharedPreferencesUtil.
+                getList(String.format(SimpleConstants.SHARED_DATABASE_TABLES, sharedPreferencesPlace));
+        List<String> savedSQLQueries = sharedPreferencesUtil.
+                getList(String.format(SimpleConstants.SHARED_DATABASE_QUERIES, sharedPreferencesPlace));
+
+        sharedPreferencesUtil.clearAllPreferences(sharedPreferencesPlace, databaseVersion);
+
         List<String> tables = new ArrayList<String>();
         List<String> sqlQueries = new ArrayList<String>();
 
@@ -161,19 +173,25 @@ public class SQLiteSimple {
         }
 
         boolean newDatabaseVersion = false;
+
         if (databaseVersion > sharedPreferencesUtil.getDatabaseVersion())
             newDatabaseVersion = true;
 
         boolean isRebasedTables = false;
-        if (!newDatabaseVersion) {   // todo new column support (alter table)
+
+        if (!newDatabaseVersion) {
+
             isRebasedTables = rebaseTablesIfNeed(savedTables, tables, sqlQueries, savedSQLQueries);
             if (savedSQLQueries.hashCode() != sqlQueries.hashCode() && savedSQLQueries.hashCode() != 1) {
                 addNewColumnsIfNeed(tables, sqlQueries, savedSQLQueries);
             }
+
         }
+
         if (!isRebasedTables) {
             checkingCommit(tables, sqlQueries, newDatabaseVersion);
         }
+
     }
 
     private void makeKeyForTable(StringBuilder sqlQueryBuilder, List<Field> primaryKeys) {
@@ -186,6 +204,8 @@ public class SQLiteSimple {
         if (primaryKeys.size() == 0) {
 
             sqlQueryBuilder.append(SimpleConstants.ID_COLUMN);
+            sqlQueryBuilder.append(SimpleConstants.SPACE);
+            sqlQueryBuilder.append(ColumnType.INTEGER);
             sqlQueryBuilder.append(SimpleConstants.SPACE);
             sqlQueryBuilder.append(SimpleConstants.PRIMARY_KEY);
             sqlQueryBuilder.append(SimpleConstants.SPACE);
@@ -288,7 +308,7 @@ public class SQLiteSimple {
             for (int i = 0; i < tables.size(); i++) {
                 String table = tables.get(i);
                 for (String savedSqlQuery : savedSqlQueries) {
-                    if (table.contains(savedSqlQuery)) {
+                    if (savedSqlQuery.contains(table)) {
 
                         List<String> savedColumns = Arrays.asList(savedSqlQueries.get(i).
                                 replace(String.format(SimpleConstants.CREATE_TABLE_IF_NOT_EXIST, table), SimpleConstants.EMPTY).
@@ -310,12 +330,15 @@ public class SQLiteSimple {
                                 sqLiteDatabase.execSQL(String.format(SimpleConstants.ALTER_TABLE_ADD_COLUMN, table, column));
                             }
                             sqLiteDatabase.close();
+
                             isAddNewColumn = true;
                         }
                     }
                 }
             }
+
             return isAddNewColumn;
+
         } catch (IndexOutOfBoundsException exception) {
             // duplicated class on databaseSimple.create(...);
             exception.printStackTrace();

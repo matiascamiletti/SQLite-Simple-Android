@@ -35,12 +35,13 @@ public class SimpleConstants {
 
     // Shared preferences
     public static final String SHARED_PREFERENCES_DATABASE = "SQLiteSimpleDatabaseHelper";
-    public static final String SHARED_DATABASE_TABLES = "SQLiteSimpleDatabaseTables";
-    public static final String SHARED_DATABASE_QUERIES = "SQLiteSimpleDatabaseQueries";
+    public static final String SHARED_DATABASE_TABLES = "SQLiteSimpleDatabaseTables_%s";
+    public static final String SHARED_DATABASE_QUERIES = "SQLiteSimpleDatabaseQueries_%s";
     public static final String SHARED_DATABASE_VERSION = "SQLiteSimpleDatabaseVersion";
     public static final String SHARED_DATABASE_VIRTUAL_TABLE_CREATED = "SQLiteSimpleDatabaseVirtualTableCreated";
     public static final String SHARED_PREFERENCES_LIST = "List_%s_%s";
     public static final String SHARED_PREFERENCES_INDEX = "%s_Index";
+    public static final String LOCAL_PREFERENCES = "LOCAL";
 
     // SQL
     public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS";
@@ -61,7 +62,7 @@ public class SimpleConstants {
     // Other
     public static final int FIRST_DATABASE_VERSION = 1;
     public static final String SPECIAL_SYMBOLS_REGEX = "[-+.^:,\"']";
-    public static final String ID_COLUMN = "_id INTEGER"; // if we don't make a primary key column
+    public static final String ID_COLUMN = "_id"; // if we don't make a primary key column
     public static final String DESC = "DESC";
     public static final String ASC = "ASC";
     public static final String SPACE = " ";

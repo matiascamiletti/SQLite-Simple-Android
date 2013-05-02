@@ -55,7 +55,9 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     private String getPrimaryKeyColumnName() {
+
         for (Field field : tClass.getDeclaredFields()) {
+
             Column fieldEntityAnnotation = field.getAnnotation(Column.class);
 
             if (fieldEntityAnnotation != null) {
@@ -71,10 +73,13 @@ public abstract class SQLiteSimpleDAO<T> {
                 }
             }
         }
-        return null;
+
+        return SimpleConstants.ID_COLUMN;
+
     }
 
     private String[] getColumns() {
+        boolean isHaveAnyKey = false;
         List<String> columnsList = new ArrayList<String>();
 
         for (Field field : tClass.getDeclaredFields()) {
@@ -83,7 +88,14 @@ public abstract class SQLiteSimpleDAO<T> {
                 String columnName = SimpleDatabaseUtil.getColumnName(field);
                 if (columnName != null)
                     columnsList.add(columnName);
+                if (fieldEntityAnnotation.isPrimaryKey()) {
+                    isHaveAnyKey = true;
+                }
             }
+        }
+
+        if (!isHaveAnyKey) {
+            columnsList.add(SimpleConstants.ID_COLUMN);
         }
 
         String[] columnsArray = new String[columnsList.size()];

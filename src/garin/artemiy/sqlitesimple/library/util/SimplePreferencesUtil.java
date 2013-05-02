@@ -33,11 +33,17 @@ public class SimplePreferencesUtil {
         sharedPreferencesEditor = sharedPreferences.edit();
     }
 
-    public void clearAllPreferences(int databaseVersion) {
+    public void clearAllPreferences(String place, int databaseVersion) {
 
         boolean isFTSTableCreated = isVirtualTableCreated();
 
-        sharedPreferencesEditor.clear();
+        sharedPreferencesEditor.remove(String.format(SimpleConstants.SHARED_DATABASE_QUERIES, place));
+        sharedPreferencesEditor.remove(String.format(SimpleConstants.SHARED_PREFERENCES_INDEX,
+                String.format(SimpleConstants.SHARED_DATABASE_QUERIES, place)));
+        sharedPreferencesEditor.remove(String.format(SimpleConstants.SHARED_DATABASE_TABLES, place));
+        sharedPreferencesEditor.remove(String.format(SimpleConstants.SHARED_PREFERENCES_INDEX,
+                String.format(SimpleConstants.SHARED_DATABASE_TABLES, place)));
+
         putDatabaseVersion(databaseVersion);
 
         if (isFTSTableCreated) {

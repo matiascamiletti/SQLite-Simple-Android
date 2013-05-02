@@ -34,11 +34,22 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
     private String localDatabaseName;
     private Context context;
     private SimplePreferencesUtil sharedPreferencesUtil;
+    private String sharedPreferencesPlace;
 
     /**
      * @param localDatabaseName - load local sqlite if need
      */
-    public SQLiteSimpleHelper(Context context, int databaseVersion, String localDatabaseName) {
+    public SQLiteSimpleHelper(Context context, String sharedPreferencesPlace,
+                              int databaseVersion, String localDatabaseName) {
+        super(context, SimpleDatabaseUtil.getFullDatabaseName(localDatabaseName, context), null, databaseVersion);
+        this.localDatabaseName = localDatabaseName;
+        this.context = context;
+        this.sharedPreferencesPlace = sharedPreferencesPlace;
+        sharedPreferencesUtil = new SimplePreferencesUtil(context);
+    }
+
+    public SQLiteSimpleHelper(Context context,
+                              int databaseVersion, String localDatabaseName) {
         super(context, SimpleDatabaseUtil.getFullDatabaseName(localDatabaseName, context), null, databaseVersion);
         this.localDatabaseName = localDatabaseName;
         this.context = context;
@@ -47,7 +58,8 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        List<String> sqlQueries = sharedPreferencesUtil.getList(SimpleConstants.SHARED_DATABASE_QUERIES);
+        List<String> sqlQueries = sharedPreferencesUtil.getList(
+                String.format(SimpleConstants.SHARED_DATABASE_QUERIES, sharedPreferencesPlace));
         if (sqlQueries != null) { // execute sql queries in order
             for (String sqlQuery : sqlQueries) {
                 sqLiteDatabase.execSQL(sqlQuery);
@@ -57,7 +69,9 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        List<String> tables = sharedPreferencesUtil.getList(SimpleConstants.SHARED_DATABASE_TABLES);
+        // todo: Delete all data when database version upgrade
+        List<String> tables = sharedPreferencesUtil.getList(
+                String.format(SimpleConstants.SHARED_DATABASE_TABLES, sharedPreferencesPlace));
         if (tables != null) { // drop tables in order
             for (String table : tables) {
                 sqLiteDatabase.execSQL(String.format(SimpleConstants.FORMAT_TWINS,
