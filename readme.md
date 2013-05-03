@@ -1,8 +1,8 @@
-<h3>Version - 1.4</h3>
+<h3>Version - 1.5</h3>
 
 <h2>Install</h2>
 
-You may import src from project or <a href="http://sourceforge.net/projects/sqlite-android/files/sqlite-simple-0.92.jar/download">download jar</a> (recommended)
+You may import src from project or <a href="http://sourceforge.net/projects/sqlite-android/files/sqlite-simple-1.5.jar/download">download jar</a> (recommended)
 
 <h2>Quick start</h2>
 
@@ -15,16 +15,13 @@ You may import src from project or <a href="http://sourceforge.net/projects/sqli
 ```java
 public class Record {
 
-    @Column(type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
-    private String _id;
-
     @Column(type = ColumnType.INTEGER)
     public Long dateOfPublication;
 
     @Column(type = ColumnType.NUMERIC)
     public boolean isPublished;
 
-    // also supports ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.BLOB
+    // also supports ColumnType.TEXT, ColumnType.REAL, ColumnType.BLOB
 
 }
 ```
@@ -110,8 +107,8 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         SQLiteSimple databaseSimple = new SQLiteSimple(this, DATABASE_VERSION); // just write here
-        databaseSimple.create(Record.class);                                   // if you not specify version
-    }                                                                          // library set version 1
+        databaseSimple.create(Record.class);                                    // if you not specify version
+    }                                                                           // library set version 1
 }
 ```
 

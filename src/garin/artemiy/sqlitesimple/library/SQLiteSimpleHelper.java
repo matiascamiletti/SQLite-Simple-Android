@@ -69,9 +69,8 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
-        // todo: Delete all data when database version upgrade
         List<String> tables = sharedPreferencesUtil.getList(
-                String.format(SimpleConstants.SHARED_DATABASE_TABLES, sharedPreferencesPlace));
+                String.format(SimpleConstants.SHARED_DATABASE_TABLES, SimpleConstants.LOCAL_PREFERENCES));
         if (tables != null) { // drop tables in order
             for (String table : tables) {
                 sqLiteDatabase.execSQL(String.format(SimpleConstants.FORMAT_TWINS,

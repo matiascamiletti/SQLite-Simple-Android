@@ -26,11 +26,6 @@ public class MainCursorAdapter extends CursorAdapter {
     }
 
     @Override
-    public int getCount() {
-        return super.getCount();
-    }
-
-    @Override
     public View newView(Context context, Cursor cursor, ViewGroup viewGroup) {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         return layoutInflater.inflate(R.layout.record_item, null);

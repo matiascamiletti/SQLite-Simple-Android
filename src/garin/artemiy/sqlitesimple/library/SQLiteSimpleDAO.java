@@ -37,13 +37,13 @@ public abstract class SQLiteSimpleDAO<T> {
     private SQLiteSimpleHelper simpleHelper;
     private String primaryKeyColumnName;
 
-    public SQLiteSimpleDAO(Class<T> tClass, Context context) {
+    protected SQLiteSimpleDAO(Class<T> tClass, Context context) {
         simpleHelper = new SQLiteSimpleHelper(context,
                 new SimplePreferencesUtil(context).getDatabaseVersion(), null);
         init(tClass);
     }
 
-    public SQLiteSimpleDAO(Class<T> tClass, Context context, String localDatabaseName) {
+    protected SQLiteSimpleDAO(Class<T> tClass, Context context, String localDatabaseName) {
         simpleHelper = new SQLiteSimpleHelper(context,
                 new SimplePreferencesUtil(context).getDatabaseVersion(), localDatabaseName);
         init(tClass);
@@ -220,7 +220,6 @@ public abstract class SQLiteSimpleDAO<T> {
     public long createIfNotExist(T object, String columnName, String columnValue) {
         long result = -1;
 
-        String table = SimpleDatabaseUtil.getTableName(tClass);
         SQLiteDatabase database = simpleHelper.getReadableDatabase();
         Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN,
                 columnName), new String[]{columnValue}, null, null, null);
@@ -242,7 +241,6 @@ public abstract class SQLiteSimpleDAO<T> {
                                  String secondColumnName, String secondColumnValue) {
         long result = -1;
 
-        String table = SimpleDatabaseUtil.getTableName(tClass);
         SQLiteDatabase database = simpleHelper.getReadableDatabase();
         Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
                 firstColumnName, secondColumnName), new String[]{firstColumnValue, secondColumnValue}, null, null, null);
