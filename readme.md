@@ -35,7 +35,7 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         SQLiteSimple databaseSimple = new SQLiteSimple(this);
-        databaseSimple.create(Record.class); // enumerate classes Class1.class,Class2.class,...
+        databaseSimple.create(Record.class); // enumerate classes Class1.class, Class2.class,...
     }
 
 }
