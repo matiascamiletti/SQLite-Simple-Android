@@ -340,10 +340,9 @@ public class SQLiteSimple {
             return isAddNewColumn;
 
         } catch (IndexOutOfBoundsException exception) {
-            // duplicated class on databaseSimple.create(...);
-            exception.printStackTrace();
-            return false;
+            throw new IndexOutOfBoundsException("Duplicated class on method create(...)");
         }
+
     }
 
 }
