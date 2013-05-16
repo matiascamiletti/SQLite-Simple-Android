@@ -114,7 +114,7 @@ public class SQLiteSimple {
         for (Class classEntity : classes) {
             StringBuilder sqlQueryBuilder = new StringBuilder();
             String table = SimpleDatabaseUtil.getTableName(classEntity);
-            sqlQueryBuilder.append(String.format(SimpleConstants.CREATE_TABLE_IF_NOT_EXIST, table));
+            sqlQueryBuilder.append(String.format(SimpleConstants.SQL_CREATE_TABLE_IF_NOT_EXIST, table));
 
             List<Field> primaryKeys = new ArrayList<Field>();
 
@@ -275,7 +275,7 @@ public class SQLiteSimple {
             SQLiteDatabase sqLiteDatabase = sqLiteSimpleHelper.getWritableDatabase();
             for (String extraTable : extraTables) {
                 sqLiteDatabase.execSQL(String.format(SimpleConstants.FORMAT_TWINS,
-                        SimpleConstants.DROP_TABLE_IF_EXISTS, extraTable));
+                        SimpleConstants.SQL_DROP_TABLE_IF_EXISTS, extraTable));
             }
 
             commit(tables, sqlQueries);
@@ -295,6 +295,7 @@ public class SQLiteSimple {
             for (String sqlQuery : sqlQueriesToCreate) {
                 sqLiteDatabase.execSQL(sqlQuery);
             }
+            sqLiteDatabase.close();
         }
 
         return false;
@@ -311,12 +312,12 @@ public class SQLiteSimple {
                     if (savedSqlQuery.contains(table)) {
 
                         List<String> savedColumns = Arrays.asList(savedSqlQueries.get(i).
-                                replace(String.format(SimpleConstants.CREATE_TABLE_IF_NOT_EXIST, table), SimpleConstants.EMPTY).
+                                replace(String.format(SimpleConstants.SQL_CREATE_TABLE_IF_NOT_EXIST, table), SimpleConstants.EMPTY).
                                 replace(SimpleConstants.LAST_BRACKET, SimpleConstants.EMPTY).
                                 split(SimpleConstants.DIVIDER));
 
                         List<String> columns = Arrays.asList(sqlQueries.get(i).
-                                replace(String.format(SimpleConstants.CREATE_TABLE_IF_NOT_EXIST, table), SimpleConstants.EMPTY).
+                                replace(String.format(SimpleConstants.SQL_CREATE_TABLE_IF_NOT_EXIST, table), SimpleConstants.EMPTY).
                                 replace(SimpleConstants.LAST_BRACKET, SimpleConstants.EMPTY).
                                 split(SimpleConstants.DIVIDER));
 
@@ -327,7 +328,7 @@ public class SQLiteSimple {
 
                             SQLiteDatabase sqLiteDatabase = sqLiteSimpleHelper.getWritableDatabase();
                             for (String column : extraColumns) {
-                                sqLiteDatabase.execSQL(String.format(SimpleConstants.ALTER_TABLE_ADD_COLUMN, table, column));
+                                sqLiteDatabase.execSQL(String.format(SimpleConstants.SQL_ALTER_TABLE_ADD_COLUMN, table, column));
                             }
                             sqLiteDatabase.close();
 

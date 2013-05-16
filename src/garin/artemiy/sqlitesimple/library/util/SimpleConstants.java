@@ -44,13 +44,14 @@ public class SimpleConstants {
     public static final String LOCAL_PREFERENCES = "LOCAL";
 
     // SQL
-    public static final String DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS";
     public static final String AUTOINCREMENT = "AUTOINCREMENT";
     public static final String PRIMARY_KEY = "PRIMARY KEY";
-    public static final String CREATE_TABLE_IF_NOT_EXIST = "CREATE TABLE IF NOT EXISTS %s (";
-    public static final String ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s ";
-    public static final String AVG_QUERY = "SELECT AVG(%s) FROM %s";
-    public static final String AVG_QUERY_WHERE = "SELECT AVG(%s) FROM %s WHERE %s = '%s'";
+    public static final String SQL_IN = "%s IN (%s)";
+    public static final String SQL_DROP_TABLE_IF_EXISTS = "DROP TABLE IF EXISTS";
+    public static final String SQL_CREATE_TABLE_IF_NOT_EXIST = "CREATE TABLE IF NOT EXISTS %s (";
+    public static final String SQL_ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s ";
+    public static final String SQL_AVG_QUERY = "SELECT AVG(%s) FROM %s";
+    public static final String SQL_AVG_QUERY_WHERE = "SELECT AVG(%s) FROM %s WHERE %s = '%s'";
 
     // String.format(..)
     public static final String FORMAT_GLUED = "%s%s";

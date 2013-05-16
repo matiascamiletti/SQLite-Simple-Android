@@ -25,6 +25,7 @@ import java.util.List;
  */
 public class MainActivity extends ListActivity {
 
+    // todo change example activity
     private RecordsDAO recordsDAO;
     private Cursor cursor;
     private SQLiteSimpleFTS simpleFTS;
@@ -37,7 +38,7 @@ public class MainActivity extends ListActivity {
         recordsDAO = new RecordsDAO(this);
         setContentView(R.layout.main_layout);
 
-        cursor = recordsDAO.selectCursorDescFromTable();
+//        cursor = recordsDAO.selectCursorDescFromTable();
         MainCursorAdapter cursorAdapter = new MainCursorAdapter(this, cursor);
         setListAdapter(cursorAdapter);
 
@@ -97,7 +98,7 @@ public class MainActivity extends ListActivity {
     private void updateAdapter() {
         MainCursorAdapter cursorAdapter = (MainCursorAdapter) getListAdapter();
 
-        cursorAdapter.changeCursor(recordsDAO.selectCursorDescFromTable());
+//        cursorAdapter.changeCursor(recordsDAO.selectCursorDescFromTable());
         cursorAdapter.notifyDataSetChanged();
 
         mainAdapter.notifyDataSetChanged();

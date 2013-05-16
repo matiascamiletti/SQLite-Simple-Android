@@ -35,7 +35,10 @@ public abstract class SQLiteSimpleDAO<T> {
 
     private Class<T> tClass;
     private SQLiteSimpleHelper simpleHelper;
+    private SQLiteDatabase sqLiteDatabase;
     private String primaryKeyColumnName;
+    private List<Cursor> cursors = new ArrayList<Cursor>();
+    private boolean isRecycled;
 
     protected SQLiteSimpleDAO(Class<T> tClass, Context context) {
         simpleHelper = new SQLiteSimpleHelper(context,
@@ -52,6 +55,22 @@ public abstract class SQLiteSimpleDAO<T> {
     private void init(Class<T> tClass) {
         this.tClass = tClass;
         primaryKeyColumnName = getPrimaryKeyColumnName();
+        sqLiteDatabase = simpleHelper.getWritableDatabase();
+    }
+
+    @SuppressWarnings("unused")
+    public void recycle() {
+        isRecycled = true;
+
+        for (Cursor cursor : cursors) {
+            if (!cursor.isClosed())
+                cursor.close();
+        }
+
+        sqLiteDatabase.close();
+        sqLiteDatabase = null;
+        primaryKeyColumnName = null;
+        cursors.clear();
     }
 
     private String getPrimaryKeyColumnName() {
@@ -171,215 +190,12 @@ public abstract class SQLiteSimpleDAO<T> {
         }
     }
 
-    @SuppressWarnings("unused")
-    public int getCount() {
-        return selectCursorAscFromTable().getCount();
-    }
-
-    @SuppressWarnings("unused")
-    public long getLastRowId() {
-        Cursor cursor = selectCursorAscFromTable();
-        cursor.moveToLast();
-
-        long id;
-        if (cursor.getPosition() == -1) {
-            id = -1;
-        } else {
-            id = cursor.getLong(cursor.getColumnIndex(primaryKeyColumnName));
-        }
-        cursor.close();
-        return id;
-    }
-
-    @SuppressWarnings("unused")
-    public Cursor selectCursorAscFromTable() {
-        return selectCursorFromTable(null, null, null, null, null);
-    }
-
-    @SuppressWarnings("unused")
-    public Cursor selectCursorDescFromTable() {
-        return selectCursorFromTable(null, null, null, null,
-                String.format(SimpleConstants.FORMAT_TWINS, primaryKeyColumnName, SimpleConstants.DESC));
-    }
-
-    @SuppressWarnings("unused")
-    public Cursor selectCursorFromTable(String selection, String[] selectionArgs,
-                                        String groupBy, String having, String orderBy) {
-
-        SQLiteDatabase database = simpleHelper.getReadableDatabase();
-        String table = SimpleDatabaseUtil.getTableName(tClass);
-        String[] columns = getColumns();
-        Cursor cursor = database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
-        cursor.moveToFirst();
-        database.close();
-
-        return cursor;
-    }
-
-    @SuppressWarnings("unused")
-    public long createIfNotExist(T object, String columnName, String columnValue) {
-        long result = -1;
-
-        SQLiteDatabase database = simpleHelper.getReadableDatabase();
-        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN,
-                columnName), new String[]{columnValue}, null, null, null);
-
-        cursor.moveToFirst();
-
-        if (cursor.getCount() == 0) {
-            result = create(object);
-        }
-
-        database.close();
-        cursor.close();
-
-        return result;
-    }
-
-    @SuppressWarnings("unused")
-    public long createIfNotExist(T object, String firstColumnName, String firstColumnValue,
-                                 String secondColumnName, String secondColumnValue) {
-        long result = -1;
-
-        SQLiteDatabase database = simpleHelper.getReadableDatabase();
-        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
-                firstColumnName, secondColumnName), new String[]{firstColumnValue, secondColumnValue}, null, null, null);
-
-        cursor.moveToFirst();
-
-        if (cursor.getCount() == 0) {
-            result = create(object);
-        }
-
-        database.close();
-        cursor.close();
-
-        return result;
-    }
-
-    @SuppressWarnings("unused")
-    public void createAll(List<T> objects) {
-        for (T object : objects) {
-            create(object);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public long create(T object) {
-        SQLiteDatabase database = simpleHelper.getWritableDatabase();
-        try {
-
-            ContentValues contentValues = new ContentValues();
-
-            for (Field field : object.getClass().getDeclaredFields()) {
-                Column fieldEntityAnnotation = field.getAnnotation(Column.class);
-                if (fieldEntityAnnotation != null) {
-                    if (!fieldEntityAnnotation.isAutoincrement()) {
-                        putInContentValues(contentValues, field, object);
-                    }
-                }
-            }
-
-            return database.insert(SimpleDatabaseUtil.getTableName(object.getClass()), null, contentValues);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
-        } finally {
-            database.close();
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public T read(long id) {
-        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName),
-                new String[]{Long.toString(id)}
-                , null, null, null);
-
-        try {
-            T newTObject = tClass.newInstance();
-            bindObject(newTObject, cursor);
-
-            return newTObject;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            cursor.close();
-        } // in this case we close cursor, because we use database.query, NOT incoming cursor
-
-    }
-
-    @SuppressWarnings("unused")
-    public T read(Cursor cursor) {
-        try {
-            T newTObject = tClass.newInstance();
-            bindObject(newTObject, cursor);
-            return newTObject;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } // don't close cursor, because CursorAdapter use it!
-    }
-
-    @SuppressWarnings("unused")
-    public T readWhere(String columnName, String columnValue) {
-        return read(selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName), new String[]{columnValue}, null, null, null));
-    }
-
-    @SuppressWarnings("unused")
-    public T readWhere(String firstColumnName, String firstColumnValue,
-                       String secondColumnName, String secondColumnValue) {
-        return read(selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
-                firstColumnName, secondColumnName), new String[]{firstColumnValue, secondColumnValue}, null, null, null));
-    }
-
-    @SuppressWarnings("unused")
-    public T readWhereWithOrder(String columnName, String columnValue, String column, String order) {
-        return read(selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
-                new String[]{columnValue}, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order)));
-    }
-
-    @SuppressWarnings("unused")
-    public List<T> readAllAsc() {
-        Cursor cursor = selectCursorAscFromTable();
-        return readAll(cursor);
-    }
-
-    @SuppressWarnings("unused")
-    public List<T> readAllDesc() {
-        Cursor cursor = selectCursorDescFromTable();
-        return readAll(cursor);
-    }
-
-    @SuppressWarnings("unused")
-    public List<T> readAllWithOrder(String column, String order) {
-        Cursor cursor = selectCursorFromTable(null, null, null, null,
-                String.format(SimpleConstants.FORMAT_TWINS, column, order));
-        return readAll(cursor);
-    }
-
-    @SuppressWarnings("unused")
-    public List<T> readAllWhere(String columnName, String columnValue) {
-        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
-                new String[]{columnValue}, null, null, null);
-        return readAll(cursor);
-    }
-
-    @SuppressWarnings("unused")
-    public List<T> readAllWhereWithOrder(String columnName, String columnValue, String column, String order) {
-        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
-                new String[]{columnValue}, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order));
-        return readAll(cursor);
-    }
-
     private List<T> readAll(Cursor cursor) {
         try {
+
             List<T> list = new ArrayList<T>();
             for (int i = 0; i < cursor.getCount(); i++) {
-                T newTObject = tClass.newInstance();
-                bindObject(newTObject, cursor);
-                list.add(newTObject);
+                list.add(read(cursor));
                 cursor.moveToNext();
             }
 
@@ -393,42 +209,64 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
-    public long update(String columnName, String columnValue, T newObject) {
-        SQLiteDatabase database = simpleHelper.getWritableDatabase();
-        try {
-
-            ContentValues contentValues = getFilledContentValues(newObject);
-
-            return database.update(SimpleDatabaseUtil.getTableName(newObject.getClass()), contentValues,
-                    String.format(SimpleConstants.FORMAT_COLUMN, columnName), new String[]{columnValue});
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return -1;
-        } finally {
-            database.close();
+    private T read(Cursor cursor) {
+        if (cursor != null) {
+            try {
+                T newTObject = tClass.newInstance();
+                bindObject(newTObject, cursor);
+                return newTObject;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
+            return null;
         }
     }
 
     @SuppressWarnings("unused")
-    public long update(String firstColumnName, String firstColumnValue,
-                       String secondColumnName, String secondColumnValue, T newObject) {
+    private Cursor selectCursorAscFromTable() {
+        return selectCursorFromTable(null, null, null, null, null);
+    }
 
-        SQLiteDatabase database = simpleHelper.getWritableDatabase();
+    @SuppressWarnings("unused")
+    private Cursor selectCursorDescFromTable() {
+        return selectCursorFromTable(null, null, null, null,
+                String.format(SimpleConstants.FORMAT_TWINS, primaryKeyColumnName, SimpleConstants.DESC));
+    }
 
-        try {
+    @SuppressWarnings("unused")
+    private Cursor selectCursorFromTable(String selection, String[] selectionArgs,
+                                         String groupBy, String having, String orderBy) {
 
-            ContentValues contentValues = getFilledContentValues(newObject);
+        String table = SimpleDatabaseUtil.getTableName(tClass);
+        String[] columns = getColumns();
 
-            return database.update(SimpleDatabaseUtil.getTableName(newObject.getClass()), contentValues,
-                    String.format(SimpleConstants.FORMAT_COLUMNS_COMMA, firstColumnName, secondColumnName),
-                    new String[]{firstColumnValue, secondColumnValue});
+        if (sqLiteDatabase != null) {
+            Cursor cursor = sqLiteDatabase.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
+            cursor.moveToFirst();
 
-        } catch (Exception e) {
-            e.printStackTrace();
+            cursors.add(cursor);
+
+            return cursor;
+
+        } else {
+            return null;
+        }
+    }
+
+    private float averageQuery(String query) {
+        if (sqLiteDatabase != null) {
+            Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+            cursor.moveToFirst();
+
+            float averageResult = cursor.getFloat(FIRST_ELEMENT);
+
+            cursors.add(cursor);
+
+            return averageResult;
+        } else {
             return -1;
-        } finally {
-            database.close();
         }
     }
 
@@ -447,96 +285,402 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
+    public int getCount() {
+        if (!isRecycled) {
+            Cursor cursor = selectCursorAscFromTable();
+            if (cursor != null) {
+                int count = cursor.getCount();
+                cursor.close();
+                return count;
+            } else {
+                return -1;
+            }
+        } else {
+            return -1;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public long getLastRowId() {
+        if (!isRecycled) {
+            Cursor cursor = selectCursorAscFromTable();
+            if (cursor != null) {
+                cursor.moveToLast();
+
+                long id;
+                if (cursor.getPosition() == -1) {
+                    id = -1;
+                } else {
+                    id = cursor.getLong(cursor.getColumnIndex(primaryKeyColumnName));
+                }
+
+                cursor.close();
+                return id;
+            } else {
+                return -1;
+            }
+        } else {
+            return -1;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public long createIfNotExist(T object, String columnName, String columnValue) {
+        if (!isRecycled) {
+            long result = -1;
+
+            Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN,
+                    columnName), new String[]{columnValue}, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+
+                if (cursor.getCount() == 0) {
+                    result = create(object);
+                }
+
+                cursor.close();
+
+                return result;
+            } else {
+                return -1;
+            }
+        } else {
+            return -1;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public long createIfNotExist(T object, String firstColumnName, String firstColumnValue,
+                                 String secondColumnName, String secondColumnValue) {
+        if (!isRecycled) {
+            long result = -1;
+
+            Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
+                    firstColumnName, secondColumnName), new String[]{firstColumnValue, secondColumnValue}, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+
+                if (cursor.getCount() == 0) {
+                    result = create(object);
+                }
+
+                cursor.close();
+
+                return result;
+            } else {
+                return -1;
+            }
+        } else {
+            return -1;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public void createAll(List<T> objects) {
+        if (!isRecycled) {
+            for (T object : objects) {
+                create(object);
+            }
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public long create(T object) {
+        if (!isRecycled && sqLiteDatabase != null) {
+            try {
+
+                ContentValues contentValues = new ContentValues();
+
+                for (Field field : object.getClass().getDeclaredFields()) {
+                    Column fieldEntityAnnotation = field.getAnnotation(Column.class);
+                    if (fieldEntityAnnotation != null) {
+                        if (!fieldEntityAnnotation.isAutoincrement()) {
+                            putInContentValues(contentValues, field, object);
+                        }
+                    }
+                }
+
+                return sqLiteDatabase.insert(SimpleDatabaseUtil.getTableName(object.getClass()), null, contentValues);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return -1;
+            }
+        }
+        return -1;
+    }
+
+    @SuppressWarnings("unused")
+    public T read(long id) {
+        if (!isRecycled) {
+            Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName),
+                    new String[]{Long.toString(id)}
+                    , null, null, null);
+            if (cursor != null) {
+                try {
+                    T newTObject = tClass.newInstance();
+                    bindObject(newTObject, cursor);
+
+                    return newTObject;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                } finally {
+                    cursor.close();
+                } // in this case we close cursor, because we use database.query, NOT incoming cursor
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public T readWhere(String columnName, String columnValue) {
+        if (!isRecycled) {
+            Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName), new String[]{columnValue}, null, null, null);
+            return read(cursor);
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public T readWhere(String firstColumnName, String firstColumnValue,
+                       String secondColumnName, String secondColumnValue) {
+        if (!isRecycled) {
+            Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
+                    firstColumnName, secondColumnName), new String[]{firstColumnValue, secondColumnValue}, null, null, null);
+            return read(cursor);
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public T readWhereWithOrder(String columnName, String columnValue, String column, String order) {
+        if (!isRecycled) {
+            Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
+                    new String[]{columnValue}, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order));
+            return read(cursor);
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public List<T> readAllAsc() {
+        if (!isRecycled) {
+            Cursor cursor = selectCursorAscFromTable();
+            if (cursor != null) {
+                return readAll(cursor);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public List<T> readAllDesc() {
+        if (!isRecycled) {
+            Cursor cursor = selectCursorDescFromTable();
+            if (cursor != null) {
+                return readAll(cursor);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public List<T> readAllWithOrder(String column, String order) {
+        if (!isRecycled) {
+            Cursor cursor = selectCursorFromTable(null, null, null, null,
+                    String.format(SimpleConstants.FORMAT_TWINS, column, order));
+            return readAll(cursor);
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public List<T> readAllWhere(String columnName, String columnValue) {
+        if (!isRecycled) {
+            Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
+                    new String[]{columnValue}, null, null, null);
+            if (cursor != null) {
+                return readAll(cursor);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public List<T> readAllWhereWithOrder(String columnName, String columnValue, String column, String order) {
+        if (!isRecycled) {
+            Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
+                    new String[]{columnValue}, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order));
+            if (cursor != null) {
+                return readAll(cursor);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public List<T> readAllWhereInWithOrder(String columnName, String in, String column, String order) {
+        if (!isRecycled) {
+            Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.SQL_IN, columnName, in),
+                    null, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order));
+            if (cursor != null) {
+                return readAll(cursor);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public List<T> readAllWhereIn(String columnName, String in) {
+        if (!isRecycled) {
+            Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.SQL_IN, columnName, in),
+                    null, null, null, null);
+            if (cursor != null) {
+                return readAll(cursor);
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public long update(String columnName, String columnValue, T newObject) {
+        if (!isRecycled && sqLiteDatabase != null) {
+            try {
+
+                ContentValues contentValues = getFilledContentValues(newObject);
+
+                return sqLiteDatabase.update(SimpleDatabaseUtil.getTableName(newObject.getClass()), contentValues,
+                        String.format(SimpleConstants.FORMAT_COLUMN, columnName), new String[]{columnValue});
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return -1;
+            }
+        } else {
+            return -1;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public long update(String firstColumnName, String firstColumnValue,
+                       String secondColumnName, String secondColumnValue, T newObject) {
+        if (!isRecycled && sqLiteDatabase != null) {
+            try {
+
+                ContentValues contentValues = getFilledContentValues(newObject);
+
+                return sqLiteDatabase.update(SimpleDatabaseUtil.getTableName(newObject.getClass()), contentValues,
+                        String.format(SimpleConstants.FORMAT_COLUMNS_COMMA, firstColumnName, secondColumnName),
+                        new String[]{firstColumnValue, secondColumnValue});
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return -1;
+            }
+        } else {
+            return -1;
+        }
+    }
+
+    @SuppressWarnings("unused")
     public long update(long id, T newObject) {
-        return update(primaryKeyColumnName, String.valueOf(id), newObject);
+        if (!isRecycled) {
+            return update(primaryKeyColumnName, String.valueOf(id), newObject);
+        } else {
+            return -1;
+        }
     }
 
     @SuppressWarnings("unused")
     public int delete(long id) {
-        SQLiteDatabase database = simpleHelper.getWritableDatabase();
-
-        int deletedRow = database.delete(
-                SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName),
-                new String[]{String.valueOf(id)});
-
-        database.close();
-        return deletedRow;
+        if (!isRecycled && sqLiteDatabase != null) {
+            return sqLiteDatabase.delete(
+                    SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName),
+                    new String[]{String.valueOf(id)});
+        } else {
+            return -1;
+        }
     }
 
     @SuppressWarnings("unused")
     public int deleteWhere(String columnName, String columnValue) {
-        SQLiteDatabase database = simpleHelper.getWritableDatabase();
-
-        int deletedRow = database.delete(
-                SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMN, columnName),
-                new String[]{columnValue});
-
-        database.close();
-        return deletedRow;
+        if (!isRecycled && sqLiteDatabase != null) {
+            return sqLiteDatabase.delete(
+                    SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMN, columnName),
+                    new String[]{columnValue});
+        } else {
+            return -1;
+        }
     }
 
     @SuppressWarnings("unused")
     public int deleteWhere(String firstColumnName, String firstColumnValue,
                            String secondColumnName, String secondColumnValue) {
-        SQLiteDatabase database = simpleHelper.getWritableDatabase();
-
-        int deletedRow = database.delete(
-                SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
-                firstColumnName, secondColumnName),
-                new String[]{firstColumnValue, secondColumnValue});
-
-        database.close();
-        return deletedRow;
+        if (!isRecycled && sqLiteDatabase != null) {
+            return sqLiteDatabase.delete(
+                    SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
+                    firstColumnName, secondColumnName),
+                    new String[]{firstColumnValue, secondColumnValue});
+        } else {
+            return -1;
+        }
     }
 
     @SuppressWarnings("unused")
     public int deleteAll() {
-        SQLiteDatabase database = simpleHelper.getWritableDatabase();
-
-        int deletedRow = database.delete(SimpleDatabaseUtil.getTableName(tClass), null, null);
-
-        database.close();
-        return deletedRow;
+        if (!isRecycled && sqLiteDatabase != null) {
+            return sqLiteDatabase.delete(SimpleDatabaseUtil.getTableName(tClass), null, null);
+        } else {
+            return -1;
+        }
     }
 
     @SuppressWarnings("unused")
     public float average(String columnName) {
-        String query = String.format(SimpleConstants.AVG_QUERY, columnName, SimpleDatabaseUtil.getTableName(tClass));
-        return averageQuery(query);
+        if (!isRecycled) {
+            String query = String.format(SimpleConstants.SQL_AVG_QUERY, columnName, SimpleDatabaseUtil.getTableName(tClass));
+            return averageQuery(query);
+        } else {
+            return -1;
+        }
     }
 
     @SuppressWarnings("unused")
     public float average(String columnName, String whereColumn, String whereValue) {
-        String query = String.format(SimpleConstants.AVG_QUERY_WHERE,
-                columnName, SimpleDatabaseUtil.getTableName(tClass),
-                whereColumn, whereValue);
-        return averageQuery(query);
-    }
-
-    private float averageQuery(String query) {
-
-        SQLiteDatabase database = simpleHelper.getWritableDatabase();
-        Cursor cursor = database.rawQuery(query, null);
-        cursor.moveToFirst();
-
-        float averageResult = cursor.getFloat(FIRST_ELEMENT);
-
-        database.close();
-        cursor.close();
-
-        return averageResult;
-    }
-
-    @SuppressWarnings("unused")
-    public Cursor rawQuery(String sqlQuery) {
-
-        SQLiteDatabase database = simpleHelper.getReadableDatabase();
-        Cursor cursor = database.rawQuery(sqlQuery, null);
-        cursor.moveToFirst();
-
-        database.close();
-
-        return cursor;
+        if (!isRecycled) {
+            String query = String.format(SimpleConstants.SQL_AVG_QUERY_WHERE,
+                    columnName, SimpleDatabaseUtil.getTableName(tClass),
+                    whereColumn, whereValue);
+            return averageQuery(query);
+        } else {
+            return -1;
+        }
     }
 
 }

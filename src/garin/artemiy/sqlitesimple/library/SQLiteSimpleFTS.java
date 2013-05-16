@@ -68,6 +68,12 @@ public class SQLiteSimpleFTS {
     }
 
     @SuppressWarnings("unused")
+    public void recycle() {
+        database.close();
+        database = null;
+    }
+
+    @SuppressWarnings("unused")
     public void dropTable() {
         database.execSQL(String.format(SimpleConstants.FTS_DROP_VIRTUAL_TABLE, tableName));
         preferencesUtil.setVirtualTableDropped();
@@ -140,6 +146,8 @@ public class SQLiteSimpleFTS {
             cursor.moveToNext();
             ftsModels.add(ftsModel);
         }
+
+        cursor.close();
 
         return ftsModels;
     }
