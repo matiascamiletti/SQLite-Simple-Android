@@ -67,10 +67,10 @@ public abstract class SQLiteSimpleDAO<T> {
                 cursor.close();
         }
 
+        cursors.clear();
         sqLiteDatabase.close();
         sqLiteDatabase = null;
-        primaryKeyColumnName = null;
-        cursors.clear();
+
     }
 
     private String getPrimaryKeyColumnName() {
