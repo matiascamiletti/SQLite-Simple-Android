@@ -35,7 +35,7 @@ public abstract class SQLiteSimpleDAO<T> {
 
     private Class<T> tClass;
     private SQLiteSimpleHelper simpleHelper;
-    private SQLiteDatabase sqLiteDatabase;
+    private SQLiteDatabase database;
     private String primaryKeyColumnName;
     private List<Cursor> cursors = new ArrayList<Cursor>();
     private boolean isRecycled;
@@ -55,7 +55,7 @@ public abstract class SQLiteSimpleDAO<T> {
     private void init(Class<T> tClass) {
         this.tClass = tClass;
         primaryKeyColumnName = getPrimaryKeyColumnName();
-        sqLiteDatabase = simpleHelper.getWritableDatabase();
+        database = simpleHelper.getWritableDatabase();
     }
 
     @SuppressWarnings("unused")
@@ -68,8 +68,8 @@ public abstract class SQLiteSimpleDAO<T> {
         }
 
         cursors.clear();
-        sqLiteDatabase.close();
-        sqLiteDatabase = null;
+        database.close();
+        database = null;
 
     }
 
@@ -243,8 +243,8 @@ public abstract class SQLiteSimpleDAO<T> {
         String table = SimpleDatabaseUtil.getTableName(tClass);
         String[] columns = getColumns();
 
-        if (sqLiteDatabase != null) {
-            Cursor cursor = sqLiteDatabase.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
+        if (database != null && database.isOpen()) {
+            Cursor cursor = database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
             cursor.moveToFirst();
 
             cursors.add(cursor);
@@ -257,8 +257,8 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     private float averageQuery(String query) {
-        if (sqLiteDatabase != null) {
-            Cursor cursor = sqLiteDatabase.rawQuery(query, null);
+        if (database != null && database.isOpen()) {
+            Cursor cursor = database.rawQuery(query, null);
             cursor.moveToFirst();
 
             float averageResult = cursor.getFloat(FIRST_ELEMENT);
@@ -387,7 +387,7 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public long create(T object) {
-        if (!isRecycled && sqLiteDatabase != null) {
+        if (!isRecycled && database != null && database.isOpen()) {
             try {
 
                 ContentValues contentValues = new ContentValues();
@@ -401,7 +401,7 @@ public abstract class SQLiteSimpleDAO<T> {
                     }
                 }
 
-                return sqLiteDatabase.insert(SimpleDatabaseUtil.getTableName(object.getClass()), null, contentValues);
+                return database.insert(SimpleDatabaseUtil.getTableName(object.getClass()), null, contentValues);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -571,12 +571,12 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public long update(String columnName, String columnValue, T newObject) {
-        if (!isRecycled && sqLiteDatabase != null) {
+        if (!isRecycled && database != null && database.isOpen()) {
             try {
 
                 ContentValues contentValues = getFilledContentValues(newObject);
 
-                return sqLiteDatabase.update(SimpleDatabaseUtil.getTableName(newObject.getClass()), contentValues,
+                return database.update(SimpleDatabaseUtil.getTableName(newObject.getClass()), contentValues,
                         String.format(SimpleConstants.FORMAT_COLUMN, columnName), new String[]{columnValue});
 
             } catch (Exception e) {
@@ -591,12 +591,12 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public long update(String firstColumnName, String firstColumnValue,
                        String secondColumnName, String secondColumnValue, T newObject) {
-        if (!isRecycled && sqLiteDatabase != null) {
+        if (!isRecycled && database != null && database.isOpen()) {
             try {
 
                 ContentValues contentValues = getFilledContentValues(newObject);
 
-                return sqLiteDatabase.update(SimpleDatabaseUtil.getTableName(newObject.getClass()), contentValues,
+                return database.update(SimpleDatabaseUtil.getTableName(newObject.getClass()), contentValues,
                         String.format(SimpleConstants.FORMAT_COLUMNS_COMMA, firstColumnName, secondColumnName),
                         new String[]{firstColumnValue, secondColumnValue});
 
@@ -620,8 +620,8 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public int delete(long id) {
-        if (!isRecycled && sqLiteDatabase != null) {
-            return sqLiteDatabase.delete(
+        if (!isRecycled && database != null && database.isOpen()) {
+            return database.delete(
                     SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName),
                     new String[]{String.valueOf(id)});
         } else {
@@ -631,8 +631,8 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public int deleteWhere(String columnName, String columnValue) {
-        if (!isRecycled && sqLiteDatabase != null) {
-            return sqLiteDatabase.delete(
+        if (!isRecycled && database != null && database.isOpen()) {
+            return database.delete(
                     SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMN, columnName),
                     new String[]{columnValue});
         } else {
@@ -643,8 +643,8 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public int deleteWhere(String firstColumnName, String firstColumnValue,
                            String secondColumnName, String secondColumnValue) {
-        if (!isRecycled && sqLiteDatabase != null) {
-            return sqLiteDatabase.delete(
+        if (!isRecycled && database != null && database.isOpen()) {
+            return database.delete(
                     SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
                     firstColumnName, secondColumnName),
                     new String[]{firstColumnValue, secondColumnValue});
@@ -655,8 +655,8 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public int deleteAll() {
-        if (!isRecycled && sqLiteDatabase != null) {
-            return sqLiteDatabase.delete(SimpleDatabaseUtil.getTableName(tClass), null, null);
+        if (!isRecycled && database != null && database.isOpen()) {
+            return database.delete(SimpleDatabaseUtil.getTableName(tClass), null, null);
         } else {
             return -1;
         }

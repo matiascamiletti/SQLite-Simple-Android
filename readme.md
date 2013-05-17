@@ -1,7 +1,7 @@
-<h3>Version - 1.6</h3>
+<h3>Version - 1.7</h3>
 
 <h2>Install</h2>
-
+// todo update readme
 You may import src from project or <a href="http://sourceforge.net/projects/sqlite-android/files/sqlite-simple-1.6.jar/download">download jar</a> (recommended)
 
 <h2>Quick start</h2>
