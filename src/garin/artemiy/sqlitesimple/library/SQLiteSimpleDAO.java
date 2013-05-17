@@ -204,7 +204,8 @@ public abstract class SQLiteSimpleDAO<T> {
             e.printStackTrace();
             return null;
         } finally {
-            cursor.close();
+            if (cursor != null)
+                cursor.close();
         }
     }
 
