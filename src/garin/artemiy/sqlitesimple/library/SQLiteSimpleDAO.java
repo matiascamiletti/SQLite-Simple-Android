@@ -239,19 +239,23 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     private Cursor selectCursorFromTable(String selection, String[] selectionArgs,
                                          String groupBy, String having, String orderBy) {
+        try {
+            String table = SimpleDatabaseUtil.getTableName(tClass);
+            String[] columns = getColumns();
 
-        String table = SimpleDatabaseUtil.getTableName(tClass);
-        String[] columns = getColumns();
+            if (database != null && database.isOpen()) {
+                Cursor cursor = database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
+                cursor.moveToFirst();
 
-        if (database != null && database.isOpen()) {
-            Cursor cursor = database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
-            cursor.moveToFirst();
+                cursors.add(cursor);
 
-            cursors.add(cursor);
+                return cursor;
 
-            return cursor;
-
-        } else {
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             return null;
         }
     }
