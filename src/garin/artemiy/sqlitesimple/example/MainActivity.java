@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.ListView;
 import garin.artemiy.sqlitesimple.R;
 import garin.artemiy.sqlitesimple.example.adapter.MainAdapter;
-import garin.artemiy.sqlitesimple.example.adapter.MainCursorAdapter;
 import garin.artemiy.sqlitesimple.example.model.Record;
 import garin.artemiy.sqlitesimple.example.operator.RecordsDAO;
 import garin.artemiy.sqlitesimple.library.SQLiteSimpleFTS;
@@ -39,8 +38,8 @@ public class MainActivity extends ListActivity {
         setContentView(R.layout.main_layout);
 
 //        cursor = recordsDAO.selectCursorDescFromTable();
-        MainCursorAdapter cursorAdapter = new MainCursorAdapter(this, cursor);
-        setListAdapter(cursorAdapter);
+//        MainCursorAdapter cursorAdapter = new MainCursorAdapter(this, cursor);
+//        setListAdapter(cursorAdapter);
 
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long id) {
@@ -96,10 +95,10 @@ public class MainActivity extends ListActivity {
     }
 
     private void updateAdapter() {
-        MainCursorAdapter cursorAdapter = (MainCursorAdapter) getListAdapter();
+//        MainCursorAdapter cursorAdapter = (MainCursorAdapter) getListAdapter();
 
 //        cursorAdapter.changeCursor(recordsDAO.selectCursorDescFromTable());
-        cursorAdapter.notifyDataSetChanged();
+//        cursorAdapter.notifyDataSetChanged();
 
         mainAdapter.notifyDataSetChanged();
     }

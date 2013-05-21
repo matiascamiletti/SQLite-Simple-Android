@@ -61,16 +61,20 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public void recycle() {
         isRecycled = true;
+        try {
 
-        for (Cursor cursor : cursors) {
-            if (!cursor.isClosed())
-                cursor.close();
+            for (Cursor cursor : cursors) {
+                if (!cursor.isClosed())
+                    cursor.close();
+            }
+
+            cursors.clear();
+            database.close();
+            database = null;
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        cursors.clear();
-        database.close();
-        database = null;
-
     }
 
     private String getPrimaryKeyColumnName() {
@@ -427,14 +431,16 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public T read(long id) {
         if (!isRecycled) {
+
             Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName),
                     new String[]{Long.toString(id)}
                     , null, null, null);
+
             if (cursor != null) {
+
                 try {
                     T newTObject = tClass.newInstance();
                     bindObject(newTObject, cursor);
-
                     return newTObject;
                 } catch (Exception e) {
                     e.printStackTrace();
