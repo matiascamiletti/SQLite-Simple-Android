@@ -31,7 +31,7 @@ public class SimpleConstants {
             "CREATE VIRTUAL TABLE %s USING fts3(%s, %s, %s, tokenize = porter);";
     public static final String FTS_CREATE_VIRTUAL_TABLE =
             "CREATE VIRTUAL TABLE %s USING fts3(%s, %s, tokenize = porter);";
-    public static final String FTS_DROP_VIRTUAL_TABLE = "DROP VIRTUAL TABLE IF EXISTS %s";
+    public static final String FTS_DROP_VIRTUAL_TABLE = "DROP TABLE IF EXISTS %s";
 
     // Shared preferences
     public static final String SHARED_PREFERENCES_DATABASE = "SQLiteSimpleDatabaseHelper";
