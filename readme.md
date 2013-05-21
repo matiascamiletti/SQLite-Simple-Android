@@ -152,8 +152,7 @@ public class MainApplication extends Application {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         simpleFTS = new SQLiteSimpleFTS(this, false); // second parameter is a tables category,
-                                                      // search between several tables
-    }
+    }                                                 // search between several tables
 
     @Override
     protected void onDestroy() {
@@ -161,10 +160,10 @@ public class MainApplication extends Application {
         simpleFTS.recycle();
     }
 
-    // That's all! Use methods as described below in appropriate places, like in a example.
-    // simpleFTS.search(...), simpleFTS.create(...)
-
 ```
+
+That's all! Use methods as described below in appropriate places, like in a example.
+simpleFTS.search(...), simpleFTS.create(...)
 
 <h2>Tools</h2>
 
