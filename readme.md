@@ -142,7 +142,29 @@ public class MainApplication extends Application {
 
 <h2>FTS (Full-Text Search)</h2>
 
-    todo: add documentation
+```java
+
+    ...
+
+    private SQLiteSimpleFTS simpleFTS;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        simpleFTS = new SQLiteSimpleFTS(this, false); // second parameter is a tables category,
+                                                      // search between several tables
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        simpleFTS.recycle();
+    }
+
+    // That's all! Use methods as described below in appropriate places, like in a example.
+    // simpleFTS.search(...), simpleFTS.create(...)
+
+```
 
 <h2>Tools</h2>
 
