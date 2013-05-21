@@ -2,6 +2,6 @@
 <!--suppress AndroidDomInspection -->
 <resources>
 
-    <style name="mainTheme" parent="android:Theme.NoTitleBar"/>
+    <style name="mainTheme" parent="android:Theme.Light.NoTitleBar"/>
 
 </resources>

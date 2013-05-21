@@ -8,18 +8,22 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import garin.artemiy.sqlitesimple.R;
 import garin.artemiy.sqlitesimple.example.model.Record;
+import garin.artemiy.sqlitesimple.example.operator.RecordsDAO;
+import garin.artemiy.sqlitesimple.library.model.FTSModel;
 
 /**
  * Author: Artemiy Garin
  * Date: 07.04.13
  */
-public class MainAdapter extends ArrayAdapter<Record> {
+public class MainFTSAdapter extends ArrayAdapter<FTSModel> {
 
     private Context context;
+    private RecordsDAO recordsDAO;
 
-    public MainAdapter(Context context) {
+    public MainFTSAdapter(Context context, RecordsDAO recordsDAO) {
         super(context, R.layout.main_layout);
         this.context = context;
+        this.recordsDAO = recordsDAO;
     }
 
     @Override
@@ -34,9 +38,12 @@ public class MainAdapter extends ArrayAdapter<Record> {
             view = layoutInflater.inflate(R.layout.record_item, null);
         }
 
-        Record record = getItem(position);
+        FTSModel ftsModel = getItem(position);
         TextView recordText = (TextView) view.findViewById(R.id.recordTextView);
-        recordText.setText(record.getRecordText());
+        Record record = recordsDAO.readWhere(Record.COLUMN_ID, ftsModel.getId());
+
+        if (record != null)
+            recordText.setText(record.getRecordText());
 
         return view;
     }

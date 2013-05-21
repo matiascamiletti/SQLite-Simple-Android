@@ -31,8 +31,6 @@ import java.util.List;
  */
 public abstract class SQLiteSimpleDAO<T> {
 
-    private static final int FIRST_ELEMENT = 0;
-
     private Class<T> tClass;
     private SQLiteSimpleHelper simpleHelper;
     private SQLiteDatabase database;
@@ -273,7 +271,7 @@ public abstract class SQLiteSimpleDAO<T> {
             Cursor cursor = database.rawQuery(query, null);
             cursor.moveToFirst();
 
-            float averageResult = cursor.getFloat(FIRST_ELEMENT);
+            float averageResult = cursor.getFloat(SimpleConstants.FIRST_ELEMENT);
 
             cursors.add(cursor);
 

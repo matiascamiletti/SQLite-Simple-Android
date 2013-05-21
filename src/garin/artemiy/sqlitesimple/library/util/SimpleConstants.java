@@ -43,6 +43,8 @@ public class SimpleConstants {
     public static final String SHARED_PREFERENCES_INDEX = "%s_Index";
     public static final String LOCAL_PREFERENCES = "LOCAL";
 
+    public static final int FIRST_ELEMENT = 0;
+
     // SQL
     public static final String AUTOINCREMENT = "AUTOINCREMENT";
     public static final String PRIMARY_KEY = "PRIMARY KEY";

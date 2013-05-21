@@ -1,6 +1,7 @@
 package garin.artemiy.sqlitesimple.example;
 
 import android.app.Application;
+import android.util.Log;
 import garin.artemiy.sqlitesimple.example.model.Record;
 import garin.artemiy.sqlitesimple.example.model.Test;
 import garin.artemiy.sqlitesimple.example.operator.TestDAO;
@@ -23,7 +24,8 @@ public class MainApplication extends Application {
         localSimple.create(Test.class);
 
         TestDAO testDAO = new TestDAO(this);
-        testDAO.getCount();
+        Log.d("Local database rows count:", String.valueOf(testDAO.getCount()));
+        testDAO.recycle();
 
     }
 
