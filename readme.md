@@ -1,7 +1,6 @@
-<h3>Version - 1.7</h3>
+<h3>Version - 2.0</h3>
 
 <h2>Install</h2>
-// todo update readme
 You may import src from project or <a href="http://sourceforge.net/projects/sqlite-android/files/sqlite-simple-1.6.jar/download">download jar</a> (recommended)
 
 <h2>Quick start</h2>
@@ -15,13 +14,16 @@ You may import src from project or <a href="http://sourceforge.net/projects/sqli
 ```java
 public class Record {
 
-    @Column(type = ColumnType.INTEGER)
-    public Long dateOfPublication;
+    public transient static final String COLUMN_RECORD_TEXT = "recordText";
+    public transient static final String COLUMN_ID = "_id";
 
-    @Column(type = ColumnType.NUMERIC)
-    public boolean isPublished;
+    @Column(name = COLUMN_ID, type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
+    private int id;
 
-    // also supports ColumnType.TEXT, ColumnType.REAL, ColumnType.BLOB
+    @Column(name = COLUMN_RECORD_TEXT, type = ColumnType.TEXT)
+    private String recordText;
+
+    // also supports ColumnType.NUMERIC, ColumnType.REAL, ColumnType.BLOB
 
 }
 ```
@@ -70,11 +72,19 @@ In your activity just create operator, for example:
 
     ...
 
+    private RecordsDAO recordsDAO;
+
       @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            RecordsDAO recordsDAO = new RecordsDAO(this);
+            recordsDAO = new RecordsDAO(this);
        }
+
+      @Override
+        protected void onDestroy() {
+            super.onDestroy();
+            recordsDAO.recycle();
+        }
 
 ```
 And you may call all needed methods, if you need more, just override or create new in class **RecordsDAO**, look above.
@@ -91,6 +101,10 @@ Look better this nuance, available annotations:
     type - required (ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.INTEGER, ColumnType.BLOB).
 
     name - optional.
+
+    isPrimaryKey - optional (for keys, supports compound key).
+
+    isAutoincrement - optional (for key, aka _id).
 
 <h2>Database version</h2>
 **Database version** - if you upgrade database version, for example from 1 to 2, all your tables will be deleted, and created again. **DATA WILL BE LOST.**
@@ -125,3 +139,17 @@ public class MainApplication extends Application {
 
 }
 ```
+
+<h2>FTS (Full-Text Search)</h2>
+
+    todo: add documentation
+
+<h2>Tools</h2>
+
+Also may be used:
+
+**SimplePreferencesUtil** methods:
+
+    getDatabaseVersion() - current database version.
+
+    isVirtualTableCreated() - for FTS.

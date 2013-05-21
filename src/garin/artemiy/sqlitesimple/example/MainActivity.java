@@ -27,6 +27,7 @@ public class MainActivity extends ListActivity {
     private RecordsDAO recordsDAO;
     private SQLiteSimpleFTS simpleFTS;
     private MainFTSAdapter mainFTSAdapter;
+
     private static final String EMPTY = "";
     private static final int ZERO_RESULT = -1;
 
@@ -45,8 +46,7 @@ public class MainActivity extends ListActivity {
 
         getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long id) {
-                // todo support delete record
-                recordsDAO.deleteWhere(Record.COLUMN_ID, mainAdapter.getItem(i).getId());
+                recordsDAO.deleteWhere(Record.COLUMN_ID, String.valueOf(mainAdapter.getItem(i).getId()));
                 updateAdapter();
                 return true;
             }
@@ -99,11 +99,14 @@ public class MainActivity extends ListActivity {
     private void updateAdapter() {
         MainAdapter mainAdapter = (MainAdapter) getListAdapter();
         mainAdapter.clear();
+
         for (Record record : recordsDAO.readAllDesc()) {
             mainAdapter.add(record);
         }
+
         mainAdapter.notifyDataSetChanged();
         mainFTSAdapter.notifyDataSetChanged();
+
     }
 
     @SuppressWarnings("unused")

@@ -24,7 +24,7 @@ public class MainApplication extends Application {
         localSimple.create(Test.class);
 
         TestDAO testDAO = new TestDAO(this);
-        Log.d("Local database rows count:", String.valueOf(testDAO.getCount()));
+        Log.d("SQLiteSimple: Local database rows", String.valueOf(testDAO.getCount()));
         testDAO.recycle();
 
     }
