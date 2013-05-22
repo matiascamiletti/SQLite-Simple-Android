@@ -9,6 +9,8 @@ import garin.artemiy.sqlitesimple.library.util.SimpleConstants;
 import garin.artemiy.sqlitesimple.library.util.SimpleDatabaseUtil;
 import garin.artemiy.sqlitesimple.library.util.SimplePreferencesUtil;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -188,7 +190,18 @@ public abstract class SQLiteSimpleDAO<T> {
         } else if (fieldValue instanceof Double) {
             contentValues.put(key, Double.valueOf(fieldValue.toString()));
         } else if (fieldValue instanceof Byte[]) {
-            contentValues.put(key, fieldValue.toString().getBytes());
+            try {
+                ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(arrayOutputStream);
+                objectOutputStream.writeObject(fieldValue);
+                contentValues.put(key, arrayOutputStream.toByteArray());
+                objectOutputStream.flush();
+                objectOutputStream.close();
+                arrayOutputStream.flush();
+                arrayOutputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
