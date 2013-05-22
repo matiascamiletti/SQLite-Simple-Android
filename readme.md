@@ -163,6 +163,7 @@ public class MainApplication extends Application {
 ```
 
 **That's all!** Use methods as described below in appropriate places, like in a example.
+
 **simpleFTS.search(...)**, **simpleFTS.create(...)**.
 
 <h2>Tools</h2>
