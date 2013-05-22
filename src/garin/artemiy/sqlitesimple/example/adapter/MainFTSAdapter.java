@@ -21,7 +21,7 @@ public class MainFTSAdapter extends ArrayAdapter<FTSModel> {
     private RecordsDAO recordsDAO;
 
     public MainFTSAdapter(Context context, RecordsDAO recordsDAO) {
-        super(context, R.layout.main_layout);
+        super(context, R.layout.record_item);
         this.context = context;
         this.recordsDAO = recordsDAO;
     }

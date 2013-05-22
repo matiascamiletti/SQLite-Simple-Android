@@ -18,7 +18,7 @@ public class MainAdapter extends ArrayAdapter<Record> {
     private Context context;
 
     public MainAdapter(Context context) {
-        super(context, R.layout.main_layout);
+        super(context, R.layout.record_item);
         this.context = context;
     }
 
@@ -36,6 +36,7 @@ public class MainAdapter extends ArrayAdapter<Record> {
 
         Record record = getItem(position);
         TextView recordText = (TextView) view.findViewById(R.id.recordTextView);
+
         recordText.setText(record.getRecordText());
 
         return view;

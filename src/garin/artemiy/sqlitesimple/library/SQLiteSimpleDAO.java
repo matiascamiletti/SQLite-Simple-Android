@@ -189,16 +189,16 @@ public abstract class SQLiteSimpleDAO<T> {
             contentValues.put(key, Boolean.parseBoolean(fieldValue.toString()));
         } else if (fieldValue instanceof Double) {
             contentValues.put(key, Double.valueOf(fieldValue.toString()));
-        } else if (fieldValue instanceof Byte[]) {
+        } else if (fieldValue instanceof Byte[] || fieldValue instanceof byte[]) {
             try {
-                ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
-                ObjectOutputStream objectOutputStream = new ObjectOutputStream(arrayOutputStream);
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
                 objectOutputStream.writeObject(fieldValue);
-                contentValues.put(key, arrayOutputStream.toByteArray());
+                contentValues.put(key, outputStream.toByteArray());
                 objectOutputStream.flush();
                 objectOutputStream.close();
-                arrayOutputStream.flush();
-                arrayOutputStream.close();
+                outputStream.flush();
+                outputStream.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
