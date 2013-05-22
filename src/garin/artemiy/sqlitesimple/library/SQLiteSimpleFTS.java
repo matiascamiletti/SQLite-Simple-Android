@@ -43,11 +43,28 @@ public class SQLiteSimpleFTS {
     @SuppressWarnings("unused")
     public SQLiteSimpleFTS(Context context, boolean useTablesCategory) {
         this.useTablesCategory = useTablesCategory;
-        SQLiteSimpleHelper simpleHelper = new SQLiteSimpleHelper(context,
-                new SimplePreferencesUtil(context).getDatabaseVersion(), null);
+        SQLiteSimpleHelper simpleHelper = new SQLiteSimpleHelper(context, SimpleConstants.LOCAL_PREFERENCES,
+                new SimplePreferencesUtil(context).getDatabaseVersion(SimpleConstants.LOCAL_PREFERENCES), null);
         database = simpleHelper.getWritableDatabase();
         tableName = SimpleDatabaseUtil.getFTSTableName(context);
 
+        createTableIfNotExist(context);
+    }
+
+    @SuppressWarnings("unused")
+    public void recycle() {
+        database.close();
+        database = null;
+    }
+
+    @SuppressWarnings("unused")
+    public void dropTable() {
+        database.execSQL(String.format(SimpleConstants.FTS_DROP_VIRTUAL_TABLE, tableName));
+        preferencesUtil.setVirtualTableDropped();
+        preferencesUtil.commit();
+    }
+
+    public void createTableIfNotExist(Context context) {
         preferencesUtil = new SimplePreferencesUtil(context);
         if (!preferencesUtil.isVirtualTableCreated()) {
 
@@ -65,19 +82,6 @@ public class SQLiteSimpleFTS {
             preferencesUtil.commit();
 
         }
-    }
-
-    @SuppressWarnings("unused")
-    public void recycle() {
-        database.close();
-        database = null;
-    }
-
-    @SuppressWarnings("unused")
-    public void dropTable() {
-        database.execSQL(String.format(SimpleConstants.FTS_DROP_VIRTUAL_TABLE, tableName));
-        preferencesUtil.setVirtualTableDropped();
-        preferencesUtil.commit();
     }
 
     @SuppressWarnings("unused")

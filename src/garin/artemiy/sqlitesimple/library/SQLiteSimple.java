@@ -61,17 +61,17 @@ public class SQLiteSimple {
     }
 
     @SuppressWarnings("unused")
-    public SQLiteSimple(Context context, String localDatabaseName) {
+    public SQLiteSimple(Context context, String assetsDatabaseName) {
         sharedPreferencesUtil = new SimplePreferencesUtil(context);
-        sharedPreferencesPlace = localDatabaseName;
-        this.databaseVersion = sharedPreferencesUtil.getDatabaseVersion();
+        sharedPreferencesPlace = assetsDatabaseName;
+        this.databaseVersion = SimpleConstants.FIRST_DATABASE_VERSION;
 
-        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, sharedPreferencesPlace, databaseVersion, localDatabaseName);
+        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, sharedPreferencesPlace, databaseVersion, assetsDatabaseName);
     }
 
     private void commitDatabaseVersion() {
-        if (databaseVersion > sharedPreferencesUtil.getDatabaseVersion()) {
-            sharedPreferencesUtil.putDatabaseVersion(databaseVersion);
+        if (databaseVersion > sharedPreferencesUtil.getDatabaseVersion(sharedPreferencesPlace)) {
+            sharedPreferencesUtil.putDatabaseVersion(databaseVersion, sharedPreferencesPlace);
             sharedPreferencesUtil.commit();
         }
     }
@@ -174,7 +174,7 @@ public class SQLiteSimple {
 
         boolean newDatabaseVersion = false;
 
-        if (databaseVersion > sharedPreferencesUtil.getDatabaseVersion())
+        if (databaseVersion > sharedPreferencesUtil.getDatabaseVersion(sharedPreferencesPlace))
             newDatabaseVersion = true;
 
         boolean isRebasedTables = false;
@@ -301,7 +301,6 @@ public class SQLiteSimple {
         return false;
     }
 
-    // add columns to table if need
     private boolean addNewColumnsIfNeed(List<String> tables, List<String> sqlQueries, List<String> savedSqlQueries) {
         try {
             // if change name of column or add new column, or delete

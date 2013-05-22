@@ -37,7 +37,7 @@ public class SimpleConstants {
     public static final String SHARED_PREFERENCES_DATABASE = "SQLiteSimpleDatabaseHelper";
     public static final String SHARED_DATABASE_TABLES = "SQLiteSimpleDatabaseTables_%s";
     public static final String SHARED_DATABASE_QUERIES = "SQLiteSimpleDatabaseQueries_%s";
-    public static final String SHARED_DATABASE_VERSION = "SQLiteSimpleDatabaseVersion";
+    public static final String SHARED_DATABASE_VERSION = "SQLiteSimpleDatabaseVersion_%s";
     public static final String SHARED_DATABASE_VIRTUAL_TABLE_CREATED = "SQLiteSimpleDatabaseVirtualTableCreated";
     public static final String SHARED_PREFERENCES_LIST = "List_%s_%s";
     public static final String SHARED_PREFERENCES_INDEX = "%s_Index";

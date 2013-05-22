@@ -31,28 +31,20 @@ import java.util.List;
  */
 public class SQLiteSimpleHelper extends SQLiteOpenHelper {
 
-    private String localDatabaseName;
+    private String assetsDatabaseName;
     private Context context;
     private SimplePreferencesUtil sharedPreferencesUtil;
     private String sharedPreferencesPlace;
 
     /**
-     * @param localDatabaseName - load local sqlite if need
+     * @param assetsDatabaseName - load local sqlite if need
      */
     public SQLiteSimpleHelper(Context context, String sharedPreferencesPlace,
-                              int databaseVersion, String localDatabaseName) {
-        super(context, SimpleDatabaseUtil.getFullDatabaseName(localDatabaseName, context), null, databaseVersion);
-        this.localDatabaseName = localDatabaseName;
+                              int databaseVersion, String assetsDatabaseName) {
+        super(context, SimpleDatabaseUtil.getFullDatabaseName(assetsDatabaseName, context), null, databaseVersion);
+        this.assetsDatabaseName = assetsDatabaseName;
         this.context = context;
         this.sharedPreferencesPlace = sharedPreferencesPlace;
-        sharedPreferencesUtil = new SimplePreferencesUtil(context);
-    }
-
-    public SQLiteSimpleHelper(Context context,
-                              int databaseVersion, String localDatabaseName) {
-        super(context, SimpleDatabaseUtil.getFullDatabaseName(localDatabaseName, context), null, databaseVersion);
-        this.localDatabaseName = localDatabaseName;
-        this.context = context;
         sharedPreferencesUtil = new SimplePreferencesUtil(context);
     }
 
@@ -84,10 +76,10 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
     @Override
     public synchronized SQLiteDatabase getWritableDatabase() {
         checkDatabaseFromAssets();
-        if (localDatabaseName == null) {
+        if (assetsDatabaseName == null) {
             return super.getWritableDatabase();
         } else {
-            return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.getFullDatabasePath(context, localDatabaseName),
+            return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.getFullDatabasePath(context, assetsDatabaseName),
                     null, SQLiteDatabase.OPEN_READWRITE);
         }
     }
@@ -95,16 +87,16 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
     @Override
     public synchronized SQLiteDatabase getReadableDatabase() {
         checkDatabaseFromAssets();
-        if (localDatabaseName == null) {
+        if (assetsDatabaseName == null) {
             return super.getReadableDatabase();
         } else {
-            return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.getFullDatabasePath(context, localDatabaseName),
+            return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.getFullDatabasePath(context, assetsDatabaseName),
                     null, SQLiteDatabase.OPEN_READONLY);
         }
     }
 
     private void checkDatabaseFromAssets() {
-        if (localDatabaseName != null) {
+        if (assetsDatabaseName != null) {
             if (!isDatabaseExist()) {
                 super.getWritableDatabase(); // create empty database
                 super.close();
@@ -116,9 +108,9 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
     private void copyDatabaseFromAssets() {
         try {
 
-            InputStream inputStream = context.getAssets().open(localDatabaseName);
+            InputStream inputStream = context.getAssets().open(assetsDatabaseName);
             OutputStream outputStream = new FileOutputStream(SimpleDatabaseUtil.getFullDatabasePath(context,
-                    localDatabaseName));
+                    assetsDatabaseName));
 
             byte[] buffer = new byte[1024];
             int length;
@@ -137,7 +129,7 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
     }
 
     private boolean isDatabaseExist() {
-        return new File(SimpleDatabaseUtil.getFullDatabasePath(context, localDatabaseName)).exists();
+        return new File(SimpleDatabaseUtil.getFullDatabasePath(context, assetsDatabaseName)).exists();
     }
 
 }

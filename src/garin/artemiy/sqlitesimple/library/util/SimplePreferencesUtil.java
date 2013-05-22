@@ -44,7 +44,7 @@ public class SimplePreferencesUtil {
         sharedPreferencesEditor.remove(String.format(SimpleConstants.SHARED_PREFERENCES_INDEX,
                 String.format(SimpleConstants.SHARED_DATABASE_TABLES, place)));
 
-        putDatabaseVersion(databaseVersion);
+        putDatabaseVersion(databaseVersion, place);
 
         if (isFTSTableCreated) {
             setVirtualTableCreated();
@@ -93,13 +93,13 @@ public class SimplePreferencesUtil {
         sharedPreferencesEditor.commit();
     }
 
-    public void putDatabaseVersion(int databaseVersion) {
-        sharedPreferencesEditor.putInt(SimpleConstants.SHARED_DATABASE_VERSION, databaseVersion);
+    public void putDatabaseVersion(int databaseVersion, String sharedPreferencesPlace) {
+        sharedPreferencesEditor.putInt(String.format(SimpleConstants.SHARED_DATABASE_VERSION, sharedPreferencesPlace), databaseVersion);
     }
 
-    public int getDatabaseVersion() {
+    public int getDatabaseVersion(String sharedPreferencesPlace) {
         // if not found, return first version -> 1
-        return sharedPreferences.getInt(SimpleConstants.SHARED_DATABASE_VERSION, SimpleConstants.FIRST_DATABASE_VERSION);
+        return sharedPreferences.getInt(String.format(SimpleConstants.SHARED_DATABASE_VERSION, sharedPreferencesPlace), SimpleConstants.FIRST_DATABASE_VERSION);
     }
 
     public boolean isVirtualTableCreated() {

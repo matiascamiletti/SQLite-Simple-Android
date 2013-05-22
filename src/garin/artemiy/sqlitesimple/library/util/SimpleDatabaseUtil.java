@@ -55,12 +55,12 @@ public class SimpleDatabaseUtil {
         return String.format(DATABASE_PATH, context.getPackageName(), databaseName);
     }
 
-    public static String getFullDatabaseName(String localDatabaseName, Context context) {
-        if (localDatabaseName == null) {
+    public static String getFullDatabaseName(String databaseName, Context context) {
+        if (databaseName == null) {
             return String.format(SimpleConstants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT).
                     replace(SimpleConstants.DOT, SimpleConstants.UNDERSCORE).toUpperCase();
         } else {
-            return localDatabaseName;
+            return databaseName;
         }
     }
 

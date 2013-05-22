@@ -41,21 +41,27 @@ public abstract class SQLiteSimpleDAO<T> {
     private boolean isRecycled;
 
     protected SQLiteSimpleDAO(Class<T> tClass, Context context) {
-        simpleHelper = new SQLiteSimpleHelper(context,
-                new SimplePreferencesUtil(context).getDatabaseVersion(), null);
+        simpleHelper = new SQLiteSimpleHelper(context, SimpleConstants.LOCAL_PREFERENCES,
+                new SimplePreferencesUtil(context).getDatabaseVersion(SimpleConstants.LOCAL_PREFERENCES), null);
         init(tClass);
     }
 
-    protected SQLiteSimpleDAO(Class<T> tClass, Context context, String localDatabaseName) {
-        simpleHelper = new SQLiteSimpleHelper(context,
-                new SimplePreferencesUtil(context).getDatabaseVersion(), localDatabaseName);
+    protected SQLiteSimpleDAO(Class<T> tClass, Context context, String assetsDatabaseName) {
+        simpleHelper = new SQLiteSimpleHelper(context, assetsDatabaseName,
+                new SimplePreferencesUtil(context).getDatabaseVersion(assetsDatabaseName), assetsDatabaseName);
+        init(tClass);
+    }
+
+    protected SQLiteSimpleDAO(Class<T> tClass, String localDatabasePath) {
+        database = SQLiteDatabase.openDatabase(localDatabasePath, null, SQLiteDatabase.OPEN_READWRITE);
         init(tClass);
     }
 
     private void init(Class<T> tClass) {
         this.tClass = tClass;
         primaryKeyColumnName = getPrimaryKeyColumnName();
-        database = simpleHelper.getWritableDatabase();
+        if (simpleHelper != null)
+            database = simpleHelper.getWritableDatabase();
     }
 
     @SuppressWarnings("unused")
