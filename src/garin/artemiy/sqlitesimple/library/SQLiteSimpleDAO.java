@@ -351,6 +351,7 @@ public abstract class SQLiteSimpleDAO<T> {
             Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN,
                     columnName), new String[]{columnValue}, null, null, null);
             if (cursor != null) {
+
                 cursor.moveToFirst();
 
                 if (cursor.getCount() == 0) {
@@ -636,7 +637,7 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
-    public int delete(long id) {
+    public long delete(long id) {
         if (!isRecycled && database != null && database.isOpen()) {
             return database.delete(
                     SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName),
@@ -647,7 +648,7 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
-    public int deleteWhere(String columnName, String columnValue) {
+    public long deleteWhere(String columnName, String columnValue) {
         if (!isRecycled && database != null && database.isOpen()) {
             return database.delete(
                     SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMN, columnName),
@@ -658,8 +659,8 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
-    public int deleteWhere(String firstColumnName, String firstColumnValue,
-                           String secondColumnName, String secondColumnValue) {
+    public long deleteWhere(String firstColumnName, String firstColumnValue,
+                            String secondColumnName, String secondColumnValue) {
         if (!isRecycled && database != null && database.isOpen()) {
             return database.delete(
                     SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
@@ -671,7 +672,7 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
-    public int deleteAll() {
+    public long deleteAll() {
         if (!isRecycled && database != null && database.isOpen()) {
             return database.delete(SimpleDatabaseUtil.getTableName(tClass), null, null);
         } else {

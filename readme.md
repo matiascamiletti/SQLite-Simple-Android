@@ -162,12 +162,16 @@ public class MainApplication extends Application {
 
 ```
 
-That's all! Use methods as described below in appropriate places, like in a example.
-simpleFTS.search(...), simpleFTS.create(...)
+**That's all!** Use methods as described below in appropriate places, like in a example.
+**simpleFTS.search(...)**, **simpleFTS.create(...)**.
 
 <h2>Tools</h2>
 
 Also may be used:
+
+**SimpleConstants**
+
+    ZERO_RESULT - if, for example, object not found, or not created
 
 **SimplePreferencesUtil** methods:
 

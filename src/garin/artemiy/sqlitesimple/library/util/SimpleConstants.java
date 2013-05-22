@@ -64,6 +64,7 @@ public class SimpleConstants {
 
     // Other
     public static final int FIRST_DATABASE_VERSION = 1;
+    public static final int ZERO_RESULT = -1;
     public static final String SPECIAL_SYMBOLS_REGEX = "[-+.^:,\"']";
     public static final String ID_COLUMN = "_id"; // if we don't make a primary key column
     public static final String DESC = "DESC";
