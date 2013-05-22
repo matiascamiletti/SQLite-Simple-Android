@@ -15,6 +15,7 @@ import garin.artemiy.sqlitesimple.example.model.Record;
 import garin.artemiy.sqlitesimple.example.operator.RecordsDAO;
 import garin.artemiy.sqlitesimple.library.SQLiteSimpleFTS;
 import garin.artemiy.sqlitesimple.library.model.FTSModel;
+import garin.artemiy.sqlitesimple.library.util.SimpleConstants;
 
 import java.util.List;
 
@@ -29,7 +30,6 @@ public class MainActivity extends ListActivity {
     private MainFTSAdapter mainFTSAdapter;
 
     private static final String EMPTY = "";
-    private static final int ZERO_RESULT = -1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -116,7 +116,7 @@ public class MainActivity extends ListActivity {
         record.setRecordText(((EditText) findViewById(R.id.recordEditText)).getText().toString());
         long id = recordsDAO.createIfNotExist(record, Record.COLUMN_RECORD_TEXT, record.getRecordText());
 
-        if (id != ZERO_RESULT) {
+        if (id != SimpleConstants.ZERO_RESULT) {
             simpleFTS.create(new FTSModel(String.valueOf(id), record.getRecordText()));
         }
 
