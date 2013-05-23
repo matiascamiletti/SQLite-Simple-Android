@@ -176,6 +176,10 @@ Also may be used:
 
 **SimplePreferencesUtil** methods:
 
-    getDatabaseVersion() - current database version.
+    getDatabaseVersion() - current local database version.
 
     isVirtualTableCreated() - for FTS.
+
+**SimpleDatabaseUtil** methods:
+
+    getFullDatabasePath() - path to internal database.

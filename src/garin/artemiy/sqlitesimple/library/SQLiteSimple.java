@@ -295,6 +295,7 @@ public class SQLiteSimple {
             for (String sqlQuery : sqlQueriesToCreate) {
                 sqLiteDatabase.execSQL(sqlQuery);
             }
+
             sqLiteDatabase.close();
         }
 
