@@ -1,4 +1,4 @@
-<h3>Version - 2.0</h3>
+<h3>Version - 2.1</h3>
 
 <h2>Install</h2>
 You may import src from project or <a href="http://sourceforge.net/projects/sqlite-android/files/sqlite-simple-2.1.jar/download">download jar</a> (recommended)
