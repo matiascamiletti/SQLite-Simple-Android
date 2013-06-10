@@ -479,7 +479,9 @@ public abstract class SQLiteSimpleDAO<T> {
         if (!isRecycled) {
             Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName), new String[]{columnValue}, null, null, null);
             T object = read(cursor);
-            cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
             return object;
         } else {
             return null;
@@ -492,9 +494,13 @@ public abstract class SQLiteSimpleDAO<T> {
         if (!isRecycled) {
             Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
                     firstColumnName, secondColumnName), new String[]{firstColumnValue, secondColumnValue}, null, null, null);
-            T object = read(cursor);
-            cursor.close();
-            return object;
+            if (cursor != null) {
+                T object = read(cursor);
+                cursor.close();
+                return object;
+            } else {
+                return null;
+            }
         } else {
             return null;
         }
@@ -506,7 +512,9 @@ public abstract class SQLiteSimpleDAO<T> {
             Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
                     new String[]{columnValue}, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order));
             T object = read(cursor);
-            cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
             return object;
         } else {
             return null;
@@ -551,7 +559,9 @@ public abstract class SQLiteSimpleDAO<T> {
             Cursor cursor = selectCursorFromTable(null, null, null, null,
                     String.format(SimpleConstants.FORMAT_TWINS, column, order));
             List<T> objects = readAll(cursor);
-            cursor.close();
+            if (cursor != null) {
+                cursor.close();
+            }
             return objects;
         } else {
             return null;
