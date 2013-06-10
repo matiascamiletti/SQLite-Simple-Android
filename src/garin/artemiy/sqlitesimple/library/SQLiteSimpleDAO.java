@@ -37,7 +37,6 @@ public abstract class SQLiteSimpleDAO<T> {
     private SQLiteSimpleHelper simpleHelper;
     private SQLiteDatabase database;
     private String primaryKeyColumnName;
-    private List<Cursor> cursors = new ArrayList<Cursor>();
     private boolean isRecycled;
 
     protected SQLiteSimpleDAO(Class<T> tClass, Context context) {
@@ -67,20 +66,16 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public void recycle() {
         isRecycled = true;
+
         try {
 
-            for (Cursor cursor : cursors) {
-                if (!cursor.isClosed())
-                    cursor.close();
-            }
-
-            cursors.clear();
             database.close();
             database = null;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     private String getPrimaryKeyColumnName() {
@@ -271,7 +266,6 @@ public abstract class SQLiteSimpleDAO<T> {
 
                 Cursor cursor = database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
                 cursor.moveToFirst();
-                cursors.add(cursor);
 
                 return cursor;
 
@@ -292,7 +286,7 @@ public abstract class SQLiteSimpleDAO<T> {
 
             float averageResult = cursor.getFloat(SimpleConstants.FIRST_ELEMENT);
 
-            cursors.add(cursor);
+            cursor.close();
 
             return averageResult;
         } else {
@@ -369,6 +363,7 @@ public abstract class SQLiteSimpleDAO<T> {
 
             Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN,
                     columnName), new String[]{columnValue}, null, null, null);
+
             if (cursor != null) {
 
                 cursor.moveToFirst();
@@ -376,6 +371,8 @@ public abstract class SQLiteSimpleDAO<T> {
                 if (cursor.getCount() == 0) {
                     result = create(object);
                 }
+
+                cursor.close();
 
                 return result;
             } else {
@@ -401,6 +398,8 @@ public abstract class SQLiteSimpleDAO<T> {
                 if (cursor.getCount() == 0) {
                     result = create(object);
                 }
+
+                cursor.close();
 
                 return result;
             } else {
@@ -459,6 +458,7 @@ public abstract class SQLiteSimpleDAO<T> {
                 try {
                     T newTObject = tClass.newInstance();
                     bindObject(newTObject, cursor);
+                    cursor.close();
                     return newTObject;
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -478,7 +478,9 @@ public abstract class SQLiteSimpleDAO<T> {
     public T readWhere(String columnName, String columnValue) {
         if (!isRecycled) {
             Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName), new String[]{columnValue}, null, null, null);
-            return read(cursor);
+            T object = read(cursor);
+            cursor.close();
+            return object;
         } else {
             return null;
         }
@@ -490,7 +492,9 @@ public abstract class SQLiteSimpleDAO<T> {
         if (!isRecycled) {
             Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
                     firstColumnName, secondColumnName), new String[]{firstColumnValue, secondColumnValue}, null, null, null);
-            return read(cursor);
+            T object = read(cursor);
+            cursor.close();
+            return object;
         } else {
             return null;
         }
@@ -501,7 +505,9 @@ public abstract class SQLiteSimpleDAO<T> {
         if (!isRecycled) {
             Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
                     new String[]{columnValue}, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order));
-            return read(cursor);
+            T object = read(cursor);
+            cursor.close();
+            return object;
         } else {
             return null;
         }
@@ -512,7 +518,9 @@ public abstract class SQLiteSimpleDAO<T> {
         if (!isRecycled) {
             Cursor cursor = selectCursorAscFromTable();
             if (cursor != null) {
-                return readAll(cursor);
+                List<T> objects = readAll(cursor);
+                cursor.close();
+                return objects;
             } else {
                 return null;
             }
@@ -526,7 +534,9 @@ public abstract class SQLiteSimpleDAO<T> {
         if (!isRecycled) {
             Cursor cursor = selectCursorDescFromTable();
             if (cursor != null) {
-                return readAll(cursor);
+                List<T> objects = readAll(cursor);
+                cursor.close();
+                return objects;
             } else {
                 return null;
             }
@@ -540,7 +550,9 @@ public abstract class SQLiteSimpleDAO<T> {
         if (!isRecycled) {
             Cursor cursor = selectCursorFromTable(null, null, null, null,
                     String.format(SimpleConstants.FORMAT_TWINS, column, order));
-            return readAll(cursor);
+            List<T> objects = readAll(cursor);
+            cursor.close();
+            return objects;
         } else {
             return null;
         }
@@ -552,7 +564,9 @@ public abstract class SQLiteSimpleDAO<T> {
             Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
                     new String[]{columnValue}, null, null, null);
             if (cursor != null) {
-                return readAll(cursor);
+                List<T> objects = readAll(cursor);
+                cursor.close();
+                return objects;
             } else {
                 return null;
             }
@@ -567,7 +581,9 @@ public abstract class SQLiteSimpleDAO<T> {
             Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
                     new String[]{columnValue}, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order));
             if (cursor != null) {
-                return readAll(cursor);
+                List<T> objects = readAll(cursor);
+                cursor.close();
+                return objects;
             } else {
                 return null;
             }
@@ -582,7 +598,9 @@ public abstract class SQLiteSimpleDAO<T> {
             Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.SQL_IN, columnName, in),
                     null, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order));
             if (cursor != null) {
-                return readAll(cursor);
+                List<T> objects = readAll(cursor);
+                cursor.close();
+                return objects;
             } else {
                 return null;
             }
@@ -597,7 +615,9 @@ public abstract class SQLiteSimpleDAO<T> {
             Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.SQL_IN, columnName, in),
                     null, null, null, null);
             if (cursor != null) {
-                return readAll(cursor);
+                List<T> objects = readAll(cursor);
+                cursor.close();
+                return objects;
             } else {
                 return null;
             }
