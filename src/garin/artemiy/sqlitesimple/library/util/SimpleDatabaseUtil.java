@@ -1,6 +1,7 @@
 package garin.artemiy.sqlitesimple.library.util;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import garin.artemiy.sqlitesimple.library.annotations.Column;
 import garin.artemiy.sqlitesimple.library.annotations.Table;
 
@@ -27,6 +28,9 @@ public class SimpleDatabaseUtil {
     private static final String DB_FORMAT = ".db";
     private static final String DATABASE_PATH = "/data/data/%s/databases/%s";
 
+    private SimpleDatabaseUtil() {
+    }
+
     public static String getColumnName(Field field) {
         Column annotationColumn = field.getAnnotation(Column.class);
         String column = null;
@@ -51,6 +55,42 @@ public class SimpleDatabaseUtil {
         return table;
     }
 
+    public static String getSQLType(Field field, Column columnAnnotation) {
+        String type;
+        if (columnAnnotation.type() != null && !columnAnnotation.type().equals(SimpleConstants.AUTO_ASSIGN)
+                && !columnAnnotation.type().equals(SimpleConstants.EMPTY)) {
+            type = columnAnnotation.type();
+        } else {
+
+            Class<?> fieldType = field.getType();
+
+            if (fieldType.isAssignableFrom(Long.class) || fieldType.isAssignableFrom(long.class)) {
+                type = ColumnType.INTEGER;
+            } else if (fieldType.isAssignableFrom(String.class)) {
+                type = ColumnType.TEXT;
+            } else if ((fieldType.isAssignableFrom(Integer.class) || fieldType.isAssignableFrom(int.class))) {
+                type = ColumnType.INTEGER;
+            } else if ((fieldType.isAssignableFrom(Byte[].class) || fieldType.isAssignableFrom(byte[].class))) {
+                type = ColumnType.BLOB;
+            } else if ((fieldType.isAssignableFrom(Double.class) || fieldType.isAssignableFrom(double.class))) {
+                type = ColumnType.REAL;
+            } else if ((fieldType.isAssignableFrom(Float.class) || fieldType.isAssignableFrom(float.class))) {
+                type = ColumnType.REAL;
+            } else if ((fieldType.isAssignableFrom(Short.class) || fieldType.isAssignableFrom(short.class))) {
+                type = ColumnType.INTEGER;
+            } else if (fieldType.isAssignableFrom(Byte.class) || fieldType.isAssignableFrom(byte.class)) {
+                type = ColumnType.INTEGER;
+            } else if (fieldType.isAssignableFrom(Boolean.class) || fieldType.isAssignableFrom(boolean.class)) {
+                type = ColumnType.NUMERIC;
+            } else {
+                throw new UnsupportedOperationException("Unknown variable type:" + fieldType);
+            }
+
+        }
+
+        return type;
+    }
+
     public static String getFullDatabasePath(Context context, String databaseName) {
         return String.format(DATABASE_PATH, context.getPackageName(), databaseName);
     }
@@ -72,6 +112,36 @@ public class SimpleDatabaseUtil {
     public static String getFTSTableName(Context context) {
         return String.format(SimpleConstants.FTS_SQL_TABLE_NAME, context.getPackageName()).
                 replace(SimpleConstants.DOT, SimpleConstants.UNDERSCORE).toUpperCase();
+    }
+
+    @SuppressWarnings("unused")
+    public static boolean isFirstApplicationStart(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SimpleConstants.SHARED_PREFERENCES_APPLICATION,
+                Context.MODE_PRIVATE);
+        if (sharedPreferences.getBoolean(SimpleConstants.SHARED_IS_FIRST_APPLICATION_START, true)) {
+            SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+            sharedPreferencesEditor.putBoolean(SimpleConstants.SHARED_IS_FIRST_APPLICATION_START, false);
+            sharedPreferencesEditor.commit();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public static boolean isFirstStartOnAppVersion(Context context, int appVersionCode) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(SimpleConstants.SHARED_PREFERENCES_APPLICATION,
+                Context.MODE_PRIVATE);
+        if (sharedPreferences.getBoolean(
+                String.format(SimpleConstants.FORMAT_SHARED_IS_FIRST_APPLICATION_START, appVersionCode), true)) {
+            SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+            sharedPreferencesEditor.putBoolean(
+                    String.format(SimpleConstants.FORMAT_SHARED_IS_FIRST_APPLICATION_START, appVersionCode), false);
+            sharedPreferencesEditor.commit();
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

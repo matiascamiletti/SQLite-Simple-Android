@@ -17,7 +17,7 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        SQLiteSimple databaseSimple = new SQLiteSimple(this);
+        SQLiteSimple databaseSimple = new SQLiteSimple(this, 2);
         databaseSimple.create(Record.class);
 
         SQLiteSimple localSimple = new SQLiteSimple(this, "test.sqlite");

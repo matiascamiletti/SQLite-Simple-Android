@@ -18,7 +18,7 @@ package garin.artemiy.sqlitesimple.library.model;
  */
 public class FTSModel {
 
-    private String id; // or UUID
+    private String id; // or UUID recommended
     private int tableCategory;
     private String data;
 

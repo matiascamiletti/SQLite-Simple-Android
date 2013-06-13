@@ -1,5 +1,5 @@
 <h3>Version - 2.2</h3>
-
+todo update readme
 <h2>Install</h2>
 You may import src from project or <a href="http://sourceforge.net/projects/sqlite-android/files/sqlite-simple-2.2.jar/download">download jar</a> (recommended)
 

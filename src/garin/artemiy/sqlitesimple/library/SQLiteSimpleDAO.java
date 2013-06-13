@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import garin.artemiy.sqlitesimple.library.annotations.Column;
-import garin.artemiy.sqlitesimple.library.model.DatabaseCursorModel;
 import garin.artemiy.sqlitesimple.library.util.SimpleConstants;
 import garin.artemiy.sqlitesimple.library.util.SimpleDatabaseUtil;
 import garin.artemiy.sqlitesimple.library.util.SimplePreferencesUtil;
@@ -45,8 +44,8 @@ public abstract class SQLiteSimpleDAO<T> {
     private static SQLiteDatabase localDatabase;
 
     protected SQLiteSimpleDAO(Class<T> tClass, Context context) {
-        simpleHelper = new SQLiteSimpleHelper(context, SimpleConstants.LOCAL_PREFERENCES,
-                new SimplePreferencesUtil(context).getDatabaseVersion(SimpleConstants.LOCAL_PREFERENCES), null, false);
+        simpleHelper = new SQLiteSimpleHelper(context, SimpleConstants.SHARED_LOCAL_PREFERENCES,
+                new SimplePreferencesUtil(context).getDatabaseVersion(SimpleConstants.SHARED_LOCAL_PREFERENCES), null, false);
         init(tClass);
     }
 
@@ -260,19 +259,19 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
-    private DatabaseCursorModel selectCursorAscFromTable() {
+    private Cursor selectCursorAscFromTable() {
         return selectCursorFromTable(null, null, null, null, null);
     }
 
     @SuppressWarnings("unused")
-    private DatabaseCursorModel selectCursorDescFromTable() {
+    private Cursor selectCursorDescFromTable() {
         return selectCursorFromTable(null, null, null, null,
                 String.format(SimpleConstants.FORMAT_TWINS, primaryKeyColumnName, SimpleConstants.DESC));
     }
 
     @SuppressWarnings("unused")
-    private DatabaseCursorModel selectCursorFromTable(String selection, String[] selectionArgs,
-                                                      String groupBy, String having, String orderBy) {
+    private Cursor selectCursorFromTable(String selection, String[] selectionArgs,
+                                         String groupBy, String having, String orderBy) {
         try {
             String table = SimpleDatabaseUtil.getTableName(tClass);
             String[] columns = getColumns();
@@ -280,11 +279,7 @@ public abstract class SQLiteSimpleDAO<T> {
             SQLiteDatabase database = getDatabase();
             Cursor cursor = database.query(table, columns, selection, selectionArgs, groupBy, having, orderBy);
             cursor.moveToFirst();
-
-            DatabaseCursorModel databaseCursorModel = new DatabaseCursorModel();
-            databaseCursorModel.setCursor(cursor);
-
-            return databaseCursorModel;
+            return cursor;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -338,45 +333,44 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public int getCount() {
-        DatabaseCursorModel databaseCursorModel = selectCursorAscFromTable();
+        Cursor cursor = selectCursorAscFromTable();
 
-        int count = databaseCursorModel.getCursor().getCount();
-        databaseCursorModel.close();
+        int count = cursor.getCount();
+        cursor.close();
 
         return count;
     }
 
     @SuppressWarnings("unused")
     public long getLastRowId() {
-        DatabaseCursorModel databaseCursorModel = selectCursorAscFromTable();
+        Cursor cursor = selectCursorAscFromTable();
 
-        databaseCursorModel.getCursor().moveToLast();
+        cursor.moveToLast();
 
         long id;
-        if (databaseCursorModel.getCursor().getPosition() == -1) {
-            id = -1;
+        if (cursor.getPosition() == -1) {
+            id = SimpleConstants.ZERO_RESULT;
         } else {
-            id = databaseCursorModel.getCursor().
-                    getLong(databaseCursorModel.getCursor().getColumnIndex(primaryKeyColumnName));
+            id = cursor.getLong(cursor.getColumnIndex(primaryKeyColumnName));
         }
 
-        databaseCursorModel.close();
+        cursor.close();
 
         return id;
     }
 
     @SuppressWarnings("unused")
     public long createIfNotExist(T object, String columnName, String columnValue) {
-        long result = -1;
+        long result = SimpleConstants.ZERO_RESULT;
 
-        DatabaseCursorModel databaseCursorModel = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN,
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN,
                 columnName), new String[]{columnValue}, null, null, null);
 
-        if (databaseCursorModel.getCursor().getCount() == 0) {
+        if (cursor.getCount() == 0) {
             result = create(object);
         }
 
-        databaseCursorModel.close();
+        cursor.close();
 
         return result;
     }
@@ -384,18 +378,18 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public long createIfNotExist(T object, String firstColumnName, String firstColumnValue,
                                  String secondColumnName, String secondColumnValue) {
-        long result = -1;
+        long result = SimpleConstants.ZERO_RESULT;
 
-        DatabaseCursorModel databaseCursorModel =
+        Cursor cursor =
                 selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
                         firstColumnName, secondColumnName),
                         new String[]{firstColumnValue, secondColumnValue}, null, null, null);
 
-        if (databaseCursorModel.getCursor().getCount() == 0) {
+        if (cursor.getCount() == 0) {
             result = create(object);
         }
 
-        databaseCursorModel.close();
+        cursor.close();
 
         return result;
     }
@@ -427,38 +421,38 @@ public abstract class SQLiteSimpleDAO<T> {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return -1;
+            return SimpleConstants.ZERO_RESULT;
         }
     }
 
     @SuppressWarnings("unused")
     public T read(long id) {
-        DatabaseCursorModel databaseCursorModel = selectCursorFromTable(
+        Cursor cursor = selectCursorFromTable(
                 String.format(SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName),
                 new String[]{Long.toString(id)}
                 , null, null, null);
 
         try {
             T newTObject = tClass.newInstance();
-            bindObject(newTObject, databaseCursorModel.getCursor());
+            bindObject(newTObject, cursor);
             return newTObject;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         } finally {
-            databaseCursorModel.close();
+            cursor.close();
         }
 
     }
 
     @SuppressWarnings("unused")
     public T readWhere(String columnName, String columnValue) {
-        DatabaseCursorModel databaseCursorModel = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
                 new String[]{columnValue}, null, null, null);
         T object = null;
-        if (databaseCursorModel != null) {
-            object = read(databaseCursorModel.getCursor());
-            databaseCursorModel.close();
+        if (cursor != null) {
+            object = read(cursor);
+            cursor.close();
         }
         return object;
     }
@@ -466,87 +460,87 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public T readWhere(String firstColumnName, String firstColumnValue,
                        String secondColumnName, String secondColumnValue) {
-        DatabaseCursorModel databaseCursorModel = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
                 firstColumnName, secondColumnName),
                 new String[]{firstColumnValue, secondColumnValue}, null, null, null);
         T object = null;
-        if (databaseCursorModel != null) {
-            object = read(databaseCursorModel.getCursor());
-            databaseCursorModel.close();
+        if (cursor != null) {
+            object = read(cursor);
+            cursor.close();
         }
         return object;
     }
 
     @SuppressWarnings("unused")
     public T readWhereWithOrder(String columnName, String columnValue, String column, String order) {
-        DatabaseCursorModel databaseCursorModel = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
                 new String[]{columnValue}, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order));
         T object = null;
-        if (databaseCursorModel != null) {
-            object = read(databaseCursorModel.getCursor());
-            databaseCursorModel.close();
+        if (cursor != null) {
+            object = read(cursor);
+            cursor.close();
         }
         return object;
     }
 
     @SuppressWarnings("unused")
     public List<T> readAllAsc() {
-        DatabaseCursorModel databaseCursorModel = selectCursorAscFromTable();
-        List<T> objects = readAll(databaseCursorModel.getCursor());
-        databaseCursorModel.close();
+        Cursor cursor = selectCursorAscFromTable();
+        List<T> objects = readAll(cursor);
+        cursor.close();
         return objects;
     }
 
     @SuppressWarnings("unused")
     public List<T> readAllDesc() {
-        DatabaseCursorModel databaseCursorModel = selectCursorDescFromTable();
-        List<T> objects = readAll(databaseCursorModel.getCursor());
-        databaseCursorModel.close();
+        Cursor cursor = selectCursorDescFromTable();
+        List<T> objects = readAll(cursor);
+        cursor.close();
         return objects;
     }
 
     @SuppressWarnings("unused")
     public List<T> readAllWithOrder(String column, String order) {
-        DatabaseCursorModel databaseCursorModel = selectCursorFromTable(null, null, null, null,
+        Cursor cursor = selectCursorFromTable(null, null, null, null,
                 String.format(SimpleConstants.FORMAT_TWINS, column, order));
-        List<T> objects = readAll(databaseCursorModel.getCursor());
-        databaseCursorModel.close();
+        List<T> objects = readAll(cursor);
+        cursor.close();
         return objects;
     }
 
     @SuppressWarnings("unused")
     public List<T> readAllWhere(String columnName, String columnValue) {
-        DatabaseCursorModel databaseCursorModel = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
                 new String[]{columnValue}, null, null, null);
-        List<T> objects = readAll(databaseCursorModel.getCursor());
-        databaseCursorModel.close();
+        List<T> objects = readAll(cursor);
+        cursor.close();
         return objects;
     }
 
     @SuppressWarnings("unused")
     public List<T> readAllWhereWithOrder(String columnName, String columnValue, String column, String order) {
-        DatabaseCursorModel databaseCursorModel = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
                 new String[]{columnValue}, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order));
-        List<T> objects = readAll(databaseCursorModel.getCursor());
-        databaseCursorModel.close();
+        List<T> objects = readAll(cursor);
+        cursor.close();
         return objects;
     }
 
     @SuppressWarnings("unused")
     public List<T> readAllWhereInWithOrder(String columnName, String in, String column, String order) {
-        DatabaseCursorModel databaseCursorModel = selectCursorFromTable(String.format(SimpleConstants.SQL_IN, columnName, in),
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.SQL_IN, columnName, in),
                 null, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order));
-        List<T> objects = readAll(databaseCursorModel.getCursor());
-        databaseCursorModel.close();
+        List<T> objects = readAll(cursor);
+        cursor.close();
         return objects;
     }
 
     @SuppressWarnings("unused")
     public List<T> readAllWhereIn(String columnName, String in) {
-        DatabaseCursorModel databaseCursorModel = selectCursorFromTable(String.format(SimpleConstants.SQL_IN, columnName, in),
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.SQL_IN, columnName, in),
                 null, null, null, null);
-        List<T> objects = readAll(databaseCursorModel.getCursor());
-        databaseCursorModel.close();
+        List<T> objects = readAll(cursor);
+        cursor.close();
         return objects;
     }
 
@@ -562,7 +556,7 @@ public abstract class SQLiteSimpleDAO<T> {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return -1;
+            return SimpleConstants.ZERO_RESULT;
         }
     }
 
@@ -580,7 +574,7 @@ public abstract class SQLiteSimpleDAO<T> {
 
         } catch (Exception e) {
             e.printStackTrace();
-            return -1;
+            return SimpleConstants.ZERO_RESULT;
         }
     }
 

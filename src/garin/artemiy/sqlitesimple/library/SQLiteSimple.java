@@ -40,8 +40,7 @@ public class SQLiteSimple {
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context, int databaseVersion) {
         sharedPreferencesUtil = new SimplePreferencesUtil(context);
-        sharedPreferencesPlace = SimpleConstants.LOCAL_PREFERENCES;
-
+        sharedPreferencesPlace = SimpleConstants.SHARED_LOCAL_PREFERENCES;
         this.databaseVersion = databaseVersion;
 
         commitDatabaseVersion();
@@ -52,7 +51,7 @@ public class SQLiteSimple {
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context) {
         sharedPreferencesUtil = new SimplePreferencesUtil(context);
-        sharedPreferencesPlace = SimpleConstants.LOCAL_PREFERENCES;
+        sharedPreferencesPlace = SimpleConstants.SHARED_LOCAL_PREFERENCES;
         this.databaseVersion = SimpleConstants.FIRST_DATABASE_VERSION;
 
         commitDatabaseVersion();
@@ -142,7 +141,7 @@ public class SQLiteSimple {
                     } else {
 
                         sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
-                                column, fieldEntityAnnotation.type()));
+                                column, SimpleDatabaseUtil.getSQLType(fieldEntity, fieldEntityAnnotation)));
 
                         isAddedSQLDivider = false;
 
@@ -217,7 +216,7 @@ public class SQLiteSimple {
             String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
             Column fieldEntityAnnotation = fieldEntity.getAnnotation(Column.class);
             sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
-                    column, fieldEntityAnnotation.type()));
+                    column, SimpleDatabaseUtil.getSQLType(fieldEntity, fieldEntityAnnotation)));
 
             sqlQueryBuilder.append(SimpleConstants.SPACE);
             sqlQueryBuilder.append(SimpleConstants.PRIMARY_KEY);
@@ -237,7 +236,7 @@ public class SQLiteSimple {
                 String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
                 Column fieldEntityAnnotation = fieldEntity.getAnnotation(Column.class);
                 sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
-                        column, fieldEntityAnnotation.type()));
+                        column, SimpleDatabaseUtil.getSQLType(fieldEntity, fieldEntityAnnotation)));
 
                 sqlQueryBuilder.append(SimpleConstants.DIVIDER);
                 sqlQueryBuilder.append(SimpleConstants.SPACE);

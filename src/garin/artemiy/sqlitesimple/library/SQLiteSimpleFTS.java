@@ -43,8 +43,8 @@ public class SQLiteSimpleFTS {
     @SuppressWarnings("unused")
     public SQLiteSimpleFTS(Context context, boolean useTablesCategory) {
         this.useTablesCategory = useTablesCategory;
-        SQLiteSimpleHelper simpleHelper = new SQLiteSimpleHelper(context, SimpleConstants.LOCAL_PREFERENCES,
-                new SimplePreferencesUtil(context).getDatabaseVersion(SimpleConstants.LOCAL_PREFERENCES), null, true);
+        SQLiteSimpleHelper simpleHelper = new SQLiteSimpleHelper(context, SimpleConstants.SHARED_LOCAL_PREFERENCES,
+                new SimplePreferencesUtil(context).getDatabaseVersion(SimpleConstants.SHARED_LOCAL_PREFERENCES), null, true);
         if (database == null || !database.isOpen())
             database = simpleHelper.getWritableDatabase();
         tableName = SimpleDatabaseUtil.getFTSTableName(context);

@@ -34,6 +34,6 @@ public @interface Column {
 
     String name() default SimpleConstants.EMPTY;
 
-    String type();
+    String type() default SimpleConstants.AUTO_ASSIGN;
 
 }

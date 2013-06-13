@@ -34,6 +34,7 @@ public class SimpleConstants {
     public static final String FTS_DROP_VIRTUAL_TABLE = "DROP TABLE IF EXISTS %s";
 
     // Shared preferences
+    public static final String SHARED_PREFERENCES_APPLICATION = "SQLiteSimpleDatabaseApplication";
     public static final String SHARED_PREFERENCES_DATABASE = "SQLiteSimpleDatabaseHelper";
     public static final String SHARED_DATABASE_TABLES = "SQLiteSimpleDatabaseTables_%s";
     public static final String SHARED_DATABASE_QUERIES = "SQLiteSimpleDatabaseQueries_%s";
@@ -41,9 +42,8 @@ public class SimpleConstants {
     public static final String SHARED_DATABASE_VIRTUAL_TABLE_CREATED = "SQLiteSimpleDatabaseVirtualTableCreated";
     public static final String SHARED_PREFERENCES_LIST = "List_%s_%s";
     public static final String SHARED_PREFERENCES_INDEX = "%s_Index";
-    public static final String LOCAL_PREFERENCES = "LOCAL";
-
-    public static final int FIRST_ELEMENT = 0;
+    public static final String SHARED_LOCAL_PREFERENCES = "LOCAL";
+    public static final String SHARED_IS_FIRST_APPLICATION_START = "SHARED_IS_FIRST_APPLICATION_START";
 
     // SQL
     public static final String AUTOINCREMENT = "AUTOINCREMENT";
@@ -62,16 +62,19 @@ public class SimpleConstants {
     public static final String FORMAT_COLUMN = "%s=?";
     public static final String FORMAT_BRACKETS = "(%s)";
     public static final String FORMAT_COLUMNS_COMMA = "%s=? AND %s=?";
+    public static final String FORMAT_SHARED_IS_FIRST_APPLICATION_START = "SHARED_IS_FIRST_APPLICATION_START_%s";
 
     // Other
     public static final int FIRST_DATABASE_VERSION = 1;
     public static final int ZERO_RESULT = -1;
+    public static final int FIRST_ELEMENT = 0;
     public static final String SPECIAL_SYMBOLS_REGEX = "[-+.^:,\"']";
     public static final String ID_COLUMN = "_id"; // if we don't make a primary key column
     public static final String DESC = "DESC";
     public static final String ASC = "ASC";
     public static final String SPACE = " ";
     public static final String EMPTY = "";
+    public static final String AUTO_ASSIGN = "AUTO_ASSIGN";
     public static final String DIVIDER = ",";
     public static final String FIRST_BRACKET = "(";
     public static final String LAST_BRACKET = ");";
