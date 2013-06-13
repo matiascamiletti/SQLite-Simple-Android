@@ -35,13 +35,15 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
     private Context context;
     private SimplePreferencesUtil sharedPreferencesUtil;
     private String sharedPreferencesPlace;
+    private static final Object writableObjectLock = new Object();
+    private static final Object readableObjectLock = new Object();
 
     /**
      * @param assetsDatabaseName - load local sqlite if need
      */
     public SQLiteSimpleHelper(Context context, String sharedPreferencesPlace,
-                              int databaseVersion, String assetsDatabaseName) {
-        super(context, SimpleDatabaseUtil.getFullDatabaseName(assetsDatabaseName, context), null, databaseVersion);
+                              int databaseVersion, String assetsDatabaseName, boolean isFTS) {
+        super(context, SimpleDatabaseUtil.getFullDatabaseName(assetsDatabaseName, context, isFTS), null, databaseVersion);
         this.assetsDatabaseName = assetsDatabaseName;
         this.context = context;
         this.sharedPreferencesPlace = sharedPreferencesPlace;
@@ -76,22 +78,26 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
     @Override
     public synchronized SQLiteDatabase getWritableDatabase() {
         checkDatabaseFromAssets();
-        if (assetsDatabaseName == null) {
-            return super.getWritableDatabase();
-        } else {
-            return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.getFullDatabasePath(context, assetsDatabaseName),
-                    null, SQLiteDatabase.OPEN_READWRITE);
+        synchronized (writableObjectLock) {
+            if (assetsDatabaseName == null) {
+                return super.getWritableDatabase();
+            } else {
+                return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.getFullDatabasePath(context, assetsDatabaseName),
+                        null, SQLiteDatabase.OPEN_READWRITE);
+            }
         }
     }
 
     @Override
     public synchronized SQLiteDatabase getReadableDatabase() {
         checkDatabaseFromAssets();
-        if (assetsDatabaseName == null) {
-            return super.getReadableDatabase();
-        } else {
-            return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.getFullDatabasePath(context, assetsDatabaseName),
-                    null, SQLiteDatabase.OPEN_READONLY);
+        synchronized (readableObjectLock) {
+            if (assetsDatabaseName == null) {
+                return super.getReadableDatabase();
+            } else {
+                return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.getFullDatabasePath(context, assetsDatabaseName),
+                        null, SQLiteDatabase.OPEN_READONLY);
+            }
         }
     }
 

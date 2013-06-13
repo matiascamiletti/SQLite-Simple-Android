@@ -35,26 +35,20 @@ public class SQLiteSimpleFTS {
     private static final String COLUMN_TABLE_CATEGORY = "tableCategory";
     private static final String COLUMN_DATA = "data";
 
-    private SQLiteDatabase database;
-    private String tableName;
+    private static SQLiteDatabase database = null;
     private boolean useTablesCategory;
+    private String tableName;
     private SimplePreferencesUtil preferencesUtil;
 
     @SuppressWarnings("unused")
     public SQLiteSimpleFTS(Context context, boolean useTablesCategory) {
         this.useTablesCategory = useTablesCategory;
         SQLiteSimpleHelper simpleHelper = new SQLiteSimpleHelper(context, SimpleConstants.LOCAL_PREFERENCES,
-                new SimplePreferencesUtil(context).getDatabaseVersion(SimpleConstants.LOCAL_PREFERENCES), null);
-        database = simpleHelper.getWritableDatabase();
+                new SimplePreferencesUtil(context).getDatabaseVersion(SimpleConstants.LOCAL_PREFERENCES), null, true);
+        if (database == null || !database.isOpen())
+            database = simpleHelper.getWritableDatabase();
         tableName = SimpleDatabaseUtil.getFTSTableName(context);
-
         createTableIfNotExist(context);
-    }
-
-    @SuppressWarnings("unused")
-    public void recycle() {
-        database.close();
-        database = null;
     }
 
     @SuppressWarnings("unused")
@@ -64,7 +58,7 @@ public class SQLiteSimpleFTS {
         preferencesUtil.commit();
     }
 
-    public void createTableIfNotExist(Context context) {
+    private void createTableIfNotExist(Context context) {
         preferencesUtil = new SimplePreferencesUtil(context);
         if (!preferencesUtil.isVirtualTableCreated()) {
 
@@ -78,9 +72,9 @@ public class SQLiteSimpleFTS {
             }
 
             database.execSQL(createVirtualFTSTable);
+
             preferencesUtil.setVirtualTableCreated();
             preferencesUtil.commit();
-
         }
     }
 
@@ -97,7 +91,6 @@ public class SQLiteSimpleFTS {
             }
 
             database.insert(tableName, null, contentValues);
-
         }
     }
 
@@ -130,7 +123,6 @@ public class SQLiteSimpleFTS {
         }
 
         Cursor cursor = database.rawQuery(format, null);
-
         cursor.moveToFirst();
 
         while (!cursor.isAfterLast()) {

@@ -84,13 +84,6 @@ public class MainActivity extends ListActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        recordsDAO.recycle();
-        simpleFTS.recycle();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         updateAdapter();

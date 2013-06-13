@@ -46,7 +46,7 @@ public class SQLiteSimple {
 
         commitDatabaseVersion();
 
-        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, sharedPreferencesPlace, databaseVersion, null);
+        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, sharedPreferencesPlace, databaseVersion, null, false);
     }
 
     @SuppressWarnings("unused")
@@ -57,7 +57,7 @@ public class SQLiteSimple {
 
         commitDatabaseVersion();
 
-        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, sharedPreferencesPlace, databaseVersion, null);
+        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, sharedPreferencesPlace, databaseVersion, null, false);
     }
 
     @SuppressWarnings("unused")
@@ -66,7 +66,7 @@ public class SQLiteSimple {
         sharedPreferencesPlace = assetsDatabaseName;
         this.databaseVersion = SimpleConstants.FIRST_DATABASE_VERSION;
 
-        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, sharedPreferencesPlace, databaseVersion, assetsDatabaseName);
+        sqLiteSimpleHelper = new SQLiteSimpleHelper(context, sharedPreferencesPlace, databaseVersion, assetsDatabaseName, false);
     }
 
     private void commitDatabaseVersion() {
@@ -85,8 +85,8 @@ public class SQLiteSimple {
     private void checkingCommit(List<String> tables, List<String> sqlQueries, boolean newDatabaseVersion) {
         if (newDatabaseVersion) {
             commit(tables, sqlQueries);
-            SQLiteDatabase sqliteDatabase = sqLiteSimpleHelper.getWritableDatabase(); // call onCreate();
-            sqliteDatabase.close();
+            SQLiteDatabase database = sqLiteSimpleHelper.getWritableDatabase(); // call onCreate();
+            database.close();
         } else {
             commit(tables, sqlQueries);
         }
@@ -272,15 +272,15 @@ public class SQLiteSimple {
             List<String> extraSqlQueries = new ArrayList<String>(savedSQLQueries); // extra SQL queries
             extraSqlQueries.removeAll(sqlQueries);
 
-            SQLiteDatabase sqLiteDatabase = sqLiteSimpleHelper.getWritableDatabase();
+            SQLiteDatabase database = sqLiteSimpleHelper.getWritableDatabase();
             for (String extraTable : extraTables) {
-                sqLiteDatabase.execSQL(String.format(SimpleConstants.FORMAT_TWINS,
+                database.execSQL(String.format(SimpleConstants.FORMAT_TWINS,
                         SimpleConstants.SQL_DROP_TABLE_IF_EXISTS, extraTable));
             }
 
             commit(tables, sqlQueries);
-            sqLiteSimpleHelper.onCreate(sqLiteDatabase);
-            sqLiteDatabase.close();
+            sqLiteSimpleHelper.onCreate(database);
+            database.close();
             return true;
         }
 
@@ -291,12 +291,12 @@ public class SQLiteSimple {
             List<String> sqlQueriesToCreate = new ArrayList<String>(sqlQueries); // extra SQL queries
             sqlQueriesToCreate.removeAll(savedSQLQueries);
 
-            SQLiteDatabase sqLiteDatabase = sqLiteSimpleHelper.getWritableDatabase();
+            SQLiteDatabase database = sqLiteSimpleHelper.getWritableDatabase();
             for (String sqlQuery : sqlQueriesToCreate) {
-                sqLiteDatabase.execSQL(sqlQuery);
+                database.execSQL(sqlQuery);
             }
 
-            sqLiteDatabase.close();
+            database.close();
         }
 
         return false;
@@ -326,11 +326,11 @@ public class SQLiteSimple {
                             List<String> extraColumns = new ArrayList<String>(columns);
                             extraColumns.removeAll(savedColumns);
 
-                            SQLiteDatabase sqLiteDatabase = sqLiteSimpleHelper.getWritableDatabase();
+                            SQLiteDatabase database = sqLiteSimpleHelper.getWritableDatabase();
                             for (String column : extraColumns) {
-                                sqLiteDatabase.execSQL(String.format(SimpleConstants.SQL_ALTER_TABLE_ADD_COLUMN, table, column));
+                                database.execSQL(String.format(SimpleConstants.SQL_ALTER_TABLE_ADD_COLUMN, table, column));
                             }
-                            sqLiteDatabase.close();
+                            database.close();
 
                             isAddNewColumn = true;
                         }

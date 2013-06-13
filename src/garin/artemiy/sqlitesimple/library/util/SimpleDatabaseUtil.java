@@ -55,10 +55,15 @@ public class SimpleDatabaseUtil {
         return String.format(DATABASE_PATH, context.getPackageName(), databaseName);
     }
 
-    public static String getFullDatabaseName(String databaseName, Context context) {
+    public static String getFullDatabaseName(String databaseName, Context context, boolean isFTS) {
         if (databaseName == null) {
-            return String.format(SimpleConstants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT).
-                    replace(SimpleConstants.DOT, SimpleConstants.UNDERSCORE).toUpperCase();
+            if (isFTS) {
+                return String.format(SimpleConstants.FORMAT_GLUED_FTS, context.getPackageName(), DB_FORMAT).
+                        replace(SimpleConstants.DOT, SimpleConstants.UNDERSCORE).toUpperCase();
+            } else {
+                return String.format(SimpleConstants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT).
+                        replace(SimpleConstants.DOT, SimpleConstants.UNDERSCORE).toUpperCase();
+            }
         } else {
             return databaseName;
         }

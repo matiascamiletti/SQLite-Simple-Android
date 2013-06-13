@@ -56,6 +56,7 @@ public class SimpleConstants {
     public static final String SQL_AVG_QUERY_WHERE = "SELECT AVG(%s) FROM %s WHERE %s = '%s'";
 
     // String.format(..)
+    public static final String FORMAT_GLUED_FTS = "%s_FTS%s";
     public static final String FORMAT_GLUED = "%s%s";
     public static final String FORMAT_TWINS = "%s %s";
     public static final String FORMAT_COLUMN = "%s=?";
