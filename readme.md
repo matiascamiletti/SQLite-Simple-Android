@@ -19,6 +19,7 @@ public class Record {
     @Column(name = COLUMN_ID, type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
     private int id;
 
+    @Column
     private String recordText;
 
     // also supports ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.BLOB
@@ -94,7 +95,7 @@ Look better this nuance, available annotations:
 
 **@Column** - required parameter for variables, also required the type of column, supports attributes:
 
-    type - required (ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.INTEGER, ColumnType.BLOB).
+    type - optional (ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.INTEGER, ColumnType.BLOB).
 
     name - optional.
 
