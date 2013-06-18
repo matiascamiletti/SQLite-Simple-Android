@@ -1,29 +1,27 @@
-<h3>Version - 2.2</h3>
-todo update readme
+<h3>Version - 2.3</h3>
+
 <h2>Install</h2>
-You may import src from project or <a href="http://sourceforge.net/projects/sqlite-android/files/sqlite-simple-2.2.jar/download">download jar</a> (recommended)
+You may import src from project or <a href="http://sourceforge.net/projects/sqlite-android/files/sqlite-simple-2.3.jar/download">download jar</a> (recommended)
 
 <h2>Quick start</h2>
 
 **Code reference you may see in project**
 
-- Create your model with annotation @Column(type = ColumnType.TYPE), for example:
+- Create your model (may use with annotation @Column(type = ColumnType.TYPE)), for example:
 
 **See all model parameters below in section <a href="https://github.com/kvirair/SQLite-Simple-Android#model">Model</a>**
 
 ```java
 public class Record {
 
-    public transient static final String COLUMN_RECORD_TEXT = "recordText";
     public transient static final String COLUMN_ID = "_id";
 
     @Column(name = COLUMN_ID, type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
     private int id;
 
-    @Column(name = COLUMN_RECORD_TEXT, type = ColumnType.TEXT)
     private String recordText;
 
-    // also supports ColumnType.NUMERIC, ColumnType.REAL, ColumnType.BLOB
+    // also supports ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.BLOB
 
 }
 ```
@@ -36,8 +34,12 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        SQLiteSimple databaseSimple = new SQLiteSimple(this);
-        databaseSimple.create(Record.class); // enumerate classes Class1.class, Class2.class,...
+
+        if (SimpleDatabaseUtil.isFirstApplicationStart(this)) { // also may use  isFirstStartOnAppVersion with your version
+            SQLiteSimple databaseSimple = new SQLiteSimple(this);
+            databaseSimple.create(Record.class); // enumerate classes Class1.class, Class2.class, ...
+        }
+
     }
 
 }
@@ -79,12 +81,6 @@ In your activity just create operator, for example:
             super.onCreate(savedInstanceState);
             recordsDAO = new RecordsDAO(this);
        }
-
-      @Override
-        protected void onDestroy() {
-            super.onDestroy();
-            recordsDAO.recycle();
-        }
 
 ```
 And you may call all needed methods, if you need more, just override or create new in class **RecordsDAO**, look above.
@@ -154,12 +150,6 @@ public class MainApplication extends Application {
         simpleFTS = new SQLiteSimpleFTS(this, false); // second parameter is a tables category,
     }                                                 // search between several tables
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        simpleFTS.recycle();
-    }
-
 ```
 
 **That's all!** Use methods as described below in appropriate places, like in a example.
@@ -174,12 +164,10 @@ Also may be used:
 
     ZERO_RESULT - if, for example, object not found, or not created
 
-**SimplePreferencesUtil** methods:
-
-    getDatabaseVersion() - current local database version.
-
-    isVirtualTableCreated() - for FTS.
-
 **SimpleDatabaseUtil** methods:
 
     getFullDatabasePath() - path to internal database.
+
+    isFirstApplicationStart - return true if is first application start.
+
+    isFirstStartOnAppVersion - return true if is first application start in version ...
