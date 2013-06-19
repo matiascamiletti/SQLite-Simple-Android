@@ -172,3 +172,7 @@ Also may be used:
     isFirstApplicationStart - return true if is first application start.
 
     isFirstStartOnAppVersion - return true if is first application start in version ...
+
+**SQLiteSimpleDAO** methods:
+
+    updateDatabases - use this, if you need force update for all databases in application
