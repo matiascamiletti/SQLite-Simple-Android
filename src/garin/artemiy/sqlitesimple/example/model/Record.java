@@ -15,7 +15,7 @@ public class Record {
     @Column(name = COLUMN_ID, type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
     private int id;
 
-    @Column
+    @Column(name = COLUMN_RECORD_TEXT)
     private String recordText;
 
     public String getRecordText() {

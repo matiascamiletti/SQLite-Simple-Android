@@ -320,19 +320,19 @@ public class SQLiteSimple {
                                 replace(SimpleConstants.LAST_BRACKET, SimpleConstants.EMPTY).
                                 split(SimpleConstants.DIVIDER_WITH_SPACE));
 
-                        if (columns.size() > savedColumns.size()) {
+                        List<String> extraColumns = new ArrayList<String>(columns);
+                        extraColumns.removeAll(savedColumns);
 
-                            List<String> extraColumns = new ArrayList<String>(columns);
-                            extraColumns.removeAll(savedColumns);
+                        if (extraColumns.size() > 0) {
 
                             SQLiteDatabase database = sqLiteSimpleHelper.getWritableDatabase();
                             for (String column : extraColumns) {
                                 database.execSQL(String.format(SimpleConstants.SQL_ALTER_TABLE_ADD_COLUMN, table, column));
                             }
                             database.close();
-
-                            isAddNewColumn = true;
                         }
+
+                        isAddNewColumn = true;
                     }
                 }
             }
