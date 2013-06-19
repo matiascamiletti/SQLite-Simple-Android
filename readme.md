@@ -1,13 +1,13 @@
-<h3>Version - 2.3</h3>
+<h3>Version - 2.4</h3>
 
 <h2>Install</h2>
-You may import src from project or <a href="http://sourceforge.net/projects/sqlite-android/files/sqlite-simple-2.3.jar/download">download jar</a> (recommended)
+You may import src from project or <a href="http://sourceforge.net/projects/sqlite-android/files/sqlite-simple-2.4.jar/download">download jar</a> (recommended)
 
 <h2>Quick start</h2>
 
 **Code reference you may see in project**
 
-- Create your model (may use with annotation @Column(type = ColumnType.TYPE)), for example:
+- Create your model with annotation @Column, for example:
 
 **See all model parameters below in section <a href="https://github.com/kvirair/SQLite-Simple-Android#model">Model</a>**
 
@@ -93,7 +93,7 @@ Look better this nuance, available annotations:
 
     name - optional.
 
-**@Column** - required parameter for variables, also required the type of column, supports attributes:
+**@Column** - required parameter for variables, supports attributes:
 
     type - optional (ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.INTEGER, ColumnType.BLOB).
 

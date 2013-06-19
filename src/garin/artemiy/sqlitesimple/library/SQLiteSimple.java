@@ -313,12 +313,12 @@ public class SQLiteSimple {
                         List<String> savedColumns = Arrays.asList(savedSqlQueries.get(i).
                                 replace(String.format(SimpleConstants.SQL_CREATE_TABLE_IF_NOT_EXIST, table), SimpleConstants.EMPTY).
                                 replace(SimpleConstants.LAST_BRACKET, SimpleConstants.EMPTY).
-                                split(SimpleConstants.DIVIDER));
+                                split(SimpleConstants.DIVIDER_WITH_SPACE));
 
                         List<String> columns = Arrays.asList(sqlQueries.get(i).
                                 replace(String.format(SimpleConstants.SQL_CREATE_TABLE_IF_NOT_EXIST, table), SimpleConstants.EMPTY).
                                 replace(SimpleConstants.LAST_BRACKET, SimpleConstants.EMPTY).
-                                split(SimpleConstants.DIVIDER));
+                                split(SimpleConstants.DIVIDER_WITH_SPACE));
 
                         if (columns.size() > savedColumns.size()) {
 

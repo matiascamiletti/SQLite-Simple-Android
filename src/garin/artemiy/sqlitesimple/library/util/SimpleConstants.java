@@ -76,6 +76,7 @@ public class SimpleConstants {
     public static final String EMPTY = "";
     public static final String AUTO_ASSIGN = "AUTO_ASSIGN";
     public static final String DIVIDER = ",";
+    public static final String DIVIDER_WITH_SPACE = ", ";
     public static final String FIRST_BRACKET = "(";
     public static final String LAST_BRACKET = ");";
     public static final String DOT = ".";

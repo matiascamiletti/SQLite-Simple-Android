@@ -6,7 +6,6 @@ import garin.artemiy.sqlitesimple.example.model.Record;
 import garin.artemiy.sqlitesimple.example.model.Test;
 import garin.artemiy.sqlitesimple.example.operator.TestDAO;
 import garin.artemiy.sqlitesimple.library.SQLiteSimple;
-import garin.artemiy.sqlitesimple.library.util.SimpleDatabaseUtil;
 
 /**
  * author: Artemiy Garin
@@ -18,15 +17,11 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if (SimpleDatabaseUtil.isFirstApplicationStart(this)) {
+        SQLiteSimple databaseSimple = new SQLiteSimple(this);
+        databaseSimple.create(Record.class);
 
-            SQLiteSimple databaseSimple = new SQLiteSimple(this);
-            databaseSimple.create(Record.class);
-
-            SQLiteSimple localSimple = new SQLiteSimple(this, "test.sqlite");
-            localSimple.create(Test.class);
-
-        }
+        SQLiteSimple localSimple = new SQLiteSimple(this, "test.sqlite");
+        localSimple.create(Test.class);
 
         TestDAO testDAO = new TestDAO(this);
         Log.d("SQLiteSimple: Local database rows", String.valueOf(testDAO.getCount()));
