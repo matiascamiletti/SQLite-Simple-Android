@@ -167,7 +167,7 @@ Also may be used:
 
 **SimpleDatabaseUtil** methods:
 
-    getFullDatabasePath() - path to internal database.
+    getFullDatabasePath - path to internal database.
 
     isFirstApplicationStart - return true if is first application start.
 
