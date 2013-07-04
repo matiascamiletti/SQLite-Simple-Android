@@ -157,6 +157,16 @@ public class MainApplication extends Application {
 
 **simpleFTS.search(...)**, **simpleFTS.create(...)**.
 
+<h2>Hints</h2>
+
+If you use proguard, don't forget add
+
+-keep public class your_package.models.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+
+to proguard-project.txt
+
 <h2>Tools</h2>
 
 Also may be used:
