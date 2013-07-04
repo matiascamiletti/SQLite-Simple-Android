@@ -161,11 +161,13 @@ public class MainApplication extends Application {
 
 If you use proguard, don't forget add
 
+```java
 -keep public class your_package.models.** { *; }
 -keepattributes Signature
 -keepattributes *Annotation*
+```
 
-to proguard-project.txt
+to **proguard-project.txt**
 
 <h2>Tools</h2>
 
