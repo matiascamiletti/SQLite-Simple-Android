@@ -241,7 +241,6 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     private T read(Cursor cursor) {
         if (cursor != null) {
-
             try {
 
                 T newTObject = tClass.newInstance();
@@ -404,7 +403,6 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public long create(T object) {
         try {
-
             ContentValues contentValues = new ContentValues();
 
             for (Field field : object.getClass().getDeclaredFields()) {
