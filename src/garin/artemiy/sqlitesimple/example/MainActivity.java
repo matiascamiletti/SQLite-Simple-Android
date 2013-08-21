@@ -29,28 +29,22 @@ public class MainActivity extends ListActivity {
     private RecordsDAO recordsDAO;
     private SQLiteSimpleFTS simpleFTS;
     private MainFTSAdapter mainFTSAdapter;
+    private MainAdapter mainAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.main_layout);
 
         recordsDAO = new RecordsDAO(this);
         simpleFTS = new SQLiteSimpleFTS(this, false);
         mainFTSAdapter = new MainFTSAdapter(this, recordsDAO);
+        mainAdapter = new MainAdapter(this);
 
-        setContentView(R.layout.main_layout);
-
-        final MainAdapter mainAdapter = new MainAdapter(this);
         setListAdapter(mainAdapter);
         updateAdapter();
 
-        getListView().setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long id) {
-                recordsDAO.deleteWhere(Record.COLUMN_ID, String.valueOf(mainAdapter.getItem(i).getId()));
-                updateAdapter();
-                return true;
-            }
-        });
+        getListView().setOnItemLongClickListener(new CustomOnLongClickListener());
 
         ListView ftsList = (ListView) findViewById(R.id.ftsList);
         ftsList.setAdapter(mainFTSAdapter);
@@ -75,7 +69,6 @@ public class MainActivity extends ListActivity {
 
         mainAdapter.notifyDataSetChanged();
         mainFTSAdapter.notifyDataSetChanged();
-
     }
 
     @SuppressWarnings("unused")
@@ -122,4 +115,13 @@ public class MainActivity extends ListActivity {
         public void afterTextChanged(Editable editable) {
         }
     }
+
+    private class CustomOnLongClickListener implements AdapterView.OnItemLongClickListener {
+        public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long id) {
+            recordsDAO.deleteWhere(Record.COLUMN_ID, String.valueOf(mainAdapter.getItem(i).getId()));
+            updateAdapter();
+            return true;
+        }
+    }
+
 }

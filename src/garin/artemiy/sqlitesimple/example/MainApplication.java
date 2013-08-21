@@ -25,7 +25,6 @@ public class MainApplication extends Application {
 
         TestDAO testDAO = new TestDAO(this);
         Log.d("SQLiteSimple: Local database rows", String.valueOf(testDAO.getCount()));
-
     }
 
 }
