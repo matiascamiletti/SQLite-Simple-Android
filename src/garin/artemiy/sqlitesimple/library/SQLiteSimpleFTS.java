@@ -58,7 +58,7 @@ public class SQLiteSimpleFTS {
         preferencesUtil.commit();
     }
 
-    private void createTableIfNotExist(Context context) {
+    public void createTableIfNotExist(Context context) {
         preferencesUtil = new SimplePreferencesUtil(context);
         if (!preferencesUtil.isVirtualTableCreated()) {
 

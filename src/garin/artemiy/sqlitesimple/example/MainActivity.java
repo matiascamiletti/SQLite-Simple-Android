@@ -1,6 +1,6 @@
 package garin.artemiy.sqlitesimple.example;
 
-import android.app.ListActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,19 +17,18 @@ import garin.artemiy.sqlitesimple.library.SQLiteSimpleFTS;
 import garin.artemiy.sqlitesimple.library.model.FTSModel;
 import garin.artemiy.sqlitesimple.library.util.SimpleConstants;
 
-import java.util.List;
-
 /**
  * author: Artemiy Garin
  * date: 11.12.12
  */
-public class MainActivity extends ListActivity {
+public class MainActivity extends Activity {
 
     private static final String EMPTY = "";
     private RecordsDAO recordsDAO;
     private SQLiteSimpleFTS simpleFTS;
     private MainFTSAdapter mainFTSAdapter;
     private MainAdapter mainAdapter;
+    private String searchWord;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,26 +40,20 @@ public class MainActivity extends ListActivity {
         mainFTSAdapter = new MainFTSAdapter(this, recordsDAO);
         mainAdapter = new MainAdapter(this);
 
-        setListAdapter(mainAdapter);
-        updateAdapter();
-
-        getListView().setOnItemLongClickListener(new CustomOnLongClickListener());
+        ListView mainList = (ListView) findViewById(R.id.mainList);
+        mainList.setOnItemLongClickListener(new CustomOnLongClickListener());
+        mainList.setAdapter(mainAdapter);
 
         ListView ftsList = (ListView) findViewById(R.id.ftsList);
         ftsList.setAdapter(mainFTSAdapter);
+
+        updateAdapters();
 
         EditText ftsEditText = (EditText) findViewById(R.id.ftsEditText);
         ftsEditText.addTextChangedListener(new CustomTextWatcher());
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updateAdapter();
-    }
-
-    private void updateAdapter() {
-        MainAdapter mainAdapter = (MainAdapter) getListAdapter();
+    private void updateAdapters() {
         mainAdapter.clear();
 
         for (Record record : recordsDAO.readAllDesc()) {
@@ -68,7 +61,20 @@ public class MainActivity extends ListActivity {
         }
 
         mainAdapter.notifyDataSetChanged();
-        mainFTSAdapter.notifyDataSetChanged();
+
+        updateFTSAdapter();
+    }
+
+    private void updateFTSAdapter() {
+        if (searchWord != null) {
+            mainFTSAdapter.clear();
+
+            for (FTSModel ftsModel : simpleFTS.search(searchWord, false)) {
+                mainFTSAdapter.add(ftsModel);
+            }
+
+            mainFTSAdapter.notifyDataSetChanged();
+        }
     }
 
     @SuppressWarnings("unused")
@@ -83,13 +89,17 @@ public class MainActivity extends ListActivity {
         }
 
         ((EditText) findViewById(R.id.recordEditText)).setText(EMPTY);
-        updateAdapter();
+        updateAdapters();
     }
 
     @SuppressWarnings("unused")
     public void onClickDeleteAllRecords(View view) {
         recordsDAO.deleteAll();
-        updateAdapter();
+
+        simpleFTS.dropTable();
+        simpleFTS.createTableIfNotExist(this);
+
+        updateAdapters();
     }
 
     private class CustomTextWatcher implements TextWatcher {
@@ -100,15 +110,8 @@ public class MainActivity extends ListActivity {
 
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int count, int i3) {
-            mainFTSAdapter.clear();
-            mainFTSAdapter.notifyDataSetChanged();
-
-            List<FTSModel> ftsModelList = simpleFTS.search(charSequence.toString(), false);
-            for (FTSModel ftsModel : ftsModelList) {
-                mainFTSAdapter.add(ftsModel);
-            }
-
-            mainFTSAdapter.notifyDataSetChanged();
+            searchWord = charSequence.toString();
+            updateFTSAdapter();
         }
 
         @Override
@@ -119,7 +122,7 @@ public class MainActivity extends ListActivity {
     private class CustomOnLongClickListener implements AdapterView.OnItemLongClickListener {
         public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long id) {
             recordsDAO.deleteWhere(Record.COLUMN_ID, String.valueOf(mainAdapter.getItem(i).getId()));
-            updateAdapter();
+            updateAdapters();
             return true;
         }
     }
