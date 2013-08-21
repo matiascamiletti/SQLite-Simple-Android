@@ -10,7 +10,6 @@ import garin.artemiy.sqlitesimple.library.util.ColumnType;
 public class Test {
 
     @Column(type = ColumnType.TEXT)
-    @SuppressWarnings("unused")
     private String title;
 
 }

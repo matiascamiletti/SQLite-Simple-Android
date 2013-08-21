@@ -25,15 +25,15 @@ import java.util.List;
  */
 public class MainActivity extends ListActivity {
 
+    private static final String EMPTY = "";
     private RecordsDAO recordsDAO;
     private SQLiteSimpleFTS simpleFTS;
     private MainFTSAdapter mainFTSAdapter;
 
-    private static final String EMPTY = "";
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         recordsDAO = new RecordsDAO(this);
         simpleFTS = new SQLiteSimpleFTS(this, false);
         mainFTSAdapter = new MainFTSAdapter(this, recordsDAO);
@@ -56,31 +56,7 @@ public class MainActivity extends ListActivity {
         ftsList.setAdapter(mainFTSAdapter);
 
         EditText ftsEditText = (EditText) findViewById(R.id.ftsEditText);
-        ftsEditText.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int count, int i3) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int count, int i3) {
-                mainFTSAdapter.clear();
-                mainFTSAdapter.notifyDataSetChanged();
-
-                List<FTSModel> ftsModelList = simpleFTS.search(charSequence.toString(), false);
-                for (FTSModel ftsModel : ftsModelList) {
-                    mainFTSAdapter.add(ftsModel);
-                }
-
-                mainFTSAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-
-        });
-
+        ftsEditText.addTextChangedListener(new CustomTextWatcher());
     }
 
     @Override
@@ -123,4 +99,27 @@ public class MainActivity extends ListActivity {
         updateAdapter();
     }
 
+    private class CustomTextWatcher implements TextWatcher {
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int count, int i3) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int count, int i3) {
+            mainFTSAdapter.clear();
+            mainFTSAdapter.notifyDataSetChanged();
+
+            List<FTSModel> ftsModelList = simpleFTS.search(charSequence.toString(), false);
+            for (FTSModel ftsModel : ftsModelList) {
+                mainFTSAdapter.add(ftsModel);
+            }
+
+            mainFTSAdapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+        }
+    }
 }
