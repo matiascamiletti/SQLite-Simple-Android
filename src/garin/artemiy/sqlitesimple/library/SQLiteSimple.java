@@ -39,8 +39,8 @@ public class SQLiteSimple {
 
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context, int databaseVersion) {
-        sharedPreferencesUtil = new SimplePreferencesUtil(context);
-        sharedPreferencesPlace = SimpleConstants.SHARED_LOCAL_PREFERENCES;
+        this.sharedPreferencesUtil = new SimplePreferencesUtil(context);
+        this.sharedPreferencesPlace = SimpleConstants.SHARED_LOCAL_PREFERENCES;
         this.databaseVersion = databaseVersion;
 
         commitDatabaseVersion();
@@ -50,8 +50,8 @@ public class SQLiteSimple {
 
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context) {
-        sharedPreferencesUtil = new SimplePreferencesUtil(context);
-        sharedPreferencesPlace = SimpleConstants.SHARED_LOCAL_PREFERENCES;
+        this.sharedPreferencesUtil = new SimplePreferencesUtil(context);
+        this.sharedPreferencesPlace = SimpleConstants.SHARED_LOCAL_PREFERENCES;
         this.databaseVersion = SimpleConstants.FIRST_DATABASE_VERSION;
 
         commitDatabaseVersion();
@@ -61,8 +61,8 @@ public class SQLiteSimple {
 
     @SuppressWarnings("unused")
     public SQLiteSimple(Context context, String assetsDatabaseName) {
-        sharedPreferencesUtil = new SimplePreferencesUtil(context);
-        sharedPreferencesPlace = assetsDatabaseName;
+        this.sharedPreferencesUtil = new SimplePreferencesUtil(context);
+        this.sharedPreferencesPlace = assetsDatabaseName;
         this.databaseVersion = SimpleConstants.FIRST_DATABASE_VERSION;
 
         sqLiteSimpleHelper = new SQLiteSimpleHelper(context, sharedPreferencesPlace, databaseVersion, assetsDatabaseName, false);
@@ -340,7 +340,7 @@ public class SQLiteSimple {
             return isAddNewColumn;
 
         } catch (IndexOutOfBoundsException exception) {
-            throw new IndexOutOfBoundsException("Duplicated class on method create(...)");
+            throw new RuntimeException("Duplicated class on method create(...)");
         }
 
     }
