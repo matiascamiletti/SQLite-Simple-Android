@@ -1,4 +1,4 @@
-package garin.artemiy.sqlitesimple.example.model;
+package garin.artemiy.sqlitesimple.example.models;
 
 import garin.artemiy.sqlitesimple.library.annotations.Column;
 import garin.artemiy.sqlitesimple.library.util.ColumnType;

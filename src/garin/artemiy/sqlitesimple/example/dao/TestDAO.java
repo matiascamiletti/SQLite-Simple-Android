@@ -1,7 +1,7 @@
-package garin.artemiy.sqlitesimple.example.operator;
+package garin.artemiy.sqlitesimple.example.dao;
 
 import android.content.Context;
-import garin.artemiy.sqlitesimple.example.model.Test;
+import garin.artemiy.sqlitesimple.example.models.Test;
 import garin.artemiy.sqlitesimple.library.SQLiteSimpleDAO;
 
 /**

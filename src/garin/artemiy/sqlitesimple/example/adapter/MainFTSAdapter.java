@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import garin.artemiy.sqlitesimple.R;
-import garin.artemiy.sqlitesimple.example.model.Record;
-import garin.artemiy.sqlitesimple.example.operator.RecordsDAO;
+import garin.artemiy.sqlitesimple.example.dao.RecordsDAO;
+import garin.artemiy.sqlitesimple.example.models.Record;
 import garin.artemiy.sqlitesimple.library.model.FTSModel;
 
 /**

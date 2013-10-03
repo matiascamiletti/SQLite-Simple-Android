@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import garin.artemiy.sqlitesimple.R;
-import garin.artemiy.sqlitesimple.example.model.Record;
+import garin.artemiy.sqlitesimple.example.models.Record;
 
 /**
  * Author: Artemiy Garin

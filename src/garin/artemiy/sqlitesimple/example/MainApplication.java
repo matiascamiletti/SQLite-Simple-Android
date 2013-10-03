@@ -2,9 +2,9 @@ package garin.artemiy.sqlitesimple.example;
 
 import android.app.Application;
 import android.util.Log;
-import garin.artemiy.sqlitesimple.example.model.Record;
-import garin.artemiy.sqlitesimple.example.model.Test;
-import garin.artemiy.sqlitesimple.example.operator.TestDAO;
+import garin.artemiy.sqlitesimple.example.dao.TestDAO;
+import garin.artemiy.sqlitesimple.example.models.Record;
+import garin.artemiy.sqlitesimple.example.models.Test;
 import garin.artemiy.sqlitesimple.library.SQLiteSimple;
 
 /**
