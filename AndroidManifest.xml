@@ -8,10 +8,16 @@
         android:minSdkVersion="7"
         android:targetSdkVersion="14"/>
 
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="garin.artemiy.sqlitesimple"/>
+
     <application
         android:theme="@style/mainTheme"
         android:label="@string/app_name"
         android:name=".example.MainApplication">
+
+        <uses-library android:name="android.test.runner"/>
 
         <activity
             android:configChanges="orientation"
