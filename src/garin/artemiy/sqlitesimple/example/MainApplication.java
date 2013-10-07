@@ -1,11 +1,10 @@
 package garin.artemiy.sqlitesimple.example;
 
 import android.app.Application;
-import android.util.Log;
-import garin.artemiy.sqlitesimple.example.dao.TestDAO;
 import garin.artemiy.sqlitesimple.example.models.Record;
 import garin.artemiy.sqlitesimple.example.models.Test;
 import garin.artemiy.sqlitesimple.library.SQLiteSimple;
+import garin.artemiy.sqlitesimple.library.util.SimpleDatabaseUtil;
 
 /**
  * author: Artemiy Garin
@@ -17,14 +16,14 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        SQLiteSimple databaseSimple = new SQLiteSimple(this);
-        databaseSimple.create(Record.class);
+        if (SimpleDatabaseUtil.isFirstApplicationStart(this)) {
+            SQLiteSimple databaseSimple = new SQLiteSimple(this);
+            databaseSimple.create(Record.class);
 
-        SQLiteSimple localSimple = new SQLiteSimple(this, "test.sqlite");
-        localSimple.create(Test.class);
+            SQLiteSimple localSimple = new SQLiteSimple(this, "test.sqlite");
+            localSimple.create(Test.class);
+        }
 
-        TestDAO testDAO = new TestDAO(this);
-        Log.d("SQLiteSimple: Local database rows", String.valueOf(testDAO.getCount()));
     }
 
 }

@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 public class LibraryTestCase extends AndroidTestCase {
 
-    private static final String TAG = "LibraryTestCase";
+    private static final String TAG = "LibraryTestLog";
 
     public void testFunctional() {
         Log.d(TAG, "Functional tests begin");
