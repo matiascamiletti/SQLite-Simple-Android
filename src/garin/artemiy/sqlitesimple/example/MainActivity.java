@@ -4,14 +4,16 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import garin.artemiy.sqlitesimple.R;
-import garin.artemiy.sqlitesimple.example.adapter.MainAdapter;
-import garin.artemiy.sqlitesimple.example.adapter.MainFTSAdapter;
+import garin.artemiy.sqlitesimple.example.adapters.MainAdapter;
+import garin.artemiy.sqlitesimple.example.adapters.MainFTSAdapter;
 import garin.artemiy.sqlitesimple.example.dao.RecordsDAO;
+import garin.artemiy.sqlitesimple.example.dao.TestDAO;
 import garin.artemiy.sqlitesimple.example.models.Record;
 import garin.artemiy.sqlitesimple.library.SQLiteSimpleFTS;
 import garin.artemiy.sqlitesimple.library.model.FTSModel;
@@ -24,6 +26,7 @@ import garin.artemiy.sqlitesimple.library.util.SimpleConstants;
 public class MainActivity extends Activity {
 
     private static final String EMPTY = "";
+
     private RecordsDAO recordsDAO;
     private SQLiteSimpleFTS simpleFTS;
     private MainFTSAdapter mainFTSAdapter;
@@ -51,6 +54,9 @@ public class MainActivity extends Activity {
 
         EditText ftsEditText = (EditText) findViewById(R.id.ftsEditText);
         ftsEditText.addTextChangedListener(new CustomTextWatcher());
+
+        TestDAO testDAO = new TestDAO(this);
+        Log.d("Internal database rows:", String.valueOf(testDAO.getCount()));
     }
 
     private void updateAdapters() {

@@ -109,7 +109,7 @@ public class SQLiteSimpleFTS {
 
         if (query.contains(SimpleConstants.FTS_SQL_OR) ||
                 query.contains(SimpleConstants.FTS_SQL_AND) ||
-                query.length() < SimpleConstants.QUERY_LENGTH) {
+                query.length() <= SimpleConstants.QUERY_MINIMUM_LENGTH) {
             return ftsModels;
         }
 

@@ -22,7 +22,7 @@ public class SimpleConstants {
     }
 
     // FTS
-    public static final int QUERY_LENGTH = 2;
+    public static final int QUERY_MINIMUM_LENGTH = 1;
     public static final String FTS_SQL_OR = "OR";
     public static final String FTS_SQL_AND = "AND";
     public static final String FTS_SQL_FORMAT = "SELECT * FROM %s WHERE %s MATCH \"%s:%s*\" ORDER BY %s %s;";
