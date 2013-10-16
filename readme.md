@@ -14,16 +14,8 @@ You may import src from project or <a href="http://sourceforge.net/projects/sqli
 ```java
 public class Record {
 
-    public transient static final String COLUMN_ID = "_id";
-
-    @Column(name = COLUMN_ID, type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
-    private int id;
-
     @Column
     private String recordText;
-
-    // also supports:
-    // ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.BLOB
 
 }
 ```
@@ -37,7 +29,7 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // also may use  isFirstStartOnAppVersion with your version
+        // also may use isFirstStartOnAppVersion with your version
         if (SimpleDatabaseUtil.isFirstApplicationStart(this)) {
             SQLiteSimple databaseSimple = new SQLiteSimple(this);
             databaseSimple.create(Record.class);
@@ -125,6 +117,7 @@ public class MainApplication extends Application {
 
         SQLiteSimple databaseSimple = new SQLiteSimple(this, DATABASE_VERSION);
         databaseSimple.create(Record.class);
+
     }
 }
 ```
