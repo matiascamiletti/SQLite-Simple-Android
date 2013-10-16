@@ -22,7 +22,8 @@ public class Record {
     @Column
     private String recordText;
 
-    // also supports ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.BLOB
+    // also supports:
+    // ColumnType.TEXT, ColumnType.NUMERIC, ColumnType.REAL, ColumnType.BLOB
 
 }
 ```
@@ -36,9 +37,11 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        if (SimpleDatabaseUtil.isFirstApplicationStart(this)) { // also may use  isFirstStartOnAppVersion with your version
+        // also may use  isFirstStartOnAppVersion with your version
+        if (SimpleDatabaseUtil.isFirstApplicationStart(this)) {
             SQLiteSimple databaseSimple = new SQLiteSimple(this);
-            databaseSimple.create(Record.class); // enumerate classes Class1.class, Class2.class, ...
+            databaseSimple.create(Record.class);
+            // above need enumerate classes, for example:  Class1.class, ...
         }
 
     }
@@ -117,9 +120,12 @@ public class MainApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        SQLiteSimple databaseSimple = new SQLiteSimple(this, DATABASE_VERSION); // just write here
-        databaseSimple.create(Record.class);                                    // if you not specify version
-    }                                                                           // library set version 1
+
+        // just write below, if you not specify version, library set version 1
+
+        SQLiteSimple databaseSimple = new SQLiteSimple(this, DATABASE_VERSION);
+        databaseSimple.create(Record.class);
+    }
 }
 ```
 
@@ -148,7 +154,8 @@ public class MainApplication extends Application {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        simpleFTS = new SQLiteSimpleFTS(this, false); // second parameter is a tables category,
+        simpleFTS = new SQLiteSimpleFTS(this, false); // second parameter is a
+                                                      // need to use tables category,
     }                                                 // search between several tables
 
 ```
