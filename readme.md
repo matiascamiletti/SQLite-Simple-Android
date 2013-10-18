@@ -1,7 +1,7 @@
 <h3>Version - 2.4</h3>
 
 <h2>Install</h2>
-You may import src from project or <a href="https://github.com/kvirair/SQLite-Simple-Android/releases">download jar</a> (recommended)
+You may import src from project (need delete example folder) or <a href="https://github.com/kvirair/SQLite-Simple-Android/releases">download jar</a> (recommended)
 
 <h2>Quick start</h2>
 
