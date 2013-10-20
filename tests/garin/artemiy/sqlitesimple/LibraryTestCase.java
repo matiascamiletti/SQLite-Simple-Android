@@ -76,6 +76,8 @@ public class LibraryTestCase extends AndroidTestCase {
 
         Assert.assertTrue(recordsDAO.getCount() == 0);
 
+//      todo add other functional tests
+
         Log.d(TAG, "Complete!");
         Log.d(TAG, "Functional tests complete.");
         Log.d("", "");
