@@ -529,18 +529,26 @@ public abstract class SQLiteSimpleDAO<T> {
     public List<T> readAllWhereInWithOrder(String columnName, String in, String column, String order) {
         Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.SQL_IN, columnName, in),
                 null, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order));
-        List<T> objects = readAll(cursor);
-        cursor.close();
-        return objects;
+        if (cursor != null) {
+            List<T> objects = readAll(cursor);
+            cursor.close();
+            return objects;
+        } else {
+            return new ArrayList<T>();
+        }
     }
 
     @SuppressWarnings("unused")
     public List<T> readAllWhereIn(String columnName, String in) {
         Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.SQL_IN, columnName, in),
                 null, null, null, null);
-        List<T> objects = readAll(cursor);
-        cursor.close();
-        return objects;
+        if (cursor != null) {
+            List<T> objects = readAll(cursor);
+            cursor.close();
+            return objects;
+        } else {
+            return new ArrayList<T>();
+        }
     }
 
     @SuppressWarnings("unused")

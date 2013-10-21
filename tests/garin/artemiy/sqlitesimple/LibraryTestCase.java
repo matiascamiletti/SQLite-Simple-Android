@@ -61,7 +61,8 @@ public class LibraryTestCase extends AndroidTestCase {
         Log.d(TAG, "Check update functions..");
 
         // Update
-        record.setRecordText(UUID.randomUUID().toString());
+        String newMessageText = UUID.randomUUID().toString();
+        record.setRecordText(newMessageText);
         recordsDAO.update(id, record);
 
         Record updatedRecord = recordsDAO.read(id);
@@ -76,7 +77,18 @@ public class LibraryTestCase extends AndroidTestCase {
 
         Assert.assertTrue(recordsDAO.getCount() == 0);
 
-//      todo add other functional tests
+        /**
+         * Other functional tests
+         */
+
+        Log.d(TAG, "Complete!");
+        Log.d(TAG, "Check additional functions..");
+
+        recordsDAO.create(record);
+        Assert.assertTrue(recordsDAO.readAllAsc().size() == 1);
+        Assert.assertTrue(recordsDAO.readAllDesc().size() == 1);
+        Assert.assertNotNull(recordsDAO.readWhere(Record.COLUMN_RECORD_TEXT, newMessageText));
+        Assert.assertTrue(recordsDAO.readAllWhere(Record.COLUMN_RECORD_TEXT, newMessageText).size() == 1);
 
         Log.d(TAG, "Complete!");
         Log.d(TAG, "Functional tests complete.");
