@@ -31,7 +31,7 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@SuppressWarnings({"SameParameterValue", "UnusedDeclaration"})
+@SuppressWarnings({"SameParameterValue", "UnusedDeclaration", "UnusedReturnValue"})
 public abstract class SQLiteSimpleDAO<T> {
 
     private Class<T> tClass;

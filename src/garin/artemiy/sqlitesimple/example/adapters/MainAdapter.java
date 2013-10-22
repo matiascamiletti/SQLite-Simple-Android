@@ -13,6 +13,7 @@ import garin.artemiy.sqlitesimple.example.models.Record;
  * Author: Artemiy Garin
  * Date: 07.04.13
  */
+@SuppressWarnings("CanBeFinal")
 public class MainAdapter extends ArrayAdapter<Record> {
 
     private Context context;

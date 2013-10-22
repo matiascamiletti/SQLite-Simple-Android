@@ -15,6 +15,7 @@ import garin.artemiy.sqlitesimple.library.model.FTSModel;
  * Author: Artemiy Garin
  * Date: 07.04.13
  */
+@SuppressWarnings("CanBeFinal")
 public class MainFTSAdapter extends ArrayAdapter<FTSModel> {
 
     private Context context;

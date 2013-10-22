@@ -16,6 +16,7 @@ package garin.artemiy.sqlitesimple.library.model;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@SuppressWarnings("CanBeFinal")
 public class FTSModel {
 
     private String id; // or UUID recommended

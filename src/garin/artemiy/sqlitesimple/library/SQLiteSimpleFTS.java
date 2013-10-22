@@ -29,6 +29,7 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@SuppressWarnings("CanBeFinal")
 public class SQLiteSimpleFTS {
 
     private static final String COLUMN_ID = "id";

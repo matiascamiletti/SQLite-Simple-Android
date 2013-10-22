@@ -23,6 +23,7 @@ import java.lang.reflect.Field;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@SuppressWarnings("AndroidLintSdCardPath")
 public class SimpleDatabaseUtil {
 
     private static final String DB_FORMAT = ".db";
