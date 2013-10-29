@@ -26,12 +26,22 @@ import java.lang.reflect.Field;
 @SuppressWarnings("AndroidLintSdCardPath")
 public class SimpleDatabaseUtil {
 
+    /**
+     * Settings
+     */
     private static final String DB_FORMAT = ".db";
     private static final String DATABASE_PATH = "/data/data/%s/databases/%s";
 
+    /**
+     * Use only by static reference
+     */
     private SimpleDatabaseUtil() {
     }
 
+    /**
+     * @param field - Java field
+     * @return - return column name {@link garin.artemiy.sqlitesimple.library.annotations.Column}, or field name if null
+     */
     public static String getColumnName(Field field) {
         Column annotationColumn = field.getAnnotation(Column.class);
         String column = null;
@@ -45,6 +55,10 @@ public class SimpleDatabaseUtil {
         return column;
     }
 
+    /**
+     * @param tClass - Java class
+     * @return - return table name {@link garin.artemiy.sqlitesimple.library.annotations.Table}, or class name if null
+     */
     public static String getTableName(Class<?> tClass) {
         Table annotationTable = tClass.getAnnotation(Table.class);
         String table = tClass.getSimpleName();
@@ -56,6 +70,11 @@ public class SimpleDatabaseUtil {
         return table;
     }
 
+    /**
+     * @param field            - Java field
+     * @param columnAnnotation - {@link garin.artemiy.sqlitesimple.library.annotations.Column}
+     * @return - return correct SQL type by parsing Java field
+     */
     public static String getSQLType(Field field, Column columnAnnotation) {
         String type;
         if (columnAnnotation.type() != null && !columnAnnotation.type().equals(SimpleConstants.AUTO_ASSIGN)
@@ -84,7 +103,7 @@ public class SimpleDatabaseUtil {
             } else if (fieldType.isAssignableFrom(Boolean.class) || fieldType.isAssignableFrom(boolean.class)) {
                 type = ColumnType.NUMERIC;
             } else {
-                throw new UnsupportedOperationException("Unknown variable type:" + fieldType);
+                throw new RuntimeException("Unknown variable type:" + fieldType);
             }
 
         }
@@ -92,6 +111,11 @@ public class SimpleDatabaseUtil {
         return type;
     }
 
+    /**
+     * @param context      - see {@link android.content.Context}
+     * @param databaseName - any database name
+     * @return - full database path
+     */
     public static String getFullDatabasePath(Context context, String databaseName) {
         return String.format(DATABASE_PATH, context.getPackageName(), databaseName);
     }
@@ -110,6 +134,10 @@ public class SimpleDatabaseUtil {
         }
     }
 
+    /**
+     * @param context - see {@link android.content.Context}
+     * @return - Parse package and return generated FTS table name
+     */
     public static String getFTSTableName(Context context) {
         return String.format(SimpleConstants.FTS_SQL_TABLE_NAME, context.getPackageName()).
                 replace(SimpleConstants.DOT, SimpleConstants.UNDERSCORE).toUpperCase();

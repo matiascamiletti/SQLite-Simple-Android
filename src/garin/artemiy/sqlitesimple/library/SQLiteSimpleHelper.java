@@ -40,7 +40,11 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
     private static final Object readableObjectLock = new Object();
 
     /**
-     * @param assetsDatabaseName - load local sqlite if need
+     * @param context                - see {@link android.content.Context}
+     * @param sharedPreferencesPlace - see {@link garin.artemiy.sqlitesimple.library.util.SimpleConstants}
+     * @param databaseVersion        - see {@link android.database.sqlite.SQLiteOpenHelper}
+     * @param assetsDatabaseName     - Load assets or internal (if null) sqlite database if need
+     * @param isFTS                  - see {@link garin.artemiy.sqlitesimple.library.SQLiteSimpleFTS}
      */
     public SQLiteSimpleHelper(Context context, String sharedPreferencesPlace,
                               int databaseVersion, String assetsDatabaseName, boolean isFTS) {

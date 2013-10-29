@@ -18,6 +18,9 @@ package garin.artemiy.sqlitesimple.library.util;
  */
 public class SimpleConstants {
 
+    /**
+     * Use only static reference
+     */
     private SimpleConstants() {
     }
 
