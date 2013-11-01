@@ -136,7 +136,7 @@ public class MainApplication extends Application {
 }
 ```
 
-<h2>FTS (Full-Text Search)</h2>
+<h2>FTS — Full-Text Search</h2>
 
 ```java
 
