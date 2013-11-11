@@ -111,6 +111,31 @@ public class SQLiteSimple {
         List<String> tables = new ArrayList<String>();
         List<String> sqlQueries = new ArrayList<String>();
 
+        uniteClassesToSQL(tables, sqlQueries, classes);
+
+        boolean newDatabaseVersion = false;
+
+        if (databaseVersion > sharedPreferencesUtil.getDatabaseVersion(sharedPreferencesPlace))
+            newDatabaseVersion = true;
+
+        boolean isRebasedTables = false;
+
+        if (!newDatabaseVersion) {
+
+            isRebasedTables = rebaseTablesIfNeed(savedTables, tables, sqlQueries, savedSQLQueries);
+            if (savedSQLQueries.hashCode() != sqlQueries.hashCode() && savedSQLQueries.hashCode() != 1) {
+                addNewColumnsIfNeed(tables, sqlQueries, savedSQLQueries);
+            }
+
+        }
+
+        if (!isRebasedTables) {
+            checkingCommit(tables, sqlQueries, newDatabaseVersion);
+        }
+
+    }
+
+    private void uniteClassesToSQL(List<String> tables, List<String> sqlQueries, Class<?>... classes) {
         for (Class classEntity : classes) {
             StringBuilder sqlQueryBuilder = new StringBuilder();
             String table = SimpleDatabaseUtil.getTableName(classEntity);
@@ -171,27 +196,6 @@ public class SQLiteSimple {
             tables.add(table);
             sqlQueries.add(sqlQueryBuilder.toString());
         }
-
-        boolean newDatabaseVersion = false;
-
-        if (databaseVersion > sharedPreferencesUtil.getDatabaseVersion(sharedPreferencesPlace))
-            newDatabaseVersion = true;
-
-        boolean isRebasedTables = false;
-
-        if (!newDatabaseVersion) {
-
-            isRebasedTables = rebaseTablesIfNeed(savedTables, tables, sqlQueries, savedSQLQueries);
-            if (savedSQLQueries.hashCode() != sqlQueries.hashCode() && savedSQLQueries.hashCode() != 1) {
-                addNewColumnsIfNeed(tables, sqlQueries, savedSQLQueries);
-            }
-
-        }
-
-        if (!isRebasedTables) {
-            checkingCommit(tables, sqlQueries, newDatabaseVersion);
-        }
-
     }
 
     private void makeKeyForTable(StringBuilder sqlQueryBuilder, List<Field> primaryKeys) {
