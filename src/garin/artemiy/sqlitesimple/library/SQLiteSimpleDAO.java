@@ -13,6 +13,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -178,6 +179,8 @@ public abstract class SQLiteSimpleDAO<T> {
         } else if (fieldType.isAssignableFrom(Boolean.class) || fieldType.isAssignableFrom(boolean.class)) {
             int booleanInteger = cursor.getInt(columnIndex);
             value = booleanInteger == 1;
+        } else if (fieldType.isAssignableFrom(Date.class)) {
+            value = new Date(cursor.getLong(columnIndex));
         }
         return value;
     }
@@ -205,6 +208,8 @@ public abstract class SQLiteSimpleDAO<T> {
             contentValues.put(key, Boolean.parseBoolean(fieldValue.toString()));
         } else if (fieldValue instanceof Double) {
             contentValues.put(key, Double.valueOf(fieldValue.toString()));
+        } else if (fieldValue instanceof Date) {
+            contentValues.put(key, String.valueOf(((Date) fieldValue).getTime()));
         } else if (fieldValue instanceof Byte[] || fieldValue instanceof byte[]) {
             try {
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
