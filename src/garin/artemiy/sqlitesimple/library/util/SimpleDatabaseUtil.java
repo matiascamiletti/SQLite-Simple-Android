@@ -6,6 +6,7 @@ import garin.artemiy.sqlitesimple.library.annotations.Column;
 import garin.artemiy.sqlitesimple.library.annotations.Table;
 
 import java.lang.reflect.Field;
+import java.util.Date;
 
 /**
  * author: Artemiy Garin
@@ -102,6 +103,8 @@ public class SimpleDatabaseUtil {
                 type = ColumnType.INTEGER;
             } else if (fieldType.isAssignableFrom(Boolean.class) || fieldType.isAssignableFrom(boolean.class)) {
                 type = ColumnType.NUMERIC;
+            } else if (fieldType.isAssignableFrom(Date.class)) {
+                type = ColumnType.INTEGER;
             } else {
                 throw new RuntimeException("Unknown variable type:" + fieldType);
             }

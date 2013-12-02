@@ -6,6 +6,7 @@ import garin.artemiy.sqlitesimple.example.dao.RecordsDAO;
 import garin.artemiy.sqlitesimple.example.models.Record;
 import org.junit.Assert;
 
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -43,9 +44,11 @@ public class LibraryTestCase extends AndroidTestCase {
 
         // Create
         String messageText = UUID.randomUUID().toString();
+        Date exampleDate = new Date();
 
         Record record = new Record();
         record.setRecordText(messageText);
+        record.setRecordDate(exampleDate);
         long id = recordsDAO.create(record);
 
         Assert.assertNotNull(id);
@@ -56,6 +59,7 @@ public class LibraryTestCase extends AndroidTestCase {
 
         // Read
         Assert.assertNotNull(recordsDAO.read(id));
+        Assert.assertEquals(recordsDAO.read(id).getRecordDate().getTime(), exampleDate.getTime());
 
         Log.d(TAG, "Complete!");
         Log.d(TAG, "Check update functions..");
