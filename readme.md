@@ -73,11 +73,11 @@ In your activity just create operator, for example:
 
     private RecordsDAO recordsDAO;
 
-      @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            recordsDAO = new RecordsDAO(this);
-       }
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        recordsDAO = new RecordsDAO(this);
+    }
 
 ```
 And you may call all needed methods, if you need more, just override or create new in class **RecordsDAO**, look above.
