@@ -44,11 +44,15 @@ public class SQLiteSimpleFTS {
     @SuppressWarnings("unused")
     public SQLiteSimpleFTS(Context context, boolean useTablesCategory) {
         this.useTablesCategory = useTablesCategory;
+
         SQLiteSimpleHelper simpleHelper = new SQLiteSimpleHelper(context, SimpleConstants.SHARED_LOCAL_PREFERENCES,
                 new SimplePreferencesUtil(context).getDatabaseVersion(SimpleConstants.SHARED_LOCAL_PREFERENCES), null, true);
+
         if (database == null || !database.isOpen())
             database = simpleHelper.getWritableDatabase();
+
         tableName = SimpleDatabaseUtil.getFTSTableName(context);
+
         createTableIfNotExist(context);
     }
 
@@ -106,7 +110,8 @@ public class SQLiteSimpleFTS {
     public List<FTSModel> search(String incomingQuery, boolean resultDesc) {
         List<FTSModel> ftsModels = new ArrayList<FTSModel>();
 
-        String query = incomingQuery.replaceAll(SimpleConstants.SPECIAL_SYMBOLS_REGEX, SimpleConstants.EMPTY).toLowerCase();
+        String query = incomingQuery.replaceAll(
+                SimpleConstants.SPECIAL_SYMBOLS_REGEX, SimpleConstants.EMPTY).toLowerCase();
 
         if (query.contains(SimpleConstants.FTS_SQL_OR) ||
                 query.contains(SimpleConstants.FTS_SQL_AND) ||

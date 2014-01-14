@@ -25,7 +25,6 @@ public class MainAdapter extends ArrayAdapter<Record> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
         View view;
 
         if (convertView != null) {

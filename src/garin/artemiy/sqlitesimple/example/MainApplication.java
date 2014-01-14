@@ -12,6 +12,8 @@ import garin.artemiy.sqlitesimple.library.util.SimpleDatabaseUtil;
  */
 public class MainApplication extends Application {
 
+    private static final String DATABASE_NAME = "test.sqlite";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -20,7 +22,7 @@ public class MainApplication extends Application {
             SQLiteSimple databaseSimple = new SQLiteSimple(this);
             databaseSimple.create(Record.class);
 
-            SQLiteSimple localSimple = new SQLiteSimple(this, "test.sqlite");
+            SQLiteSimple localSimple = new SQLiteSimple(this, DATABASE_NAME);
             localSimple.create(Test.class);
         }
 

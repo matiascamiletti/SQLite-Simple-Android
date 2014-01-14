@@ -29,4 +29,5 @@ import java.lang.annotation.Target;
 public @interface Table {
 
     String name() default SimpleConstants.EMPTY;
+
 }
