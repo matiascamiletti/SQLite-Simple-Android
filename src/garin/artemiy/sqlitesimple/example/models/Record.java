@@ -12,7 +12,6 @@ import java.util.Date;
 public class Record {
 
     public transient static final String COLUMN_RECORD_TEXT = "recordText";
-    public transient static final String COLUMN_RECORD_DATE = "recordDate";
     public transient static final String COLUMN_ID = "_id";
 
     @Column(name = COLUMN_ID, type = ColumnType.INTEGER, isPrimaryKey = true, isAutoincrement = true)
@@ -21,7 +20,7 @@ public class Record {
     @Column(name = COLUMN_RECORD_TEXT)
     private String recordText;
 
-    @Column(name = COLUMN_RECORD_DATE)
+    @Column
     private Date recordDate;
 
     public String getRecordText() {
