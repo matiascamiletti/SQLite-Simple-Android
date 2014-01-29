@@ -45,20 +45,20 @@ public abstract class SQLiteSimpleDAO<T> {
     private static SQLiteDatabase assetsDatabase;
     private static SQLiteDatabase localDatabase;
 
-    protected SQLiteSimpleDAO(Class<T> tClass, Context context) {
+    public SQLiteSimpleDAO(Class<T> tClass, Context context) {
         simpleHelper = new SQLiteSimpleHelper(context, SimpleConstants.SHARED_LOCAL_PREFERENCES,
                 new SimplePreferencesUtil(context).getDatabaseVersion(SimpleConstants.SHARED_LOCAL_PREFERENCES), null, false);
         init(tClass);
     }
 
-    protected SQLiteSimpleDAO(Class<T> tClass, Context context, String assetsDatabaseName) {
+    public SQLiteSimpleDAO(Class<T> tClass, Context context, String assetsDatabaseName) {
         simpleHelper = new SQLiteSimpleHelper(context, assetsDatabaseName,
                 new SimplePreferencesUtil(context).getDatabaseVersion(assetsDatabaseName), assetsDatabaseName, false);
         this.assetsDatabaseName = assetsDatabaseName;
         init(tClass);
     }
 
-    protected SQLiteSimpleDAO(Class<T> tClass, String localDatabasePath) {
+    public SQLiteSimpleDAO(Class<T> tClass, String localDatabasePath) {
         this.localDatabasePath = localDatabasePath;
         init(tClass);
     }
