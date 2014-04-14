@@ -1,7 +1,6 @@
 package garin.artemiy.sqlitesimple.example.models;
 
 import garin.artemiy.sqlitesimple.library.annotations.Column;
-import garin.artemiy.sqlitesimple.library.util.ColumnType;
 
 /**
  * Author: Artemiy Garin
@@ -9,7 +8,7 @@ import garin.artemiy.sqlitesimple.library.util.ColumnType;
  */
 public class Test {
 
-    @Column(type = ColumnType.TEXT)
+    @Column
     private String title;
 
 }

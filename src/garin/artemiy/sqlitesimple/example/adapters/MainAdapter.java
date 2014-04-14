@@ -25,21 +25,17 @@ public class MainAdapter extends ArrayAdapter<Record> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view;
-
-        if (convertView != null) {
-            view = convertView;
-        } else {
+        if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.record_item, null);
+            convertView = layoutInflater.inflate(R.layout.record_item, null);
         }
 
         Record record = getItem(position);
-        TextView recordText = (TextView) view.findViewById(R.id.recordTextView);
+        TextView recordText = (TextView) convertView.findViewById(R.id.recordTextView);
 
         recordText.setText(record.getRecordText());
 
-        return view;
+        return convertView;
     }
 
 }

@@ -25,7 +25,7 @@ public class SimpleConstants {
     }
 
     // FTS
-    public static final int QUERY_MINIMUM_LENGTH = 1;
+    public static final int FTS_QUERY_MINIMUM_LENGTH = 2;
     public static final String FTS_SQL_FORMAT = "SELECT * FROM %s WHERE %s MATCH ? ORDER BY %s %s;";
     public static final String FTS_SQL_TABLE_NAME = "%s_FTS";
     public static final String FTS_CREATE_VIRTUAL_TABLE_WITH_CATEGORY =
@@ -70,7 +70,6 @@ public class SimpleConstants {
     public static final int ZERO_RESULT = -1;
     public static final int FIRST_ELEMENT = 0;
 
-    public static final String SPECIAL_SYMBOLS_REGEX = "[-+.^:,\"']";
     public static final String ID_COLUMN = "_id";
     public static final String AUTO_ASSIGN = "AUTO_ASSIGN";
     public static final String DESC = "DESC";

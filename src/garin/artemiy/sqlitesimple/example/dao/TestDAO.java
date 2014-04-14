@@ -10,7 +10,7 @@ import garin.artemiy.sqlitesimple.library.SQLiteSimpleDAO;
  */
 public class TestDAO extends SQLiteSimpleDAO<Test> {
 
-    private static final String DATABASE_NAME = "test.sqlite";
+    private static transient final String DATABASE_NAME = "test.sqlite";
 
     public TestDAO(Context context) {
         super(Test.class, context, DATABASE_NAME);

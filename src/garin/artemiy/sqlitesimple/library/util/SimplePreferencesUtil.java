@@ -71,7 +71,8 @@ public class SimplePreferencesUtil {
     public void putList(String place, List<String> entityList) {
         for (String entity : entityList) {
             int index = getNextIndex(place);
-            sharedPreferencesEditor.putString(String.format(SimpleConstants.SHARED_PREFERENCES_LIST, place, index), entity);
+            sharedPreferencesEditor.putString(
+                    String.format(SimpleConstants.SHARED_PREFERENCES_LIST, place, index), entity);
             putCurrentIndex(place, index);
         }
     }
@@ -80,8 +81,8 @@ public class SimplePreferencesUtil {
         List<String> resultList = new ArrayList<String>();
 
         for (int i = 1; i <= getCurrentIndex(place); i++) {
-            String savedString =
-                    sharedPreferences.getString(String.format(SimpleConstants.SHARED_PREFERENCES_LIST, place, i), null);
+            String savedString = sharedPreferences.getString(
+                    String.format(SimpleConstants.SHARED_PREFERENCES_LIST, place, i), null);
             if (savedString != null) {
                 resultList.add(savedString);
             }
@@ -95,12 +96,14 @@ public class SimplePreferencesUtil {
     }
 
     public void putDatabaseVersion(int databaseVersion, String sharedPreferencesPlace) {
-        sharedPreferencesEditor.putInt(String.format(SimpleConstants.SHARED_DATABASE_VERSION, sharedPreferencesPlace), databaseVersion);
+        sharedPreferencesEditor.putInt(String.format(SimpleConstants.SHARED_DATABASE_VERSION,
+                sharedPreferencesPlace), databaseVersion);
     }
 
     public int getDatabaseVersion(String sharedPreferencesPlace) {
         // if not found, return first version -> 1
-        return sharedPreferences.getInt(String.format(SimpleConstants.SHARED_DATABASE_VERSION, sharedPreferencesPlace), SimpleConstants.FIRST_DATABASE_VERSION);
+        return sharedPreferences.getInt(String.format(SimpleConstants.SHARED_DATABASE_VERSION,
+                sharedPreferencesPlace), SimpleConstants.FIRST_DATABASE_VERSION);
     }
 
     public boolean isVirtualTableCreated() {
