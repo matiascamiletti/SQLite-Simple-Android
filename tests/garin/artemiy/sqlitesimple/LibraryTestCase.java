@@ -138,6 +138,8 @@ public class LibraryTestCase extends AndroidTestCase {
         Log.d(TAG, String.format(SPEED_FORMAT, "Select", testTimeEnd - testTimeStart));
 
         Log.d(TAG, "Speed tests complete.");
+
+        recordsDAO.deleteAll();
     }
 
 }

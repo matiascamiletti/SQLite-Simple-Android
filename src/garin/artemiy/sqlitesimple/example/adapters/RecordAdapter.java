@@ -14,12 +14,12 @@ import garin.artemiy.sqlitesimple.example.models.Record;
  * Date: 07.04.13
  */
 @SuppressWarnings("CanBeFinal")
-public class MainAdapter extends ArrayAdapter<Record> {
+public class RecordAdapter extends ArrayAdapter<Record> {
 
     private Context context;
 
-    public MainAdapter(Context context) {
-        super(context, R.layout.record_item);
+    public RecordAdapter(Context context) {
+        super(context, R.layout.item_record);
         this.context = context;
     }
 
@@ -27,7 +27,7 @@ public class MainAdapter extends ArrayAdapter<Record> {
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.record_item, null);
+            convertView = layoutInflater.inflate(R.layout.item_record, null);
         }
 
         Record record = getItem(position);

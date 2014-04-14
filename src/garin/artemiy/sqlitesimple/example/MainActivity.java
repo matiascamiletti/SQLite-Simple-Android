@@ -10,10 +10,10 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import garin.artemiy.sqlitesimple.R;
-import garin.artemiy.sqlitesimple.example.adapters.MainAdapter;
-import garin.artemiy.sqlitesimple.example.adapters.MainFTSAdapter;
+import garin.artemiy.sqlitesimple.example.adapters.FTSAdapter;
+import garin.artemiy.sqlitesimple.example.adapters.RecordAdapter;
+import garin.artemiy.sqlitesimple.example.dao.InternalDAO;
 import garin.artemiy.sqlitesimple.example.dao.RecordsDAO;
-import garin.artemiy.sqlitesimple.example.dao.TestDAO;
 import garin.artemiy.sqlitesimple.example.models.Record;
 import garin.artemiy.sqlitesimple.library.SQLiteSimpleFTS;
 import garin.artemiy.sqlitesimple.library.model.FTSModel;
@@ -25,61 +25,59 @@ import garin.artemiy.sqlitesimple.library.util.SimpleConstants;
  */
 public class MainActivity extends Activity {
 
-    private static final String EMPTY = "";
-
     private RecordsDAO recordsDAO;
     private SQLiteSimpleFTS simpleFTS;
-    private MainFTSAdapter mainFTSAdapter;
-    private MainAdapter mainAdapter;
+    private FTSAdapter ftsAdapter;
+    private RecordAdapter recordAdapter;
     private String searchWord;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_layout);
+        setContentView(R.layout.activity_main_layout);
 
         recordsDAO = new RecordsDAO(this);
         simpleFTS = new SQLiteSimpleFTS(this, false);
-        mainFTSAdapter = new MainFTSAdapter(this, recordsDAO);
-        mainAdapter = new MainAdapter(this);
+        ftsAdapter = new FTSAdapter(this, recordsDAO);
+        recordAdapter = new RecordAdapter(this);
 
-        ListView mainList = (ListView) findViewById(R.id.mainList);
-        mainList.setOnItemLongClickListener(new CustomOnLongClickListener());
-        mainList.setAdapter(mainAdapter);
+        ListView recordsListView = (ListView) findViewById(R.id.recordListView);
+        recordsListView.setOnItemLongClickListener(new CustomOnLongClickListener());
+        recordsListView.setAdapter(recordAdapter);
 
-        ListView ftsList = (ListView) findViewById(R.id.ftsList);
-        ftsList.setAdapter(mainFTSAdapter);
+        ListView ftsListView = (ListView) findViewById(R.id.ftsListView);
+        ftsListView.setAdapter(ftsAdapter);
 
         updateAdapters();
 
         EditText ftsEditText = (EditText) findViewById(R.id.ftsEditText);
         ftsEditText.addTextChangedListener(new CustomTextWatcher());
 
-        TestDAO testDAO = new TestDAO(this);
-        Log.d("Internal database rows:", String.valueOf(testDAO.getCount()));
+        InternalDAO internalDAO = new InternalDAO(this);
+        Log.d("Internal database rows:", String.valueOf(internalDAO.getCount()));
     }
 
     private void updateAdapters() {
-        mainAdapter.clear();
+        recordAdapter.clear();
 
         for (Record record : recordsDAO.readAllDesc()) {
-            mainAdapter.add(record);
+            recordAdapter.add(record);
         }
 
-        mainAdapter.notifyDataSetChanged();
+        recordAdapter.notifyDataSetChanged();
 
         updateFTSAdapter();
     }
 
     private void updateFTSAdapter() {
         if (searchWord != null) {
-            mainFTSAdapter.clear();
+            ftsAdapter.clear();
 
             for (FTSModel ftsModel : simpleFTS.search(searchWord, false)) {
-                mainFTSAdapter.add(ftsModel);
+                ftsAdapter.add(ftsModel);
             }
 
-            mainFTSAdapter.notifyDataSetChanged();
+            ftsAdapter.notifyDataSetChanged();
         }
     }
 
@@ -94,7 +92,7 @@ public class MainActivity extends Activity {
             simpleFTS.create(new FTSModel(String.valueOf(id), record.getRecordText()));
         }
 
-        ((EditText) findViewById(R.id.recordEditText)).setText(EMPTY);
+        ((EditText) findViewById(R.id.recordEditText)).setText(null);
         updateAdapters();
     }
 
@@ -127,7 +125,7 @@ public class MainActivity extends Activity {
 
     private class CustomOnLongClickListener implements AdapterView.OnItemLongClickListener {
         public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long id) {
-            recordsDAO.deleteWhere(Record.COLUMN_ID, String.valueOf(mainAdapter.getItem(i).getId()));
+            recordsDAO.deleteWhere(Record.COLUMN_ID, String.valueOf(recordAdapter.getItem(i).getId()));
             updateAdapters();
             return true;
         }

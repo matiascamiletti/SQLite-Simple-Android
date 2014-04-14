@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!--Other-->
     <string name="app_name">SQLite Simple</string>
 
-    <string name="record">record name</string>
-    <string name="fts">search</string>
-    <string name="add_record">ADD RECORD</string>
-    <string name="delete_all">DELETE ALL</string>
+    <!--Hints-->
+    <string name="hint_record">record name</string>
+    <string name="hint_fts">search</string>
+
+    <!--Actions-->
+    <string name="action_add_record">ADD RECORD</string>
+    <string name="action_delete_all">DELETE ALL</string>
 
 </resources>
