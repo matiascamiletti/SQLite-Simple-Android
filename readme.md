@@ -1,4 +1,4 @@
-<h3>Version — 2.6</h3>
+<h3>Version — 2.7</h3>
 <h3>Minimum SDK — 2.1+</h3>
 
 <h2>Install</h2>
