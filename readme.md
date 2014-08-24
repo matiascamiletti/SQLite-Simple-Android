@@ -1,7 +1,7 @@
 <h3>Changes by Matias Camiletti</h3>
 
 - Add function to execute SQL SUM.
-
+- Add function: getContext.
 
 
 <h3>Version — 2.7</h3>
