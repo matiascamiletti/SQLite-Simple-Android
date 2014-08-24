@@ -1,3 +1,9 @@
+<h3>Changes by Matias Camiletti</h3>
+
+- Add function to execute SQL SUM.
+
+
+
 <h3>Version — 2.7</h3>
 <h3>Minimum SDK — 2.1+</h3>
 
