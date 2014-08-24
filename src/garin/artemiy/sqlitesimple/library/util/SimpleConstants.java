@@ -63,6 +63,7 @@ public class SimpleConstants {
     public static final String FORMAT_GLUED = "%s%s";
     public static final String FORMAT_TWINS = "%s %s";
     public static final String FORMAT_COLUMN = "%s=?";
+    public static final String FORMAT_COLUMN_LIKE = "%s LIKE ?";
     public static final String FORMAT_BRACKETS = "(%s)";
     public static final String FORMAT_COLUMNS_COMMA = "%s=? AND %s=?";
     public static final String FORMAT_SHARED_IS_FIRST_APPLICATION_START = "SHARED_IS_FIRST_APPLICATION_START_%s";

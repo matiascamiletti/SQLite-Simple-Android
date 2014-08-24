@@ -35,7 +35,7 @@ import java.util.List;
 @SuppressWarnings({"SameParameterValue", "UnusedDeclaration", "UnusedReturnValue"})
 public abstract class SQLiteSimpleDAO<T> {
 
-    private Class<T> tClass;
+    protected Class<T> tClass;
     private SQLiteSimpleHelper simpleHelper;
     private String primaryKeyColumnName;
     private String localDatabasePath;
@@ -538,6 +538,15 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
+    public List<T> readAllWhereLike(String columnName, String columnValue) {
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN_LIKE, columnName),
+                new String[]{columnValue}, null, null, null);
+        List<T> objects = readAll(cursor);
+        cursor.close();
+        return objects;
+    }
+    
+    @SuppressWarnings("unused")
     public List<T> readAllWhereWithOrder(String columnName, String columnValue, String column, String order) {
         Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
                 new String[]{columnValue}, null, null, String.format(SimpleConstants.FORMAT_TWINS, column, order));
@@ -669,5 +678,9 @@ public abstract class SQLiteSimpleDAO<T> {
     protected float sum(String columnName, String where) {
     	String query = String.format(SimpleConstants.SQL_SUM_QUERY_WHERE, columnName, SimpleDatabaseUtil.getTableName(tClass), where);
     	return sumQuery(query);
+    }
+    
+    public Class<T> getTClass() {
+    	return tClass;
     }
 }

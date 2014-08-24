@@ -2,7 +2,7 @@
 
 - Add function to execute SQL SUM.
 - Add function: getContext.
-
+- Add function: readAllWhereLike.
 
 <h3>Version — 2.7</h3>
 <h3>Minimum SDK — 2.1+</h3>
