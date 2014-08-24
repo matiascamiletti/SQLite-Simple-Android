@@ -80,6 +80,10 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
+    public Context getContext() {
+    	return this.context;
+    }
+    
     @Override
     public synchronized SQLiteDatabase getWritableDatabase() {
         checkDatabaseFromAssets();

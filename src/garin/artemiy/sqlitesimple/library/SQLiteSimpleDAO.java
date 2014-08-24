@@ -68,7 +68,7 @@ public abstract class SQLiteSimpleDAO<T> {
         primaryKeyColumnName = getPrimaryKeyColumnName();
     }
 
-    private SQLiteDatabase getDatabase() {
+    protected SQLiteDatabase getDatabase() {
         if (assetsDatabaseName != null) {
 
             if (assetsDatabase == null || !assetsDatabase.isOpen()) {
@@ -374,6 +374,10 @@ public abstract class SQLiteSimpleDAO<T> {
         cursor.close();
 
         return id;
+    }
+    
+    public Context getContext() {
+    	return simpleHelper.getContext();
     }
 
     @SuppressWarnings("unused")
