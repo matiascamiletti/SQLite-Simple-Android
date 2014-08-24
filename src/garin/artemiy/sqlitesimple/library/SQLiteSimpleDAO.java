@@ -303,6 +303,18 @@ public abstract class SQLiteSimpleDAO<T> {
 
         return averageResult;
     }
+    
+    protected float sumQuery(String query) {
+    	SQLiteDatabase database = getDatabase();
+        Cursor cursor = database.rawQuery(query, null);
+        cursor.moveToFirst();
+
+        float sumResult = cursor.getFloat(SimpleConstants.FIRST_ELEMENT);
+
+        cursor.close();
+
+        return sumResult;
+    }
 
     private ContentValues getFilledContentValues(Object object) throws IllegalAccessException {
         ContentValues contentValues = new ContentValues();
@@ -642,5 +654,16 @@ public abstract class SQLiteSimpleDAO<T> {
                 whereColumn, whereValue);
         return averageQuery(query);
     }
+    
+    @SuppressWarnings("unused")
+    protected float sum(String columnName) {
+    	String query = String.format(SimpleConstants.SQL_SUM_QUERY, columnName, SimpleDatabaseUtil.getTableName(tClass));
+    	return sumQuery(query);
+    }
 
+    @SuppressWarnings("unused")
+    protected float sum(String columnName, String where) {
+    	String query = String.format(SimpleConstants.SQL_SUM_QUERY_WHERE, columnName, SimpleDatabaseUtil.getTableName(tClass), where);
+    	return sumQuery(query);
+    }
 }

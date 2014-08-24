@@ -55,6 +55,8 @@ public class SimpleConstants {
     public static final String SQL_ALTER_TABLE_ADD_COLUMN = "ALTER TABLE %s ADD COLUMN %s ";
     public static final String SQL_AVG_QUERY = "SELECT AVG(%s) FROM %s";
     public static final String SQL_AVG_QUERY_WHERE = "SELECT AVG(%s) FROM %s WHERE %s = '%s'";
+    public static final String SQL_SUM_QUERY = "SELECT SUM(%s) FROM %s";
+    public static final String SQL_SUM_QUERY_WHERE = "SELECT SUM(%s) FROM %s WHERE %s";
 
     // String.format(..)
     public static final String FORMAT_GLUED_FTS = "%s_FTS%s";
