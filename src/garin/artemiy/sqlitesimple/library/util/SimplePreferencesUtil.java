@@ -1,5 +1,6 @@
 package garin.artemiy.sqlitesimple.library.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -28,6 +29,7 @@ public class SimplePreferencesUtil {
     private SharedPreferences.Editor sharedPreferencesEditor;
     private SharedPreferences sharedPreferences;
 
+    @SuppressLint("CommitPrefEdits")
     public SimplePreferencesUtil(Context context) {
         sharedPreferences = context.getSharedPreferences(SimpleConstants.SHARED_PREFERENCES_DATABASE,
                 Context.MODE_PRIVATE);
@@ -35,7 +37,6 @@ public class SimplePreferencesUtil {
     }
 
     public void clearAllPreferences(String place, int databaseVersion) {
-
         boolean isFTSTableCreated = isVirtualTableCreated();
 
         sharedPreferencesEditor.remove(String.format(SimpleConstants.SHARED_DATABASE_QUERIES, place));
@@ -47,9 +48,7 @@ public class SimplePreferencesUtil {
 
         putDatabaseVersion(databaseVersion, place);
 
-        if (isFTSTableCreated) {
-            setVirtualTableCreated();
-        }
+        if (isFTSTableCreated) setVirtualTableCreated();
 
         sharedPreferencesEditor.commit();
     }
@@ -83,9 +82,7 @@ public class SimplePreferencesUtil {
         for (int i = 1; i <= getCurrentIndex(place); i++) {
             String savedString = sharedPreferences.getString(
                     String.format(SimpleConstants.SHARED_PREFERENCES_LIST, place, i), null);
-            if (savedString != null) {
-                resultList.add(savedString);
-            }
+            if (savedString != null) resultList.add(savedString);
         }
 
         return resultList;

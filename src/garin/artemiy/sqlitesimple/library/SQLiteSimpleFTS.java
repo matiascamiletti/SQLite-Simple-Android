@@ -49,9 +49,7 @@ public class SQLiteSimpleFTS {
         SQLiteSimpleHelper simpleHelper = new SQLiteSimpleHelper(context, SimpleConstants.SHARED_LOCAL_PREFERENCES,
                 new SimplePreferencesUtil(context).getDatabaseVersion(SimpleConstants.SHARED_LOCAL_PREFERENCES), null, true);
 
-        if (database == null || !database.isOpen())
-            database = simpleHelper.getWritableDatabase();
-
+        if (database == null || !database.isOpen()) database = simpleHelper.getWritableDatabase();
         tableName = SimpleDatabaseUtil.getFTSTableName(context);
 
         createTableIfNotExist(context);
@@ -69,13 +67,11 @@ public class SQLiteSimpleFTS {
         if (!preferencesUtil.isVirtualTableCreated()) {
 
             String createVirtualFTSTable;
-            if (useTablesCategory) {
+            if (useTablesCategory)
                 createVirtualFTSTable = String.format(SimpleConstants.FTS_CREATE_VIRTUAL_TABLE_WITH_CATEGORY,
                         tableName, COLUMN_ID, COLUMN_TABLE_CATEGORY, COLUMN_DATA);
-            } else {
-                createVirtualFTSTable = String.format(SimpleConstants.FTS_CREATE_VIRTUAL_TABLE,
-                        tableName, COLUMN_ID, COLUMN_DATA);
-            }
+            else createVirtualFTSTable = String.format(SimpleConstants.FTS_CREATE_VIRTUAL_TABLE,
+                    tableName, COLUMN_ID, COLUMN_DATA);
 
             database.execSQL(createVirtualFTSTable);
 
@@ -92,9 +88,7 @@ public class SQLiteSimpleFTS {
             contentValues.put(COLUMN_ID, ftsModel.getId());
             contentValues.put(COLUMN_DATA, ftsModel.getData().toLowerCase());
 
-            if (useTablesCategory) {
-                contentValues.put(COLUMN_TABLE_CATEGORY, ftsModel.getTableCategory());
-            }
+            if (useTablesCategory) contentValues.put(COLUMN_TABLE_CATEGORY, ftsModel.getTableCategory());
 
             database.insert(tableName, null, contentValues);
         }
@@ -102,9 +96,7 @@ public class SQLiteSimpleFTS {
 
     @SuppressWarnings("unused")
     public void createAll(List<FTSModel> ftsModels) {
-        for (FTSModel ftsModel : ftsModels) {
-            create(ftsModel);
-        }
+        for (FTSModel ftsModel : ftsModels) create(ftsModel);
     }
 
     @SuppressWarnings("unused")
@@ -112,7 +104,6 @@ public class SQLiteSimpleFTS {
         List<FTSModel> ftsModels = new ArrayList<FTSModel>();
 
         if (incomingQuery.length() >= SimpleConstants.FTS_QUERY_MINIMUM_LENGTH) {
-
             String order;
             if (resultDesc)
                 order = SimpleConstants.DESC;
@@ -125,16 +116,14 @@ public class SQLiteSimpleFTS {
 
             while (!cursor.isAfterLast()) {
                 FTSModel ftsModel;
-                if (useTablesCategory) {
+                if (useTablesCategory)
                     ftsModel = new FTSModel(
                             cursor.getString(cursor.getColumnIndex(COLUMN_ID)),
                             cursor.getInt(cursor.getColumnIndex(COLUMN_TABLE_CATEGORY)),
                             cursor.getString(cursor.getColumnIndex(COLUMN_DATA)));
-                } else {
-                    ftsModel = new FTSModel(
-                            cursor.getString(cursor.getColumnIndex(COLUMN_ID)),
-                            cursor.getString(cursor.getColumnIndex(COLUMN_DATA)));
-                }
+                else ftsModel = new FTSModel(
+                        cursor.getString(cursor.getColumnIndex(COLUMN_ID)),
+                        cursor.getString(cursor.getColumnIndex(COLUMN_DATA)));
 
                 cursor.moveToNext();
                 ftsModels.add(ftsModel);
