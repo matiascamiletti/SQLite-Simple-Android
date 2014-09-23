@@ -6,82 +6,82 @@
               android:layout_height="fill_parent">
 
     <LinearLayout
-        android:baselineAligned="false"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_width="fill_parent">
+            android:baselineAligned="false"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_width="fill_parent">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_height="fill_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            tools:ignore="NestedWeights">
+                android:orientation="vertical"
+                android:layout_height="fill_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                tools:ignore="NestedWeights">
 
             <EditText
-                android:id="@+id/recordEditText"
-                android:hint="@string/hint_record"
-                android:inputType="text"
-                android:layout_margin="@dimen/default_margin"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"/>
+                    android:id="@+id/recordEditText"
+                    android:hint="@string/hint_record"
+                    android:inputType="text"
+                    android:layout_margin="@dimen/default_margin"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"/>
 
             <ListView
-                android:id="@+id/recordListView"
-                android:cacheColorHint="@android:color/transparent"
-                android:dividerHeight="1px"
-                android:divider="@android:color/darker_gray"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"/>
+                    android:id="@+id/recordListView"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:dividerHeight="1px"
+                    android:divider="@android:color/darker_gray"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_height="fill_parent"
-            android:layout_width="0dp"
-            android:layout_weight="1">
+                android:orientation="vertical"
+                android:layout_height="fill_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1">
 
             <EditText
-                android:id="@+id/ftsEditText"
-                android:hint="@string/hint_fts"
-                android:inputType="text"
-                android:layout_margin="@dimen/default_margin"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"/>
+                    android:id="@+id/ftsEditText"
+                    android:hint="@string/hint_fts"
+                    android:inputType="text"
+                    android:layout_margin="@dimen/default_margin"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"/>
 
             <ListView
-                android:id="@+id/ftsListView"
-                android:cacheColorHint="@android:color/transparent"
-                android:dividerHeight="1px"
-                android:divider="@android:color/darker_gray"
-                android:layout_height="wrap_content"
-                android:layout_width="fill_parent"/>
+                    android:id="@+id/ftsListView"
+                    android:cacheColorHint="@android:color/transparent"
+                    android:dividerHeight="1px"
+                    android:divider="@android:color/darker_gray"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent">
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent">
 
         <Button
-            style="@style/defaultButtonStyle"
-            android:onClick="onClickAddRecord"
-            android:typeface="serif"
-            android:text="@string/action_add_record"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"/>
+                style="@style/defaultButtonStyle"
+                android:onClick="onClickDeleteAllRecords"
+                android:text="@string/action_delete_all"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
 
         <Button
-            style="@style/defaultButtonStyle"
-            android:onClick="onClickDeleteAllRecords"
-            android:text="@string/action_delete_all"
-            android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="1"/>
+                style="@style/defaultButtonStyle"
+                android:onClick="onClickAddRecord"
+                android:typeface="serif"
+                android:text="@string/action_add_record"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"/>
 
     </LinearLayout>
 
