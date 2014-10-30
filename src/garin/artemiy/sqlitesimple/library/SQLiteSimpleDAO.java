@@ -70,26 +70,19 @@ public abstract class SQLiteSimpleDAO<T> {
 
     protected SQLiteDatabase getDatabase() {
         if (assetsDatabaseName != null) {
+            if (assetsDatabase == null || !assetsDatabase.isOpen()) assetsDatabase = simpleHelper.getWritableDatabase();
 
-            if (assetsDatabase == null || !assetsDatabase.isOpen()) {
-                assetsDatabase = simpleHelper.getWritableDatabase();
-            }
             return assetsDatabase;
-
         } else if (localDatabasePath != null) {
-
-            if (localDatabase == null || !localDatabase.isOpen()) {
+            if (localDatabase == null || !localDatabase.isOpen())
                 localDatabase = SQLiteDatabase.openDatabase(localDatabasePath, null, SQLiteDatabase.OPEN_READWRITE);
-            }
+
             return localDatabase;
-
         } else {
-
-            if (internalDatabase == null || !internalDatabase.isOpen()) {
+            if (internalDatabase == null || !internalDatabase.isOpen())
                 internalDatabase = simpleHelper.getWritableDatabase();
-            }
-            return internalDatabase;
 
+            return internalDatabase;
         }
     }
 
@@ -105,10 +98,7 @@ public abstract class SQLiteSimpleDAO<T> {
                 if (columnName != null) {
                     Column annotationColumn = field.getAnnotation(Column.class);
 
-                    if (annotationColumn.isPrimaryKey()) {
-                        return columnName;
-                    }
-
+                    if (annotationColumn.isPrimaryKey()) return columnName;
                 }
             }
         }
@@ -127,16 +117,12 @@ public abstract class SQLiteSimpleDAO<T> {
                 String columnName = SimpleDatabaseUtil.getColumnName(field);
                 if (columnName != null)
                     columnsList.add(columnName);
-                if (fieldEntityAnnotation.isPrimaryKey()) {
+                if (fieldEntityAnnotation.isPrimaryKey())
                     isHaveAnyKey = true;
-                }
             }
         }
 
-        if (!isHaveAnyKey) {
-            columnsList.add(SimpleConstants.ID_COLUMN);
-        }
-
+        if (!isHaveAnyKey) columnsList.add(SimpleConstants.ID_COLUMN);
         String[] columnsArray = new String[columnsList.size()];
 
         return columnsList.toArray(columnsArray);
@@ -147,9 +133,8 @@ public abstract class SQLiteSimpleDAO<T> {
             if (!field.isAccessible())
                 field.setAccessible(true); // for private variables
             Column fieldEntityAnnotation = field.getAnnotation(Column.class);
-            if (fieldEntityAnnotation != null) {
+            if (fieldEntityAnnotation != null)
                 field.set(newTObject, getValueFromCursor(cursor, field));
-            }
         }
     }
 
@@ -160,57 +145,57 @@ public abstract class SQLiteSimpleDAO<T> {
 
         int columnIndex = cursor.getColumnIndex(SimpleDatabaseUtil.getColumnName(field));
 
-        if (fieldType.isAssignableFrom(Long.class) || fieldType.isAssignableFrom(long.class)) {
+        if (fieldType.isAssignableFrom(Long.class) || fieldType.isAssignableFrom(long.class))
             value = cursor.getLong(columnIndex);
-        } else if (fieldType.isAssignableFrom(String.class)) {
+        else if (fieldType.isAssignableFrom(String.class))
             value = cursor.getString(columnIndex);
-        } else if ((fieldType.isAssignableFrom(Integer.class) || fieldType.isAssignableFrom(int.class))) {
+        else if ((fieldType.isAssignableFrom(Integer.class) || fieldType.isAssignableFrom(int.class)))
             value = cursor.getInt(columnIndex);
-        } else if ((fieldType.isAssignableFrom(Byte[].class) || fieldType.isAssignableFrom(byte[].class))) {
+        else if ((fieldType.isAssignableFrom(Byte[].class) || fieldType.isAssignableFrom(byte[].class)))
             value = cursor.getBlob(columnIndex);
-        } else if ((fieldType.isAssignableFrom(Double.class) || fieldType.isAssignableFrom(double.class))) {
+        else if ((fieldType.isAssignableFrom(Double.class) || fieldType.isAssignableFrom(double.class)))
             value = cursor.getDouble(columnIndex);
-        } else if ((fieldType.isAssignableFrom(Float.class) || fieldType.isAssignableFrom(float.class))) {
+        else if ((fieldType.isAssignableFrom(Float.class) || fieldType.isAssignableFrom(float.class)))
             value = cursor.getFloat(columnIndex);
-        } else if ((fieldType.isAssignableFrom(Short.class) || fieldType.isAssignableFrom(short.class))) {
+        else if ((fieldType.isAssignableFrom(Short.class) || fieldType.isAssignableFrom(short.class)))
             value = cursor.getShort(columnIndex);
-        } else if (fieldType.isAssignableFrom(Byte.class) || fieldType.isAssignableFrom(byte.class)) {
+        else if (fieldType.isAssignableFrom(Byte.class) || fieldType.isAssignableFrom(byte.class))
             value = (byte) cursor.getShort(columnIndex);
-        } else if (fieldType.isAssignableFrom(Boolean.class) || fieldType.isAssignableFrom(boolean.class)) {
+        else if (fieldType.isAssignableFrom(Boolean.class) || fieldType.isAssignableFrom(boolean.class)) {
             int booleanInteger = cursor.getInt(columnIndex);
             value = booleanInteger == 1;
-        } else if (fieldType.isAssignableFrom(Date.class)) {
+        } else if (fieldType.isAssignableFrom(Date.class))
             value = new Date(cursor.getLong(columnIndex));
-        }
+
         return value;
     }
 
     // Put in content value from object to specific type
     private void putInContentValues(ContentValues contentValues, Field field, Object object)
             throws IllegalAccessException {
-        if (!field.isAccessible())
-            field.setAccessible(true); // for private variables
+        if (!field.isAccessible()) field.setAccessible(true); // for private variables
         Object fieldValue = field.get(object);
         String key = SimpleDatabaseUtil.getColumnName(field);
-        if (fieldValue instanceof Long) {
+
+        if (fieldValue instanceof Long)
             contentValues.put(key, Long.valueOf(fieldValue.toString()));
-        } else if (fieldValue instanceof String) {
+        else if (fieldValue instanceof String)
             contentValues.put(key, fieldValue.toString());
-        } else if (fieldValue instanceof Integer) {
+        else if (fieldValue instanceof Integer)
             contentValues.put(key, Integer.valueOf(fieldValue.toString()));
-        } else if (fieldValue instanceof Float) {
+        else if (fieldValue instanceof Float)
             contentValues.put(key, Float.valueOf(fieldValue.toString()));
-        } else if (fieldValue instanceof Byte) {
+        else if (fieldValue instanceof Byte)
             contentValues.put(key, Byte.valueOf(fieldValue.toString()));
-        } else if (fieldValue instanceof Short) {
+        else if (fieldValue instanceof Short)
             contentValues.put(key, Short.valueOf(fieldValue.toString()));
-        } else if (fieldValue instanceof Boolean) {
+        else if (fieldValue instanceof Boolean)
             contentValues.put(key, Boolean.parseBoolean(fieldValue.toString()));
-        } else if (fieldValue instanceof Double) {
+        else if (fieldValue instanceof Double)
             contentValues.put(key, Double.valueOf(fieldValue.toString()));
-        } else if (fieldValue instanceof Date) {
+        else if (fieldValue instanceof Date)
             contentValues.put(key, String.valueOf(((Date) fieldValue).getTime()));
-        } else if (fieldValue instanceof Byte[] || fieldValue instanceof byte[]) {
+        else if (fieldValue instanceof Byte[] || fieldValue instanceof byte[]) {
             try {
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 ObjectOutputStream objectOutputStream = new ObjectOutputStream(outputStream);
@@ -228,7 +213,6 @@ public abstract class SQLiteSimpleDAO<T> {
 
     private List<T> readAll(Cursor cursor) {
         try {
-
             List<T> list = new ArrayList<T>();
 
             for (int i = 0; i < cursor.getCount(); i++) {
@@ -248,7 +232,6 @@ public abstract class SQLiteSimpleDAO<T> {
     private T read(Cursor cursor) {
         if (cursor != null) {
             try {
-
                 T newTObject = tClass.newInstance();
                 bindObject(newTObject, cursor);
                 return newTObject;
@@ -321,11 +304,8 @@ public abstract class SQLiteSimpleDAO<T> {
 
         for (Field field : object.getClass().getDeclaredFields()) {
             Column fieldEntityAnnotation = field.getAnnotation(Column.class);
-            if (fieldEntityAnnotation != null) {
-                if (!fieldEntityAnnotation.isAutoincrement()) {
-                    putInContentValues(contentValues, field, object);
-                }
-            }
+            if (fieldEntityAnnotation != null && !fieldEntityAnnotation.isAutoincrement())
+                putInContentValues(contentValues, field, object);
         }
         return contentValues;
     }
@@ -361,15 +341,12 @@ public abstract class SQLiteSimpleDAO<T> {
     @SuppressWarnings("unused")
     public long getLastRowId() {
         Cursor cursor = selectCursorAscFromTable();
-
         cursor.moveToLast();
 
         long id;
-        if (cursor.getPosition() == -1) {
+        if (cursor.getPosition() == -1)
             id = SimpleConstants.ZERO_RESULT;
-        } else {
-            id = cursor.getLong(cursor.getColumnIndex(primaryKeyColumnName));
-        }
+        else id = cursor.getLong(cursor.getColumnIndex(primaryKeyColumnName));
 
         cursor.close();
 
@@ -387,9 +364,7 @@ public abstract class SQLiteSimpleDAO<T> {
         Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN,
                 columnName), new String[]{columnValue}, null, null, null);
 
-        if (cursor.getCount() == 0) {
-            result = create(object);
-        }
+        if (cursor.getCount() == 0) result = create(object);
 
         cursor.close();
 
@@ -401,14 +376,12 @@ public abstract class SQLiteSimpleDAO<T> {
                                  String secondColumnName, String secondColumnValue) {
         long result = SimpleConstants.ZERO_RESULT;
 
-        Cursor cursor =
-                selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
                         firstColumnName, secondColumnName),
-                        new String[]{firstColumnValue, secondColumnValue}, null, null, null);
+                new String[]{firstColumnValue, secondColumnValue}, null, null, null
+        );
 
-        if (cursor.getCount() == 0) {
-            result = create(object);
-        }
+        if (cursor.getCount() == 0) result = create(object);
 
         cursor.close();
 
@@ -417,9 +390,7 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public void createAll(List<T> objects) {
-        for (T object : objects) {
-            create(object);
-        }
+        for (T object : objects) create(object);
     }
 
     @SuppressWarnings("unused")
@@ -429,11 +400,8 @@ public abstract class SQLiteSimpleDAO<T> {
 
             for (Field field : object.getClass().getDeclaredFields()) {
                 Column fieldEntityAnnotation = field.getAnnotation(Column.class);
-                if (fieldEntityAnnotation != null) {
-                    if (!fieldEntityAnnotation.isAutoincrement()) {
-                        putInContentValues(contentValues, field, object);
-                    }
-                }
+                if (fieldEntityAnnotation != null && !fieldEntityAnnotation.isAutoincrement())
+                    putInContentValues(contentValues, field, object);
             }
 
             SQLiteDatabase database = getDatabase();
@@ -447,10 +415,8 @@ public abstract class SQLiteSimpleDAO<T> {
 
     @SuppressWarnings("unused")
     public T read(long id) {
-        Cursor cursor = selectCursorFromTable(
-                String.format(SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName),
-                new String[]{Long.toString(id)}
-                , null, null, null);
+        Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName),
+                new String[]{Long.toString(id)}, null, null, null);
 
         try {
             T newTObject = tClass.newInstance();
@@ -481,8 +447,9 @@ public abstract class SQLiteSimpleDAO<T> {
     public T readWhere(String firstColumnName, String firstColumnValue,
                        String secondColumnName, String secondColumnValue) {
         Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
-                firstColumnName, secondColumnName),
-                new String[]{firstColumnValue, secondColumnValue}, null, null, null);
+                        firstColumnName, secondColumnName),
+                new String[]{firstColumnValue, secondColumnValue}, null, null, null
+        );
         T object = null;
         if (cursor != null) {
             object = read(cursor);
@@ -563,9 +530,7 @@ public abstract class SQLiteSimpleDAO<T> {
             List<T> objects = readAll(cursor);
             cursor.close();
             return objects;
-        } else {
-            return new ArrayList<T>();
-        }
+        } else return new ArrayList<T>();
     }
 
     @SuppressWarnings("unused")
@@ -576,15 +541,12 @@ public abstract class SQLiteSimpleDAO<T> {
             List<T> objects = readAll(cursor);
             cursor.close();
             return objects;
-        } else {
-            return new ArrayList<T>();
-        }
+        } else return new ArrayList<T>();
     }
 
     @SuppressWarnings("unused")
     public long update(String columnName, String columnValue, T newObject) {
         try {
-
             ContentValues contentValues = getFilledContentValues(newObject);
 
             SQLiteDatabase database = getDatabase();
@@ -601,7 +563,6 @@ public abstract class SQLiteSimpleDAO<T> {
     public long update(String firstColumnName, String firstColumnValue,
                        String secondColumnName, String secondColumnValue, T newObject) {
         try {
-
             ContentValues contentValues = getFilledContentValues(newObject);
 
             SQLiteDatabase database = getDatabase();
@@ -624,27 +585,25 @@ public abstract class SQLiteSimpleDAO<T> {
     public long delete(long id) {
         SQLiteDatabase database = getDatabase();
         return database.delete(
-                SimpleDatabaseUtil.getTableName(tClass),
-                String.format(SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName),
-                new String[]{String.valueOf(id)});
+                SimpleDatabaseUtil.getTableName(tClass), String.format(
+                        SimpleConstants.FORMAT_COLUMN, primaryKeyColumnName), new String[]{String.valueOf(id)});
     }
 
     @SuppressWarnings("unused")
     public long deleteWhere(String columnName, String columnValue) {
         SQLiteDatabase database = getDatabase();
-        return database.delete(
-                SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMN, columnName),
-                new String[]{columnValue});
+        return database.delete(SimpleDatabaseUtil.getTableName(tClass),
+                String.format(SimpleConstants.FORMAT_COLUMN, columnName), new String[]{columnValue});
     }
 
     @SuppressWarnings("unused")
     public long deleteWhere(String firstColumnName, String firstColumnValue,
                             String secondColumnName, String secondColumnValue) {
         SQLiteDatabase database = getDatabase();
-        return database.delete(
-                SimpleDatabaseUtil.getTableName(tClass), String.format(SimpleConstants.FORMAT_COLUMNS_COMMA,
-                firstColumnName, secondColumnName),
-                new String[]{firstColumnValue, secondColumnValue});
+        return database.delete(SimpleDatabaseUtil.getTableName(tClass),
+                String.format(SimpleConstants.FORMAT_COLUMNS_COMMA, firstColumnName, secondColumnName),
+                new String[]{firstColumnValue, secondColumnValue}
+        );
     }
 
     @SuppressWarnings("unused")

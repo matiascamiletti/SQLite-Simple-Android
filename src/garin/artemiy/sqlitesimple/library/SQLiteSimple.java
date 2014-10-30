@@ -87,9 +87,8 @@ public class SQLiteSimple {
             commit(tables, sqlQueries);
             SQLiteDatabase database = sqLiteSimpleHelper.getWritableDatabase(); // call onCreate();
             database.close();
-        } else {
+        } else
             commit(tables, sqlQueries);
-        }
     }
 
     @SuppressWarnings("unused")
@@ -120,14 +119,11 @@ public class SQLiteSimple {
 
         if (!newDatabaseVersion) {
             isRebasedTables = rebaseTablesIfNeed(savedTables, tables, sqlQueries, savedSQLQueries);
-            if (savedSQLQueries.hashCode() != sqlQueries.hashCode() && savedSQLQueries.hashCode() != 1) {
+            if (savedSQLQueries.hashCode() != sqlQueries.hashCode() && savedSQLQueries.hashCode() != 1)
                 addNewColumnsIfNeed(tables, sqlQueries, savedSQLQueries);
-            }
         }
 
-        if (!isRebasedTables) {
-            checkingCommit(tables, sqlQueries, newDatabaseVersion);
-        }
+        if (!isRebasedTables) checkingCommit(tables, sqlQueries, newDatabaseVersion);
     }
 
     private void uniteClassesToSQL(List<String> tables, List<String> sqlQueries, Class<?>... classes) {
@@ -144,13 +140,10 @@ public class SQLiteSimple {
                 Field fieldEntity = classEntity.getDeclaredFields()[i];
 
                 Column fieldEntityAnnotation = fieldEntity.getAnnotation(Column.class);
-                if (fieldEntityAnnotation == null) {
-                    tableFieldsCount--;
-                }
+                if (fieldEntityAnnotation == null) tableFieldsCount--;
 
                 if (fieldEntityAnnotation != null) {
-                    if (fieldEntityAnnotation.isPrimaryKey())
-                        primaryKeys.add(fieldEntity);
+                    if (fieldEntityAnnotation.isPrimaryKey()) primaryKeys.add(fieldEntity);
                     else {
                         String column = SimpleDatabaseUtil.getColumnName(fieldEntity);
                         sqlQueryBuilder.append(String.format(SimpleConstants.FORMAT_TWINS,
@@ -161,6 +154,7 @@ public class SQLiteSimple {
                             sqlQueryBuilder.append(SimpleConstants.SPACE);
                             sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
                         }
+
                         if (annotatedFieldsIndex != tableFieldsCount - 1) {
                             isAddedSQLDivider = true;
                             sqlQueryBuilder.append(SimpleConstants.DIVIDER);
@@ -210,9 +204,7 @@ public class SQLiteSimple {
                 sqlQueryBuilder.append(SimpleConstants.AUTOINCREMENT);
             }
 
-        } else {
-            makeCompoundKey(primaryKeys, sqlQueryBuilder);
-        }
+        } else makeCompoundKey(primaryKeys, sqlQueryBuilder);
     }
 
     private void makeCompoundKey(List<Field> primaryKeys, StringBuilder sqlQueryBuilder) {
@@ -255,10 +247,9 @@ public class SQLiteSimple {
             extraSqlQueries.removeAll(sqlQueries);
 
             SQLiteDatabase database = sqLiteSimpleHelper.getWritableDatabase();
-            for (String extraTable : extraTables) {
+            for (String extraTable : extraTables)
                 database.execSQL(String.format(SimpleConstants.FORMAT_TWINS,
                         SimpleConstants.SQL_DROP_TABLE_IF_EXISTS, extraTable));
-            }
 
             commit(tables, sqlQueries);
             sqLiteSimpleHelper.onCreate(database);
@@ -274,9 +265,7 @@ public class SQLiteSimple {
             sqlQueriesToCreate.removeAll(savedSQLQueries);
 
             SQLiteDatabase database = sqLiteSimpleHelper.getWritableDatabase();
-            for (String sqlQuery : sqlQueriesToCreate) {
-                database.execSQL(sqlQuery);
-            }
+            for (String sqlQuery : sqlQueriesToCreate) database.execSQL(sqlQuery);
 
             database.close();
         }
@@ -294,6 +283,7 @@ public class SQLiteSimple {
                 for (String savedSqlQuery : savedSqlQueries) {
 
                     if (savedSqlQuery.contains(table)) {
+
                         List<String> savedColumns = Arrays.asList(savedSqlQueries.get(i).
                                 replace(String.format(
                                         SimpleConstants.SQL_CREATE_TABLE_IF_NOT_EXIST, table), SimpleConstants.EMPTY).
@@ -310,12 +300,10 @@ public class SQLiteSimple {
                         extraColumns.removeAll(savedColumns);
 
                         if (extraColumns.size() > 0) {
-
                             SQLiteDatabase database = sqLiteSimpleHelper.getWritableDatabase();
-                            for (String column : extraColumns) {
-                                database.execSQL(String.format(
-                                        SimpleConstants.SQL_ALTER_TABLE_ADD_COLUMN, table, column));
-                            }
+                            for (String column : extraColumns)
+                                database.execSQL(String.format(SimpleConstants.SQL_ALTER_TABLE_ADD_COLUMN,
+                                        table, column));
                             database.close();
                         }
 
@@ -329,7 +317,6 @@ public class SQLiteSimple {
         } catch (IndexOutOfBoundsException exception) {
             throw new RuntimeException("Duplicated class on method create(...)");
         }
-
     }
 
 }

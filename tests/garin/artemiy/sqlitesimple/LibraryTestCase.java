@@ -16,12 +16,12 @@ import java.util.UUID;
 public class LibraryTestCase extends AndroidTestCase {
 
     private static final String TAG = "LibraryTestLog";
-    private static final String SPEED_FORMAT = "%s result: %s ms";
+    private static final String SPEED_FORMAT = "%s (%s) result: %s ms";
 
     /**
      * Speed test settings
      */
-    private static final int RECORDS_COUNT = 100;
+    private static final int RECORDS_COUNT = 500;
 
     public void testFunctional() {
         Log.d(TAG, "Functional tests begin");
@@ -123,7 +123,7 @@ public class LibraryTestCase extends AndroidTestCase {
 
         testTimeEnd = System.currentTimeMillis();
 
-        Log.d(TAG, String.format(SPEED_FORMAT, "Insert", testTimeEnd - testTimeStart));
+        Log.d(TAG, String.format(SPEED_FORMAT, "Insert", RECORDS_COUNT, testTimeEnd - testTimeStart));
 
         /**
          * Select
@@ -135,8 +135,7 @@ public class LibraryTestCase extends AndroidTestCase {
 
         testTimeEnd = System.currentTimeMillis();
 
-        Log.d(TAG, String.format(SPEED_FORMAT, "Select", testTimeEnd - testTimeStart));
-
+        Log.d(TAG, String.format(SPEED_FORMAT, "Select", RECORDS_COUNT, testTimeEnd - testTimeStart));
         Log.d(TAG, "Speed tests complete.");
 
         recordsDAO.deleteAll();

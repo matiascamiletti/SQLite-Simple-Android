@@ -1,5 +1,6 @@
 package garin.artemiy.sqlitesimple.example.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +24,11 @@ public class RecordAdapter extends ArrayAdapter<Record> {
         this.context = context;
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.item_record, null);
-        }
+        if (convertView == null)
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_record, null);
 
         Record record = getItem(position);
         TextView recordText = (TextView) convertView.findViewById(R.id.recordTextView);

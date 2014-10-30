@@ -46,13 +46,11 @@ public class SimpleDatabaseUtil {
     public static String getColumnName(Field field) {
         Column annotationColumn = field.getAnnotation(Column.class);
         String column = null;
-        if (annotationColumn != null) {
-            if (annotationColumn.name().equals(SimpleConstants.EMPTY)) {
+        if (annotationColumn != null)
+            if (annotationColumn.name().equals(SimpleConstants.EMPTY))
                 column = field.getName();
-            } else {
-                column = annotationColumn.name();
-            }
-        }
+            else column = annotationColumn.name();
+
         return column;
     }
 
@@ -63,11 +61,9 @@ public class SimpleDatabaseUtil {
     public static String getTableName(Class<?> tClass) {
         Table annotationTable = tClass.getAnnotation(Table.class);
         String table = tClass.getSimpleName();
-        if (annotationTable != null) {
-            if (!annotationTable.name().equals(SimpleConstants.EMPTY)) {
-                table = annotationTable.name();
-            }
-        }
+        if (annotationTable != null && !annotationTable.name().equals(SimpleConstants.EMPTY))
+            table = annotationTable.name();
+
         return table;
     }
 
@@ -79,36 +75,32 @@ public class SimpleDatabaseUtil {
     public static String getSQLType(Field field, Column columnAnnotation) {
         String type;
         if (columnAnnotation.type() != null && !columnAnnotation.type().equals(SimpleConstants.AUTO_ASSIGN)
-                && !columnAnnotation.type().equals(SimpleConstants.EMPTY)) {
+                && !columnAnnotation.type().equals(SimpleConstants.EMPTY))
             type = columnAnnotation.type();
-        } else {
-
+        else {
             Class<?> fieldType = field.getType();
 
-            if (fieldType.isAssignableFrom(Long.class) || fieldType.isAssignableFrom(long.class)) {
+            if (fieldType.isAssignableFrom(Long.class) || fieldType.isAssignableFrom(long.class))
                 type = ColumnType.INTEGER;
-            } else if (fieldType.isAssignableFrom(String.class)) {
+            else if (fieldType.isAssignableFrom(String.class))
                 type = ColumnType.TEXT;
-            } else if ((fieldType.isAssignableFrom(Integer.class) || fieldType.isAssignableFrom(int.class))) {
+            else if ((fieldType.isAssignableFrom(Integer.class) || fieldType.isAssignableFrom(int.class)))
                 type = ColumnType.INTEGER;
-            } else if ((fieldType.isAssignableFrom(Byte[].class) || fieldType.isAssignableFrom(byte[].class))) {
+            else if ((fieldType.isAssignableFrom(Byte[].class) || fieldType.isAssignableFrom(byte[].class)))
                 type = ColumnType.BLOB;
-            } else if ((fieldType.isAssignableFrom(Double.class) || fieldType.isAssignableFrom(double.class))) {
+            else if ((fieldType.isAssignableFrom(Double.class) || fieldType.isAssignableFrom(double.class)))
                 type = ColumnType.REAL;
-            } else if ((fieldType.isAssignableFrom(Float.class) || fieldType.isAssignableFrom(float.class))) {
+            else if ((fieldType.isAssignableFrom(Float.class) || fieldType.isAssignableFrom(float.class)))
                 type = ColumnType.REAL;
-            } else if ((fieldType.isAssignableFrom(Short.class) || fieldType.isAssignableFrom(short.class))) {
+            else if ((fieldType.isAssignableFrom(Short.class) || fieldType.isAssignableFrom(short.class)))
                 type = ColumnType.INTEGER;
-            } else if (fieldType.isAssignableFrom(Byte.class) || fieldType.isAssignableFrom(byte.class)) {
+            else if (fieldType.isAssignableFrom(Byte.class) || fieldType.isAssignableFrom(byte.class))
                 type = ColumnType.INTEGER;
-            } else if (fieldType.isAssignableFrom(Boolean.class) || fieldType.isAssignableFrom(boolean.class)) {
+            else if (fieldType.isAssignableFrom(Boolean.class) || fieldType.isAssignableFrom(boolean.class))
                 type = ColumnType.NUMERIC;
-            } else if (fieldType.isAssignableFrom(Date.class)) {
+            else if (fieldType.isAssignableFrom(Date.class))
                 type = ColumnType.INTEGER;
-            } else {
-                throw new RuntimeException("Unknown variable type:" + fieldType);
-            }
-
+            else throw new RuntimeException("Unknown variable type:" + fieldType);
         }
 
         return type;
@@ -125,16 +117,12 @@ public class SimpleDatabaseUtil {
 
     public static String getFullDatabaseName(String databaseName, Context context, boolean isFTS) {
         if (databaseName == null) {
-            if (isFTS) {
+            if (isFTS)
                 return String.format(SimpleConstants.FORMAT_GLUED_FTS, context.getPackageName(), DB_FORMAT).
                         replace(SimpleConstants.DOT, SimpleConstants.UNDERSCORE).toUpperCase();
-            } else {
-                return String.format(SimpleConstants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT).
-                        replace(SimpleConstants.DOT, SimpleConstants.UNDERSCORE).toUpperCase();
-            }
-        } else {
-            return databaseName;
-        }
+            else return String.format(SimpleConstants.FORMAT_GLUED, context.getPackageName(), DB_FORMAT).
+                    replace(SimpleConstants.DOT, SimpleConstants.UNDERSCORE).toUpperCase();
+        } else return databaseName;
     }
 
     /**
@@ -155,9 +143,7 @@ public class SimpleDatabaseUtil {
             sharedPreferencesEditor.putBoolean(SimpleConstants.SHARED_IS_FIRST_APPLICATION_START, false);
             sharedPreferencesEditor.commit();
             return true;
-        } else {
-            return false;
-        }
+        } else return false;
     }
 
     @SuppressWarnings("unused")
@@ -171,9 +157,7 @@ public class SimpleDatabaseUtil {
                     String.format(SimpleConstants.FORMAT_SHARED_IS_FIRST_APPLICATION_START, appVersionCode), false);
             sharedPreferencesEditor.commit();
             return true;
-        } else {
-            return false;
-        }
+        } else return false;
     }
 
 }

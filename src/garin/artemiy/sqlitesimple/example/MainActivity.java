@@ -60,10 +60,7 @@ public class MainActivity extends Activity {
     private void updateAdapters() {
         recordAdapter.clear();
 
-        for (Record record : recordsDAO.readAllDesc()) {
-            recordAdapter.add(record);
-        }
-
+        for (Record record : recordsDAO.readAllDesc()) recordAdapter.add(record);
         recordAdapter.notifyDataSetChanged();
 
         updateFTSAdapter();
@@ -73,9 +70,7 @@ public class MainActivity extends Activity {
         if (searchWord != null) {
             ftsAdapter.clear();
 
-            for (FTSModel ftsModel : simpleFTS.search(searchWord, false)) {
-                ftsAdapter.add(ftsModel);
-            }
+            for (FTSModel ftsModel : simpleFTS.search(searchWord, false)) ftsAdapter.add(ftsModel);
 
             ftsAdapter.notifyDataSetChanged();
         }
@@ -88,9 +83,8 @@ public class MainActivity extends Activity {
         record.setRecordText(((EditText) findViewById(R.id.recordEditText)).getText().toString());
         long id = recordsDAO.createIfNotExist(record, Record.COLUMN_RECORD_TEXT, record.getRecordText());
 
-        if (id != SimpleConstants.ZERO_RESULT) {
+        if (id != SimpleConstants.ZERO_RESULT)
             simpleFTS.create(new FTSModel(String.valueOf(id), record.getRecordText()));
-        }
 
         ((EditText) findViewById(R.id.recordEditText)).setText(null);
         updateAdapters();

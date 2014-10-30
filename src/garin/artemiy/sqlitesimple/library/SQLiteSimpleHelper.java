@@ -59,23 +59,17 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         List<String> sqlQueries = sharedPreferencesUtil.getList(
                 String.format(SimpleConstants.SHARED_DATABASE_QUERIES, sharedPreferencesPlace));
-        if (sqlQueries != null) { // execute sql queries in order
-            for (String sqlQuery : sqlQueries) {
-                sqLiteDatabase.execSQL(sqlQuery);
-            }
-        }
+        if (sqlQueries != null) for (String sqlQuery : sqlQueries)
+            sqLiteDatabase.execSQL(sqlQuery);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         List<String> tables = sharedPreferencesUtil.getList(
                 String.format(SimpleConstants.SHARED_DATABASE_TABLES, SimpleConstants.SHARED_LOCAL_PREFERENCES));
-        if (tables != null) { // drop tables in order
-            for (String table : tables) {
-                sqLiteDatabase.execSQL(String.format(SimpleConstants.FORMAT_TWINS,
-                        SimpleConstants.SQL_DROP_TABLE_IF_EXISTS, table));
-            }
-        }
+        if (tables != null) for (String table : tables)
+            sqLiteDatabase.execSQL(String.format(SimpleConstants.FORMAT_TWINS,
+                    SimpleConstants.SQL_DROP_TABLE_IF_EXISTS, table));
 
         onCreate(sqLiteDatabase);
     }
@@ -85,38 +79,30 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
     }
     
     @Override
-    public synchronized SQLiteDatabase getWritableDatabase() {
-        checkDatabaseFromAssets();
+    public SQLiteDatabase getWritableDatabase() {
         synchronized (writableObjectLock) {
-            if (assetsDatabaseName == null) {
-                return super.getWritableDatabase();
-            } else {
-                return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.getFullDatabasePath(context, assetsDatabaseName),
-                        null, SQLiteDatabase.OPEN_READWRITE);
-            }
+            checkDatabaseFromAssets();
+            if (assetsDatabaseName == null) return super.getWritableDatabase();
+            else return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.
+                    getFullDatabasePath(context, assetsDatabaseName), null, SQLiteDatabase.OPEN_READWRITE);
         }
     }
 
     @Override
-    public synchronized SQLiteDatabase getReadableDatabase() {
-        checkDatabaseFromAssets();
+    public SQLiteDatabase getReadableDatabase() {
         synchronized (readableObjectLock) {
-            if (assetsDatabaseName == null) {
-                return super.getReadableDatabase();
-            } else {
-                return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.getFullDatabasePath(context, assetsDatabaseName),
-                        null, SQLiteDatabase.OPEN_READONLY);
-            }
+            checkDatabaseFromAssets();
+            if (assetsDatabaseName == null) return super.getReadableDatabase();
+            else return SQLiteDatabase.openDatabase(SimpleDatabaseUtil.
+                    getFullDatabasePath(context, assetsDatabaseName), null, SQLiteDatabase.OPEN_READONLY);
         }
     }
 
     private void checkDatabaseFromAssets() {
-        if (assetsDatabaseName != null) {
-            if (!isDatabaseExist()) {
-                super.getWritableDatabase(); // create empty database
-                super.close();
-                copyDatabaseFromAssets();
-            }
+        if (assetsDatabaseName != null && !isDatabaseExist()) {
+            super.getWritableDatabase(); // create empty database
+            super.close();
+            copyDatabaseFromAssets();
         }
     }
 
@@ -129,9 +115,7 @@ public class SQLiteSimpleHelper extends SQLiteOpenHelper {
             byte[] buffer = new byte[1024];
             int length;
 
-            while ((length = inputStream.read(buffer)) > 0) {
-                outputStream.write(buffer, 0, length);
-            }
+            while ((length = inputStream.read(buffer)) > 0) outputStream.write(buffer, 0, length);
 
             outputStream.flush();
             outputStream.close();
