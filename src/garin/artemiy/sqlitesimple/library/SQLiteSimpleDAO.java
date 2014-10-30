@@ -432,6 +432,26 @@ public abstract class SQLiteSimpleDAO<T> {
     }
 
     @SuppressWarnings("unused")
+    public T readWhere(String[] columnNames, String[] columnValues) {
+        
+        String formatColumn = "";
+        for (int i = 0; i < columnNames.length; i++) {
+            if(i != 0){
+                formatColumn += " AND ";
+            }
+            formatColumn += String.format(SimpleConstants.FORMAT_COLUMN, columnNames[i]);
+        }
+        
+        Cursor cursor = selectCursorFromTable(formatColumn, columnValues, null, null, null, "");
+        T object = null;
+        if (cursor != null) {
+            object = read(cursor);
+            cursor.close();
+        }
+        return object;
+    }
+    
+    @SuppressWarnings("unused")
     public T readWhere(String columnName, String columnValue) {
         Cursor cursor = selectCursorFromTable(String.format(SimpleConstants.FORMAT_COLUMN, columnName),
                 new String[]{columnValue}, null, null, null);
